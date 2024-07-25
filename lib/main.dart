@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:pwaohyes/auth/authscreen.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/provider/provider.dart';
+import 'package:pwaohyes/service/servicehome.dart';
 import 'package:pwaohyes/utils/constants.dart';
 
 void main() {
@@ -23,7 +23,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-         ChangeNotifierProvider<ProviderClass>(create: (context) => ProviderClass()),
+        ChangeNotifierProvider<ProviderClass>(
+            create: (context) => ProviderClass()),
       ],
       child: MultiBlocProvider(
         providers: [BlocProvider<AuthBloc>(create: (context) => AuthBloc())],
@@ -42,7 +43,8 @@ class MyApp extends StatelessWidget {
             useMaterial3: false,
             scaffoldBackgroundColor: backgroundcolor,
           ),
-          home: const AuthScreen(),
+          home: const ServiceHome(),
+          // const AuthScreen(),
         ),
       ),
     );

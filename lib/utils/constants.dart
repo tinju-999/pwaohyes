@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 //colors
@@ -11,3 +9,4 @@ const grey = Colors.grey;
 
 const authLogin = 'assets/loging.png';
 const logo = 'assets/logo.png';
+const quicksand = 'Quicksand';

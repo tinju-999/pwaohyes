@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pwaohyes/utils/helper.dart';
 
 class ScreenSize extends StatelessWidget {
   final Widget? mobileView, webView;

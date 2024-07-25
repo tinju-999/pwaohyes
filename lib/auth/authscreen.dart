@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:provider/provider.dart';
-import 'package:pwaohyes/auth/authwebphoneview.dart';
 import 'package:pwaohyes/auth/authwebregisterview.dart';
-import 'package:pwaohyes/auth/otpwebview.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
+import 'package:pwaohyes/common/webfooter.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
@@ -148,92 +147,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   ],
                 ),
                 Helper.allowHeight(60),
-                Container(
-                    color: white,
-                    width: Helper.width,
-                    padding: const EdgeInsets.only(
-                        top: 8.0, bottom: 46, left: 46, right: 46),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.asset(
-                          logo,
-                          fit: BoxFit.contain,
-                          width: 120,
-                          height: 100,
-                        ),
-                        Helper.allowHeight(5.0),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "OH YES is a digital platform where\nhundreds of services comes\ntogether. We will act as service\nproviders hub for customers.",
-                              style: TextStyle(height: 2.0),
-                            ),
-                            Helper.allowWidth(60),
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text("About Us"),
-                                Helper.allowHeight(10.0),
-                                const Text("Get Started"),
-                                Helper.allowHeight(10.0),
-                                const Text("Contact Us"),
-                              ],
-                            ),
-                            Helper.allowWidth(60),
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Gigvoc Technologies PVT LTD\nSpringfield Avenue NH Road\nAngamaly , Kerala 683572",
-                                  style: TextStyle(height: 2.0),
-                                ),
-                                Helper.allowHeight(10.0),
-                                const Text(
-                                  "Talisman Centre, 2640 Golf Rd\nGlenview, Illinois. USA",
-                                  style: TextStyle(height: 2.0),
-                                ),
-                                Helper.allowHeight(10.0),
-                                const Text(
-                                  "INQ Innovation Second floor, #59\n100 Feet Rd, Defence Colony\nIndiranagar, Bengaluru, Karnataka\n560038",
-                                  style: TextStyle(height: 2.0),
-                                ),
-                                Helper.allowHeight(10.0),
-                                const Text("support@ohyesworld.com"),
-                                Helper.allowHeight(10.0),
-                                const Text("+91 7034444303"),
-                              ],
-                            ),
-                            Helper.allowWidth(60),
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Terms & Conditions",
-                                  style: TextStyle(height: 2.0),
-                                ),
-                                Helper.allowHeight(5.0),
-                                const Text(
-                                  "Privacy Policy",
-                                  style: TextStyle(height: 2.0),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
-                    )),
+                const WebFooter(),
               ],
             ),
           ),

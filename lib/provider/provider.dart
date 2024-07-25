@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 class ProviderClass extends ChangeNotifier {
@@ -8,6 +7,9 @@ class ProviderClass extends ChangeNotifier {
   int get remainingTime => _remainingTime;
   // bool? _isTimerRemaining = false;
   bool get isTimerRunning => _remainingTime > 0;
+
+  bool? _showSubServices = false;
+  bool? get showSubServices => _showSubServices;
 
   CombinedData get combineData => CombinedData(
       remainingTime: _remainingTime, isTimerRunning: isTimerRunning);
@@ -29,6 +31,11 @@ class ProviderClass extends ChangeNotifier {
   resetTimer() {
     _timer!.cancel();
     startTimer();
+  }
+
+  showSubSerives(bool? value) {
+    _showSubServices = value;
+    notifyListeners();
   }
 }
 
