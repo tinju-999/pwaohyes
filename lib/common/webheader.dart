@@ -93,6 +93,38 @@ class WebHeader extends StatelessWidget {
           ],
         ),
       ),
+      tabView: Container(
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+        decoration: const BoxDecoration(color: white),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Image.asset(
+                logo,
+                fit: BoxFit.fitWidth,
+              ),
+            ),
+            Expanded(
+              flex: 10,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const Text("Karukutty, Angamali"),
+                  Helper.allowWidth(5.0),
+                  const Icon(CupertinoIcons.chevron_down,
+                      color: black, size: 16),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

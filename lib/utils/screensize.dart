@@ -7,7 +7,7 @@ class ScreenSize extends StatelessWidget {
       {super.key,
       required this.mobileView,
       required this.webView,
-       this.tabView});
+      required this.tabView});
 
   @override
   Widget build(BuildContext context) {

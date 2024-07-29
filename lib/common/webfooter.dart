@@ -11,6 +11,7 @@ class WebFooter extends StatelessWidget {
     return ScreenSize(
       mobileView: mobileView(context),
       webView: webView(context),
+      tabView: tabView(context),
     );
   }
 
@@ -40,7 +41,7 @@ class WebFooter extends StatelessWidget {
             SizedBox(
               width: Helper.width / 1.5,
               child: content(
-                "OH YES is a digital platform where hundreds of services comes together. We will act as service providers hub for customers",
+                "OH YES is a digital platform where\nhundreds of services comes together.\nWe will act as service providers hub for\ncustomers",
                 true,
               ),
             ),
@@ -238,4 +239,104 @@ class WebFooter extends StatelessWidget {
           Helper.allowHeight(60.0),
         ],
       ));
+
+  Widget tabView(BuildContext context) => Container(
+      color: white,
+      padding:
+          const EdgeInsets.only(top: 36.0, bottom: 46, left: 26, right: 26),
+      child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                  Colors.white.withOpacity(0.85), BlendMode.dstOut),
+              child: Image.asset(
+                logo,
+                fit: BoxFit.fitWidth,
+                width: 160,
+              ),
+            ),
+            Helper.allowHeight(25),
+            SizedBox(
+              width: Helper.width / 1.5,
+              child: content(
+                "OH YES is a digital platform where hundreds of\nservices comes together. We will act as service\nproviders hub for customers",
+                true,
+              ),
+            ),
+            Helper.allowHeight(12.5),
+            const Divider(),
+            Helper.allowHeight(12.5),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () => Helper.showToast(msg: "Toast"),
+                  child: content("About Us"),
+                ),
+                Helper.allowWidth(25),
+                InkWell(
+                  onTap: () => Helper.showToast(msg: "Toast"),
+                  child: content("About Us"),
+                ),
+              ],
+            ),
+            Helper.allowHeight(12.5),
+            const Divider(),
+            Helper.allowHeight(12.5),
+            content(
+                "Gigvoc Technologies PVT LTD\nSpringfield Avenue NH Road\nAngamaly , Kerala 683572",
+                true),
+            Helper.allowWidth(20),
+            content(
+                "Talisman Centre, 2640 Golf Rd\nGlenview, Illinois. USA", true),
+            Helper.allowWidth(20),
+            content(
+                "INQ Innovation Second floor, #59\n100 Feet Rd, Defence Colony\nIndiranagar, Bengaluru, Karnataka\n560038",
+                true),
+            Helper.allowWidth(25),
+            content("support@ohyesworld.com", true),
+            Helper.allowWidth(10),
+            content("+91 7034444303", true),
+            Helper.allowHeight(12.5),
+            const Divider(),
+            Helper.allowHeight(12.5),
+            content("Terms & Conditions"),
+            content("Privacy Policy"),
+            Helper.allowHeight(12.5),
+            const Divider(),
+            Helper.allowHeight(20),
+            copyright,
+            Helper.allowHeight(20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Image.asset(
+                  facebook,
+                  fit: BoxFit.fitHeight,
+                  height: 25,
+                ),
+                Helper.allowWidth(10),
+                Image.asset(
+                  instagram,
+                  fit: BoxFit.fitHeight,
+                  height: 25,
+                ),
+                Helper.allowWidth(10),
+                Image.asset(
+                  twitter,
+                  fit: BoxFit.fitHeight,
+                  height: 25,
+                ),
+                Helper.allowWidth(10),
+              ],
+            ),
+            Helper.allowHeight(60.0),
+          ]));
 }

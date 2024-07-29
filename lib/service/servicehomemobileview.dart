@@ -24,11 +24,13 @@ class ServiceHomeMobileView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 18),
               color: white,
-              child: Selector<ProviderClass, bool>(
-                selector: (p0, p1) => p1.showSubServices!,
-                builder: (context, value, child) => CommonAnimationSwitcher(
-                  switchInCurve: Curves.ease,
-                  child: value
+              child: CommonAnimationSwitcher(
+                duration: const Duration(milliseconds: 600),
+                switchInCurve: Curves.easeInSine,
+                switchOutCurve: Curves.elasticOut,
+                child: Selector<ProviderClass, bool>(
+                  selector: (p0, p1) => p1.showSubServices!,
+                  builder: (context, value, child) => value
                       ? ohMobileSubServices(context, Initializer.subServices)
                       : ohMobileYesServices(context, Initializer.services),
                 ),
@@ -43,7 +45,7 @@ class ServiceHomeMobileView extends StatelessWidget {
   }
 
   ohMobileSubServices(BuildContext context, List<String> subServices) => Column(
-        key: const ValueKey('ohSubServices'),
+        key: const ValueKey<int>(1),
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -118,7 +120,7 @@ class ServiceHomeMobileView extends StatelessWidget {
       );
 
   ohMobileYesServices(BuildContext context, List<String> services) => Column(
-        key: const ValueKey('ohYesServices'),
+        key: const ValueKey<int>(2),
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,

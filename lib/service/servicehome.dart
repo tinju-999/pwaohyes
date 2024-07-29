@@ -27,7 +27,7 @@ class _ServiceHomeState extends State<ServiceHome> {
     return ScreenSize(
       mobileView:  ServiceHomeMobileView(providerClass: providerClass),
       webView: ServiceHomeWebView(providerClass: providerClass),
-      tabView: const ServiceHomeTabView(),
+      tabView:  ServiceHomeTabView(providerClass: providerClass),
     );
   }
 }
