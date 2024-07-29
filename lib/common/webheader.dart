@@ -1,61 +1,97 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
+import 'package:pwaohyes/utils/screensize.dart';
 
 class WebHeader extends StatelessWidget {
   const WebHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: white,
-      padding: const EdgeInsets.only(left: 46, right: 46),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            logo,
-            fit: BoxFit.contain,
-            width: 160,
-            height: 120,
-          ),
-          Row(
-            children: [
-              Row(
+    return ScreenSize(
+      mobileView: Container(
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+        decoration: const BoxDecoration(color: white),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Image.asset(
+                logo,
+                fit: BoxFit.fitWidth,
+              ),
+            ),
+            Expanded(
+              flex: 8,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Row(
-                      children: [
-                        const Icon(Icons.phone, color: primaryColor),
-                        Helper.allowWidth(10.0),
-                        const InkWell(
-                          // onTap: () => PWAInstall().promptInstall_(),
-                          child: Text(
-                            "Call +91 7034444303",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: primaryColor,
+                  const Text("Karukutty, Angamali"),
+                  Helper.allowWidth(5.0),
+                  const Icon(CupertinoIcons.chevron_down,
+                      color: black, size: 16),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      webView: Container(
+        color: white,
+        padding: const EdgeInsets.only(left: 46, right: 46),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              logo,
+              fit: BoxFit.contain,
+              width: 160,
+              height: 120,
+            ),
+            Row(
+              children: [
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {},
+                      child: Row(
+                        children: [
+                          const Icon(Icons.phone, color: primaryColor),
+                          Helper.allowWidth(10.0),
+                          const InkWell(
+                            // onTap: () => PWAInstall().promptInstall_(),
+                            child: Text(
+                              "Call +91 7034444303",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: primaryColor,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Helper.allowWidth(30),
-                  const Text("About Us"),
-                  Helper.allowWidth(20),
-                  const Text("Get Started"),
-                  Helper.allowWidth(20),
-                  const Text("Blog"),
-                  Helper.allowWidth(20),
-                ],
-              )
-            ],
-          )
-        ],
+                    Helper.allowWidth(30),
+                    const Text("About Us"),
+                    Helper.allowWidth(20),
+                    const Text("Get Started"),
+                    Helper.allowWidth(20),
+                    const Text("Blog"),
+                    Helper.allowWidth(20),
+                  ],
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

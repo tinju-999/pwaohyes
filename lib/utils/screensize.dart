@@ -7,7 +7,7 @@ class ScreenSize extends StatelessWidget {
       {super.key,
       required this.mobileView,
       required this.webView,
-      required this.tabView});
+       this.tabView});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class ScreenSize extends StatelessWidget {
       } else if (constraints.maxWidth < 1000) {
         return tabView!;
       } else {
-        return webView!;
+        return webView ?? Container();
       }
     });
   }

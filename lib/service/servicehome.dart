@@ -25,8 +25,8 @@ class _ServiceHomeState extends State<ServiceHome> {
   @override
   Widget build(BuildContext context) {
     return ScreenSize(
-      mobileView: const ServiceHomeMobileView(),
-      webView: ServiceHomeWebView(providerClass: providerClass,),
+      mobileView:  ServiceHomeMobileView(providerClass: providerClass),
+      webView: ServiceHomeWebView(providerClass: providerClass),
       tabView: const ServiceHomeTabView(),
     );
   }
