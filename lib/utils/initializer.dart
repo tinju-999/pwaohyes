@@ -1,12 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pwaohyes/booking/bookinghome.dart';
+import 'package:pwaohyes/model/bookingdatemodel.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 
 class Initializer {
-  static List bookingTimeSuggestions = [];
+  static DateTime now = DateTime.now();
+  static DateTime selectedServiceDate = now;
+  static DateTime selectedServiceTime = now;
+  static List<BookingDateTimeModel> bookingTimeSuggestions = [];
+  static List<BookingDateTimeModel> bookingDateSuggestions = [];
   static List chooseService = [
     {"title": "Installation", "value": "0"},
     {"title": "Repair", "value": "1"},

@@ -1,5 +1,10 @@
+// ignore_for_file: avoid_function_literals_in_foreach_calls
+
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:pwaohyes/model/bookingdatemodel.dart';
+import 'package:pwaohyes/utils/helper.dart';
+import 'package:pwaohyes/utils/initializer.dart';
 
 class ProviderClass extends ChangeNotifier {
   Timer? _timer;
@@ -42,6 +47,60 @@ class ProviderClass extends ChangeNotifier {
 
   chooseService(String id, int index) {
     _selectedServiceId = id;
+    notifyListeners();
+  }
+
+  void changeServiceTime(TimeOfDay value) {
+    Initializer.bookingTimeSuggestions.forEach((e) => e.isSelected = false);
+    if (!Initializer.bookingTimeSuggestions.any((e) {
+      if (e.date!.hour == value.hour && e.date!.minute == value.minute) {
+        e.isSelected = true;
+        return true;
+      } else {
+        e.isSelected = false;
+        return false;
+      }
+    })) {
+      Helper.showLog("haa");
+
+      Initializer.bookingTimeSuggestions.last = BookingDateTimeModel(
+        isSelected: true,
+        // date:
+        label: "${value.hour}:${value.minute}",
+      );
+    }
+    notifyListeners();
+  }
+
+  void selectServiceDate(DateTime? value) {
+    Initializer.bookingDateSuggestions.forEach((e) => e.isSelected = false);
+    var today = Initializer.bookingDateSuggestions[0].date;
+    var tomorrow = Initializer.bookingDateSuggestions[1].date;
+    if (isDatesEqual(value!, today)) {
+      Initializer.bookingDateSuggestions[0].isSelected = true;
+    } else if (isDatesEqual(value, tomorrow)) {
+      Initializer.bookingDateSuggestions[1].isSelected = true;
+    } else {
+      Initializer.bookingDateSuggestions[2].isSelected = true;
+    }
+    Initializer.selectedServiceDate = value;
+    notifyListeners();
+  }
+
+  bool isDatesEqual(DateTime value, DateTime? date) =>
+      value.year == date!.year &&
+      value.month == date.month &&
+      value.day == date.day;
+
+  selectServiceDateIndex(int index) {
+    Initializer.bookingDateSuggestions.forEach((e) => e.isSelected = false);
+    Initializer.bookingDateSuggestions[index].isSelected = true;
+    notifyListeners();
+  }
+
+  selectServiceTimeIndex(int index) {
+    Initializer.bookingTimeSuggestions.forEach((e) => e.isSelected = false);
+    Initializer.bookingTimeSuggestions[index].isSelected = true;
     notifyListeners();
   }
 }

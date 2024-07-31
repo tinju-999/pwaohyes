@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pwaohyes/main.dart';
+import 'package:pwaohyes/model/bookingdatemodel.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 
@@ -21,32 +22,40 @@ class Helper {
   }
 
   static setTimings() {
-    Initializer.bookingTimeSuggestions.clear();
     DateTime now = DateTime.now();
-    DateTime startingTime = getStartTime(now);
+    //
+    Initializer.bookingTimeSuggestions.clear();
+    Initializer.bookingDateSuggestions.clear();
+    //
+    Initializer.bookingDateSuggestions.addAll([
+      BookingDateTimeModel(
+        date: now,
+        label: "Today",
+        isSelected: true,
+      ),
+      BookingDateTimeModel(
+        date: now.add(const Duration(days: 1)),
+        label: "Tomorrow",
+        isSelected: false,
+      ),
+      BookingDateTimeModel(
+        date: now,
+        label: "Custom",
+        isSelected: false,
+      ),
+    ]);
+
+    // DateTime startingTime = getStartTime(now);
     DateTime endingTime = getEndingTime(now);
 
     if (now.isBefore(endingTime)) {
-        DateTime? date;
-        for (int i = 1; i <= 3; i++) {
-          if (i == 1) {
-            date =
-                DateTime(now.year, now.month, now.day, now.hour + i, 30, 0, 0);
-          } else {
-            if (date!.isBefore(endingTime)) {
-              date =
-                  DateTime(now.year, now.month, now.day, now.hour + i, 0, 0, 0);
-            } else {
-              break;
-            }
-          }
-          Initializer.bookingTimeSuggestions.add({
-            "label": Helper.setDateFormat(dateTime: date, format: "hh:mm a"),
-            "value": date,
-            "selected": i == 1 ? true : false,
-          });
-        }
-     
+      DateTime? date;
+      int diiference = endingTime.difference(now).inHours;
+      if (diiference >= 3) {
+        loopDates(diiference < 5 ? diiference : 5, date, now, endingTime);
+      } else {
+        loopDates(diiference, date, now, endingTime);
+      }
     } else {
       Helper.showLog('now.isBefore(endingTime)');
     }
@@ -226,5 +235,35 @@ class Helper {
       DateTime(now.year, now.month, now.day, 8, 0, 0, 0, 0);
 
   static DateTime getEndingTime(DateTime now) =>
-      DateTime(now.year, now.month, now.day, 15, 0, 0, 0, 0);
+      DateTime(now.year, now.month, now.day, 20, 0, 0, 0, 0);
+
+  static void loopDates(
+      int diiference, DateTime? date, DateTime now, DateTime endingTime) {
+    for (int i = 1; i <= diiference; i++) {
+      if (i == 1) {
+        date = DateTime(now.year, now.month, now.day, now.hour + i, 30, 0, 0);
+      } else {
+        if (date!.isBefore(endingTime)) {
+          date = DateTime(now.year, now.month, now.day, now.hour + i, 0, 0, 0);
+        } else {
+          break;
+        }
+      }
+      Initializer.bookingTimeSuggestions.add(
+        BookingDateTimeModel(
+          label: Helper.setDateFormat(dateTime: date, format: "hh:mm a"),
+          date: date,
+          isSelected: i == 1 ? true : false,
+        ),
+      );
+    }
+
+    Initializer.bookingTimeSuggestions.add(
+      BookingDateTimeModel(
+        label: "Select Time",
+        date: date,
+        isSelected: false,
+      ),
+    );
+  }
 }

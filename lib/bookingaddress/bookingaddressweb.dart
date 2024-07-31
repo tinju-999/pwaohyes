@@ -1,11 +1,14 @@
 import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pwaohyes/common/webfooter.dart';
 import 'package:pwaohyes/common/webheader.dart';
+import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
+import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 
 class BookingAddressWeb extends StatefulWidget {
   const BookingAddressWeb({super.key});
@@ -142,295 +145,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                       ],
                     ),
                     Helper.allowHeight(15),
-                    Expanded(
-                      child: Scrollbar(
-                        interactive: true,
-                        controller: yourScrollController,
-                        thumbVisibility: false,
-                        child: ListView(
-                          padding: const EdgeInsets.only(right: 26),
-                          controller: yourScrollController,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Text(
-                                  "Time & Date For Service",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Text(
-                                  "Choose a day and time for the service your booking",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey[400],
-                                      fontWeight: FontWeight.w100),
-                                ),
-                                SizedBox(
-                                    width: Helper.width / 4,
-                                    child: const Divider()),
-                                Helper.allowHeight(10),
-                                Container(
-                                  margin:
-                                      const EdgeInsets.only(left: 8, right: 18),
-                                  width: Helper.width / 3,
-                                  child: Wrap(
-                                    spacing: 8.0,
-                                    runSpacing: 3.0,
-                                    children: [
-                                      clickChip(
-                                        context: context,
-                                        title: "Today",
-                                        active: true,
-                                        needIcon: false,
-                                      ),
-                                      clickChip(
-                                        context: context,
-                                        title: "Tommorrow",
-                                        active: false,
-                                        needIcon: false,
-                                      ),
-                                      InkWell(
-                                        onTap: () => showBoardDateTimePicker(
-                                          context: context,
-                                          initialDate: _now,
-                                          minimumDate: _now,
-                                          // maximumDate: DateTime(_now.year + 1),
-                                          pickerType:
-                                              DateTimePickerType.datetime,
-                                          options: const BoardDateTimeOptions(
-                                            activeTextColor: white,
-                                            activeColor: primaryColor,
-                                            weekend: BoardPickerWeekendOptions(
-                                              saturdayColor: primaryColor,
-                                            ),
-                                          ),
-                                        ),
-                                        child: clickChip(
-                                          context: context,
-                                          title: "Select Date",
-                                          active: false,
-                                          needIcon: true,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Helper.allowHeight(10),
-                                Container(
-                                  margin:
-                                      const EdgeInsets.only(left: 8, right: 18),
-                                  width: Helper.width / 2.5,
-                                  child: Wrap(
-                                      spacing: 8.0,
-                                      runSpacing: 8.0,
-                                      children: List.generate(
-                                        Initializer
-                                            .bookingTimeSuggestions.length,
-                                        (index) => clickChip(
-                                          context: context,
-                                          title: Initializer
-                                                  .bookingTimeSuggestions[index]
-                                              ['label'],
-                                          active: Initializer
-                                                  .bookingTimeSuggestions[index]
-                                              ['selected'],
-                                          needIcon: false,
-                                        ),
-                                      )
-                                      // [
-
-                                      // InkWell(
-                                      //   onTap: () => showBoardDateTimePicker(
-                                      //     context: context,
-                                      //     initialDate: _now,
-                                      //     minimumDate: _now,
-                                      //     // maximumDate: DateTime(_now.year + 1),
-                                      //     pickerType:
-                                      //         DateTimePickerType.datetime,
-                                      //     options: const BoardDateTimeOptions(
-                                      //       activeTextColor: white,
-                                      //       activeColor: primaryColor,
-                                      //       weekend: BoardPickerWeekendOptions(
-                                      //         saturdayColor: primaryColor,
-                                      //       ),
-                                      //     ),
-                                      //   ),
-                                      //   child: clickChip(
-                                      //     context: context,
-                                      //     title: "Select Time",
-                                      //     active: false,
-                                      //     needIcon: true,
-                                      //   ),
-                                      // )
-                                      // ],
-                                      ),
-                                ),
-                              ],
-                            ),
-                            Helper.allowHeight(30),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Text(
-                                  "Description",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                SizedBox(
-                                    width: Helper.width / 4,
-                                    child: const Divider()),
-                                Helper.allowHeight(10),
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 120),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          "Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam eu nibh elementum, accumsan ona neque ac, aliquet nunc. In eu ipsum fringilla, accumsan purus vel, pellentesque risus. Vivamus vehicula nl purus at eros interdum, in dignissim nullaInterdum et malesuada fames ac ante ipsum primis in faucibus. Etiam eu nibh elementum, accumsan ona neque.",
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Helper.allowHeight(15),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Expanded(
-                                  flex: 4,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Text(
-                                        "Included",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      Helper.allowHeight(5),
-                                      const Divider(),
-                                      Helper.allowHeight(5),
-                                      Column(
-                                        children: List.generate(
-                                            4,
-                                            (index) => Column(
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.check,
-                                                          color: Colors.green,
-                                                        ),
-                                                        Helper.allowWidth(30),
-                                                        const Flexible(
-                                                          child: Text(
-                                                            "Reloaded 1 of 850 libraries in 832ms (compile: 72 ms, reload: 228 ms, reassemble: 306 ms).",
-                                                            style: TextStyle(
-                                                                fontSize: 14),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    if (index != 8)
-                                                      Helper.allowHeight(5.0)
-                                                  ],
-                                                )),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Helper.allowWidth(30),
-                                Expanded(
-                                  flex: 4,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Text(
-                                        "Excluded",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      Helper.allowHeight(5),
-                                      const Divider(),
-                                      Helper.allowHeight(5),
-                                      Column(
-                                        children: List.generate(
-                                            3,
-                                            (index) => Column(
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.close_outlined,
-                                                          color: Colors.red,
-                                                        ),
-                                                        Helper.allowWidth(30),
-                                                        const Flexible(
-                                                          child: Text(
-                                                            "Reloaded 1 of 850 libraries in 832ms (compile: 72 ms, reload: 228 ms, reassemble: 306 ms).",
-                                                            style: TextStyle(
-                                                                fontSize: 14),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    if (index != 8)
-                                                      Helper.allowHeight(5.0)
-                                                  ],
-                                                )),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
+                    mainView(context),
                   ],
                 )),
           ),
@@ -438,6 +153,382 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
       ),
     );
   }
+
+  Widget mainView(BuildContext context) => Expanded(
+        child: Scrollbar(
+          interactive: true,
+          controller: yourScrollController,
+          thumbVisibility: false,
+          child: ListView(
+            padding: const EdgeInsets.only(right: 26),
+            controller: yourScrollController,
+            children: [
+              Consumer<ProviderClass>(
+                builder: (context, value, child) => Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Time & Date For Service",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      "Choose a day and time for the service your booking",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[400],
+                          fontWeight: FontWeight.w100),
+                    ),
+                    SizedBox(width: Helper.width / 4, child: const Divider()),
+                    Helper.allowHeight(10),
+                    Container(
+                      margin: const EdgeInsets.only(left: 8, right: 18),
+                      width: Helper.width / 3,
+                      child: Wrap(
+                        spacing: 8.0,
+                        runSpacing: 8.0,
+                        children: List.generate(
+                            Initializer.bookingDateSuggestions.length,
+                            (index) => Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    index !=
+                                            Initializer.bookingDateSuggestions
+                                                    .length -
+                                                1
+                                        ? InkWell(
+                                            onTap: () => Initializer
+                                                .providerClass
+                                                ?.selectServiceDateIndex(index),
+                                            child: clickChip(
+                                              context: context,
+                                              title: Initializer
+                                                  .bookingDateSuggestions[index]
+                                                  .label,
+                                              active: Initializer
+                                                  .bookingDateSuggestions[index]
+                                                  .isSelected,
+                                              needIcon: false,
+                                            ))
+                                        : InkWell(
+                                            onTap: () => showDatePicker(
+                                              context: context,
+                                              initialDate: _now,
+                                              firstDate: _now,
+                                              builder: (context, child) =>
+                                                  Theme(
+                                                      data: ThemeData.light()
+                                                          .copyWith(
+                                                        primaryColor:
+                                                            primaryColor,
+                                                        colorScheme: ColorScheme.light(
+                                                            primary:
+                                                                primaryColor,
+                                                            secondary: const Color(
+                                                                    0xffF46523)
+                                                                .withOpacity(
+                                                                    0.1)),
+                                                      ),
+                                                      child: child!),
+                                              lastDate: DateTime(_now.year + 2),
+                                            ).then((value) {
+                                              if (value != null) {
+                                                Initializer.providerClass
+                                                    ?.selectServiceDate(value);
+                                              }
+                                            }),
+                                            child: clickChip(
+                                              context: context,
+                                              title: Initializer
+                                                      .bookingDateSuggestions[
+                                                          index]
+                                                      .isSelected!
+                                                  ? Helper.setDateFormat(
+                                                      dateTime: Initializer
+                                                          .bookingDateSuggestions[
+                                                              index]
+                                                          .date,
+                                                      format: "dd/MM/yyyy")
+                                                  : "Select Date",
+                                              active: Initializer
+                                                  .bookingDateSuggestions[index]
+                                                  .isSelected,
+                                              needIcon: true,
+                                            ),
+                                          )
+                                  ],
+                                )),
+                      ),
+                    ),
+                    Helper.allowHeight(10),
+                    Container(
+                      margin: const EdgeInsets.only(left: 8, right: 18),
+                      width: Helper.width / 2,
+                      child: Wrap(
+                          spacing: 8.0,
+                          runSpacing: 8.0,
+                          children: List.generate(
+                            Initializer.bookingTimeSuggestions.length,
+                            (index) => Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                index !=
+                                        Initializer
+                                                .bookingTimeSuggestions.length -
+                                            1
+                                    ? InkWell(
+                                        onTap: () => Initializer.providerClass
+                                            ?.selectServiceTimeIndex(index),
+                                        child: clickChip(
+                                          context: context,
+                                          title: Initializer
+                                              .bookingTimeSuggestions[index]
+                                              .label,
+                                          active: Initializer
+                                              .bookingTimeSuggestions[index]
+                                              .isSelected,
+                                          needIcon: false,
+                                        ),
+                                      )
+                                    : InkWell(
+                                        onTap: () => showTimePicker(
+                                          context: context,
+                                          builder: (context, child) => Theme(
+                                              data: ThemeData.light().copyWith(
+                                                primaryColor: primaryColor,
+                                                colorScheme: ColorScheme.light(
+                                                    primary: primaryColor,
+                                                    onSecondary: primaryColor,
+                                                    secondary:
+                                                        const Color(0xffF46523)
+                                                            .withOpacity(0.1)),
+                                              ),
+                                              child: child!),
+                                          initialTime: TimeOfDay(
+                                              hour: _now.hour,
+                                              minute: _now.minute),
+                                        ).then((value) {
+                                          if (value != null) {
+                                            if (value.hour <= 20 &&
+                                                value.hour >= 8) {
+                                              Initializer.providerClass
+                                                  ?.changeServiceTime(value);
+                                            } else {
+                                              showInvalidTime(context);
+                                            }
+                                          }
+                                        }),
+                                        child: clickChip(
+                                          context: context,
+                                          title: Initializer
+                                              .bookingTimeSuggestions[index]
+                                              .label,
+                                          active: Initializer
+                                              .bookingTimeSuggestions[index]
+                                              .isSelected,
+                                          needIcon: true,
+                                        ),
+                                      )
+                              ],
+                            ),
+                          )
+                          // [
+
+                          // InkWell(
+                          //   onTap: () => showBoardDateTimePicker(
+                          //     context: context,
+                          //     initialDate: _now,
+                          //     minimumDate: _now,
+                          //     // maximumDate: DateTime(_now.year + 1),
+                          //     pickerType:
+                          //         DateTimePickerType.datetime,
+                          //     options: const BoardDateTimeOptions(
+                          //       activeTextColor: white,
+                          //       activeColor: primaryColor,
+                          //       weekend: BoardPickerWeekendOptions(
+                          //         saturdayColor: primaryColor,
+                          //       ),
+                          //     ),
+                          //   ),
+                          //   child: clickChip(
+                          //     context: context,
+                          //     title: "Select Time",
+                          //     active: false,
+                          //     needIcon: true,
+                          //   ),
+                          // )
+                          // ],
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              Helper.allowHeight(30),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "Description",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(width: Helper.width / 4, child: const Divider()),
+                  Helper.allowHeight(10),
+                  const Padding(
+                    padding: EdgeInsets.only(right: 120),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            "Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam eu nibh elementum, accumsan ona neque ac, aliquet nunc. In eu ipsum fringilla, accumsan purus vel, pellentesque risus. Vivamus vehicula nl purus at eros interdum, in dignissim nullaInterdum et malesuada fames ac ante ipsum primis in faucibus. Etiam eu nibh elementum, accumsan ona neque.",
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Helper.allowHeight(15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          "Included",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Helper.allowHeight(5),
+                        const Divider(),
+                        Helper.allowHeight(5),
+                        Column(
+                          children: List.generate(
+                              4,
+                              (index) => Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(
+                                            Icons.check,
+                                            color: Colors.green,
+                                          ),
+                                          Helper.allowWidth(30),
+                                          const Flexible(
+                                            child: Text(
+                                              "Reloaded 1 of 850 libraries in 832ms (compile: 72 ms, reload: 228 ms, reassemble: 306 ms).",
+                                              style: TextStyle(fontSize: 14),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      if (index != 8) Helper.allowHeight(5.0)
+                                    ],
+                                  )),
+                        )
+                      ],
+                    ),
+                  ),
+                  Helper.allowWidth(30),
+                  Expanded(
+                    flex: 4,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          "Excluded",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Helper.allowHeight(5),
+                        const Divider(),
+                        Helper.allowHeight(5),
+                        Column(
+                          children: List.generate(
+                              3,
+                              (index) => Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(
+                                            Icons.close_outlined,
+                                            color: Colors.red,
+                                          ),
+                                          Helper.allowWidth(30),
+                                          const Flexible(
+                                            child: Text(
+                                              "Reloaded 1 of 850 libraries in 832ms (compile: 72 ms, reload: 228 ms, reassemble: 306 ms).",
+                                              style: TextStyle(fontSize: 14),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      if (index != 8) Helper.allowHeight(5.0)
+                                    ],
+                                  )),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+
+  void showInvalidTime(BuildContext context) => showCupertinoDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+            title: const Text("Oops! Time Out of Bounds"),
+            content: const Text(
+                "Please choose a time between 8:00 AM and 8:00 PM to proceed with your booking"),
+            actions: [
+              CupertinoButton(
+                child: const Text(
+                  "Ok",
+                  style: TextStyle(color: primaryColor),
+                ),
+                onPressed: () => Helper.pop(),
+              )
+            ],
+          ));
 }
 
 clickChip({
@@ -466,10 +557,10 @@ clickChip({
           ),
           if (needIcon!) Helper.allowWidth(5.0),
           if (needIcon)
-            const Icon(
-              CupertinoIcons.chevron_down,
-              color: primaryColor,
-              size: 16,
+            Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: active ? white : primaryColor,
+              size: 14,
             )
         ],
       ),
