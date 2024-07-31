@@ -7,9 +7,11 @@ class ProviderClass extends ChangeNotifier {
   int get remainingTime => _remainingTime;
   // bool? _isTimerRemaining = false;
   bool get isTimerRunning => _remainingTime > 0;
-
   bool? _showSubServices = false;
   bool? get showSubServices => _showSubServices;
+
+  String _selectedServiceId = '0';
+  String get selectedServiceId => _selectedServiceId;
 
   CombinedData get combineData => CombinedData(
       remainingTime: _remainingTime, isTimerRunning: isTimerRunning);
@@ -35,6 +37,11 @@ class ProviderClass extends ChangeNotifier {
 
   showSubSerives(bool? value) {
     _showSubServices = value;
+    notifyListeners();
+  }
+
+  chooseService(String id, int index) {
+    _selectedServiceId = id;
     notifyListeners();
   }
 }

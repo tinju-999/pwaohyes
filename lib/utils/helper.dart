@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pwaohyes/main.dart';
 import 'package:pwaohyes/utils/constants.dart';
+import 'package:pwaohyes/utils/initializer.dart';
 
 class Helper {
   static FocusNode? focusNode;
@@ -17,6 +18,38 @@ class Helper {
   static String? appVersion;
   static allowHeight(double height) {
     return SizedBox(height: height);
+  }
+
+  static setTimings() {
+    Initializer.bookingTimeSuggestions.clear();
+    DateTime now = DateTime.now();
+    DateTime startingTime = getStartTime(now);
+    DateTime endingTime = getEndingTime(now);
+
+    if (now.isBefore(endingTime)) {
+        DateTime? date;
+        for (int i = 1; i <= 3; i++) {
+          if (i == 1) {
+            date =
+                DateTime(now.year, now.month, now.day, now.hour + i, 30, 0, 0);
+          } else {
+            if (date!.isBefore(endingTime)) {
+              date =
+                  DateTime(now.year, now.month, now.day, now.hour + i, 0, 0, 0);
+            } else {
+              break;
+            }
+          }
+          Initializer.bookingTimeSuggestions.add({
+            "label": Helper.setDateFormat(dateTime: date, format: "hh:mm a"),
+            "value": date,
+            "selected": i == 1 ? true : false,
+          });
+        }
+     
+    } else {
+      Helper.showLog('now.isBefore(endingTime)');
+    }
   }
 
   static showLog(msg)
@@ -188,4 +221,10 @@ class Helper {
       return 'Good evening';
     }
   }
+
+  static DateTime getStartTime(DateTime now) =>
+      DateTime(now.year, now.month, now.day, 8, 0, 0, 0, 0);
+
+  static DateTime getEndingTime(DateTime now) =>
+      DateTime(now.year, now.month, now.day, 15, 0, 0, 0, 0);
 }

@@ -38,8 +38,7 @@ class ServicePageWeb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    Container(
+    return Container(
       padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 18),
       color: white,
       child: Row(
@@ -64,14 +63,14 @@ class ServicePageWeb extends StatelessWidget {
                   //   // )
                   // ],
                 ),
-                child: Image.network(
-                  'https://scontent-maa2-2.xx.fbcdn.net/v/t39.30808-6/446789762_474325451777406_8073053602585418142_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=0uassRk9BIMQ7kNvgEfGkJR&_nc_ht=scontent-maa2-2.xx&oh=00_AYA341o2CUmQEVx6jR2H_v8v2SWlzD2CDUWDkMon1VS5uA&oe=66A7C864',
-                  fit: BoxFit.fitHeight,
+                child: Image.asset(
+                  'assets/images/bg2.jpeg',
+                  fit: BoxFit.contain,
                 )),
           ),
           // Helper.allowWidth(30),
           Expanded(
-            flex: 4,
+            flex: 5,
             child: Container(
               height: Helper.height / 1.5,
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
@@ -81,10 +80,25 @@ class ServicePageWeb extends StatelessWidget {
               child: Selector<ProviderClass, bool>(
                 selector: (p0, p1) => p1.showSubServices!,
                 builder: (context, value, child) => CommonAnimationSwitcher(
-                  switchInCurve: Curves.linear,
+                  duration: const Duration(milliseconds: 600),
+                  // transitionBuilder: (child, animation) {
+                  //   final offsetAnimation = Tween<Offset>(
+                  //     begin: Offset(value ? 1 : -1,
+                  //         0), // Controls the direction of the animation
+                  //     end: const Offset(0, 0),
+                  //   ).animate(animation);
+                  //   return SlideTransition(
+                  //     position: offsetAnimation,
+                  //     child: child,
+                  //   );
+                  // },
+                  switchInCurve: Curves.easeInExpo,
+                  switchOutCurve: Curves.easeInOut,
                   child: value
-                      ? Initializer.ohSubServices(context, Initializer.subServices, providerClass)
-                      : Initializer.ohYesServices(context, Initializer.services, providerClass),
+                      ? Initializer.ohSubServices(
+                          context, Initializer.subServices, providerClass)
+                      : Initializer.ohYesServices(
+                          context, Initializer.services, providerClass),
                 ),
               ),
             ),
@@ -229,8 +243,7 @@ class ServicePageWeb extends StatelessWidget {
         ),
       );
 
-  ohYesServices(BuildContext context, List<String> services) => 
-  Column(
+  ohYesServices(BuildContext context, List<String> services) => Column(
         key: const ValueKey('ohYesServices'),
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -304,6 +317,4 @@ class ServicePageWeb extends StatelessWidget {
           )
         ],
       );
-
-
 }

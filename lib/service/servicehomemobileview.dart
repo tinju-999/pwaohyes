@@ -30,9 +30,14 @@ class ServiceHomeMobileView extends StatelessWidget {
                 switchOutCurve: Curves.elasticOut,
                 child: Selector<ProviderClass, bool>(
                   selector: (p0, p1) => p1.showSubServices!,
-                  builder: (context, value, child) => value
-                      ? ohMobileSubServices(context, Initializer.subServices)
-                      : ohMobileYesServices(context, Initializer.services),
+                  builder: (context, value, child) => CommonAnimationSwitcher(
+                    duration: const Duration(milliseconds: 600),
+                    switchInCurve: Curves.easeInExpo,
+                    switchOutCurve: Curves.easeInOut,
+                    child: value
+                        ? ohMobileSubServices(context, Initializer.subServices)
+                        : ohMobileYesServices(context, Initializer.services),
+                  ),
                 ),
               ),
             ),
@@ -50,13 +55,29 @@ class ServiceHomeMobileView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "Sub Serivces",
-            style: TextStyle(
-              fontFamily: quicksand,
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-            ),
+          Stack(
+            children: [
+              const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Sub Serivces",
+                  style: TextStyle(
+                    fontFamily: quicksand,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                    onPressed: () => providerClass!.showSubSerives(false),
+                    icon: const Icon(
+                      CupertinoIcons.clear,
+                      color: black,
+                    )),
+              )
+            ],
           ),
           // Helper.allowHeight(10),
           Helper.allowHeight(5),
@@ -69,7 +90,7 @@ class ServiceHomeMobileView extends StatelessWidget {
           Helper.allowHeight(30),
           Flexible(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.only(left: 18, right: 18),
+              // padding: const EdgeInsets.only(left: 18, right: 18),
               child: Center(
                 child: Wrap(
                   alignment: WrapAlignment.center,
@@ -78,7 +99,7 @@ class ServiceHomeMobileView extends StatelessWidget {
                   children: List.generate(
                       subServices.length,
                       (index) => InkWell(
-                            onTap: () => providerClass!.showSubSerives(false),
+                            onTap: () => providerClass!.showSubSerives(true),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -101,7 +122,7 @@ class ServiceHomeMobileView extends StatelessWidget {
                                 SizedBox(
                                   width: 120,
                                   child: Text(
-                                    "${subServices[index]} $index",
+                                    subServices[index],
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -118,7 +139,6 @@ class ServiceHomeMobileView extends StatelessWidget {
           )
         ],
       );
-
   ohMobileYesServices(BuildContext context, List<String> services) => Column(
         key: const ValueKey<int>(2),
         mainAxisAlignment: MainAxisAlignment.center,
