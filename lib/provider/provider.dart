@@ -51,13 +51,27 @@ class ProviderClass extends ChangeNotifier {
   }
 
   void changeServiceTime(TimeOfDay value) {
+    DateTime selectedDate = Initializer.selectedServiceDate;
+    Initializer.selectedServiceTime = DateTime(
+        selectedDate.year,
+        selectedDate.month,
+        selectedDate.day,
+        value.hour,
+        value.minute,
+        0,
+        0,
+        0);
     Initializer.bookingTimeSuggestions.forEach((e) => e.isSelected = false);
     if (!Initializer.bookingTimeSuggestions.any((e) {
-      if (e.date!.hour == value.hour && e.date!.minute == value.minute) {
-        e.isSelected = true;
-        return true;
+      if (e.date != null) {
+        if (e.date!.hour == value.hour && e.date!.minute == value.minute) {
+          e.isSelected = true;
+          return true;
+        } else {
+          e.isSelected = false;
+          return false;
+        }
       } else {
-        e.isSelected = false;
         return false;
       }
     })) {
@@ -65,14 +79,16 @@ class ProviderClass extends ChangeNotifier {
 
       Initializer.bookingTimeSuggestions.last = BookingDateTimeModel(
         isSelected: true,
-        // date:
-        label: "${value.hour}:${value.minute}",
+        date: Initializer.selectedServiceTime,
+        label: Helper.setDateFormat(
+            dateTime: Initializer.selectedServiceTime, format: "hh:mm a"),
       );
     }
     notifyListeners();
   }
 
   void selectServiceDate(DateTime? value) {
+    Helper.showLog("Service date selected");
     Initializer.bookingDateSuggestions.forEach((e) => e.isSelected = false);
     var today = Initializer.bookingDateSuggestions[0].date;
     var tomorrow = Initializer.bookingDateSuggestions[1].date;
@@ -84,6 +100,7 @@ class ProviderClass extends ChangeNotifier {
       Initializer.bookingDateSuggestions[2].isSelected = true;
     }
     Initializer.selectedServiceDate = value;
+    Helper.setTimings(Initializer.selectedServiceDate);
     notifyListeners();
   }
 

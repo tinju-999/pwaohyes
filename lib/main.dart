@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
+import 'package:pwaohyes/booking/bookinghome.dart';
 import 'package:pwaohyes/bookingaddress/bookingaddresshome.dart';
 import 'package:pwaohyes/provider/provider.dart';
+import 'package:pwaohyes/service/servicehome.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 
@@ -47,7 +49,7 @@ class MyApp extends StatelessWidget {
             home: Builder(
               builder: (context) {
                 Initializer.providerClass = context.read<ProviderClass>();
-                return const BookingAddress();
+                return const ServiceHome();
               },
             )
             //

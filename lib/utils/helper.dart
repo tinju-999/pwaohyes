@@ -21,10 +21,10 @@ class Helper {
     return SizedBox(height: height);
   }
 
-  static setTimings() {
+  static setDateAndTimings() {
     DateTime now = DateTime.now();
     //
-    Initializer.bookingTimeSuggestions.clear();
+
     Initializer.bookingDateSuggestions.clear();
     //
     Initializer.bookingDateSuggestions.addAll([
@@ -45,20 +45,7 @@ class Helper {
       ),
     ]);
 
-    // DateTime startingTime = getStartTime(now);
-    DateTime endingTime = getEndingTime(now);
-
-    if (now.isBefore(endingTime)) {
-      DateTime? date;
-      int diiference = endingTime.difference(now).inHours;
-      if (diiference >= 3) {
-        loopDates(diiference < 5 ? diiference : 5, date, now, endingTime);
-      } else {
-        loopDates(diiference, date, now, endingTime);
-      }
-    } else {
-      Helper.showLog('now.isBefore(endingTime)');
-    }
+    setTimings(now);
   }
 
   static showLog(msg)
@@ -265,5 +252,23 @@ class Helper {
         isSelected: false,
       ),
     );
+  }
+
+  static void setTimings(DateTime now) {
+    Initializer.bookingTimeSuggestions.clear();
+    // DateTime startingTime = getStartTime(now);
+    DateTime endingTime = getEndingTime(now);
+
+    if (now.isBefore(endingTime)) {
+      DateTime? date;
+      int diiference = endingTime.difference(now).inHours;
+      if (diiference >= 3) {
+        loopDates(diiference < 3 ? diiference : 3, date, now, endingTime);
+      } else {
+        loopDates(diiference, date, now, endingTime);
+      }
+    } else {
+      Helper.showLog('now.isBefore(endingTime)');
+    }
   }
 }

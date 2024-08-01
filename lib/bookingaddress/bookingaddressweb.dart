@@ -1,4 +1,3 @@
-import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +7,6 @@ import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
-import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 
 class BookingAddressWeb extends StatefulWidget {
   const BookingAddressWeb({super.key});
@@ -20,7 +18,7 @@ class BookingAddressWeb extends StatefulWidget {
 class _BookingAddressWebState extends State<BookingAddressWeb> {
   @override
   void initState() {
-    Helper.setTimings();
+    Helper.setDateAndTimings();
     super.initState();
   }
 
@@ -185,7 +183,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                     Helper.allowHeight(10),
                     Container(
                       margin: const EdgeInsets.only(left: 8, right: 18),
-                      width: Helper.width / 3,
+                      width: Helper.width / 2.5,
                       child: Wrap(
                         spacing: 8.0,
                         runSpacing: 8.0,
@@ -236,6 +234,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                                                       child: child!),
                                               lastDate: DateTime(_now.year + 2),
                                             ).then((value) {
+                                              value
                                               if (value != null) {
                                                 Initializer.providerClass
                                                     ?.selectServiceDate(value);
@@ -267,7 +266,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                     Helper.allowHeight(10),
                     Container(
                       margin: const EdgeInsets.only(left: 8, right: 18),
-                      width: Helper.width / 2,
+                      width: Helper.width / 1.5,
                       child: Wrap(
                           spacing: 8.0,
                           runSpacing: 8.0,
@@ -299,6 +298,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                                     : InkWell(
                                         onTap: () => showTimePicker(
                                           context: context,
+                                          initialEntryMode: TimePickerEntryMode.dial,
                                           builder: (context, child) => Theme(
                                               data: ThemeData.light().copyWith(
                                                 primaryColor: primaryColor,
@@ -311,16 +311,25 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                                               ),
                                               child: child!),
                                           initialTime: TimeOfDay(
-                                              hour: _now.hour,
-                                              minute: _now.minute),
+                                            hour: DateTime.now().hour,
+                                            minute: DateTime.now().minute,
+                                          ),
                                         ).then((value) {
+                                          Initializer.now = DateTime.now();
                                           if (value != null) {
                                             if (value.hour <= 20 &&
                                                 value.hour >= 8) {
-                                              Initializer.providerClass
-                                                  ?.changeServiceTime(value);
+                                              TimeOfDay adjustedTime =
+                                                  adjustTime(
+                                                      Initializer.now, value);
+                                              Initializer.providerClass!
+                                                  .changeServiceTime(
+                                                      adjustedTime);
                                             } else {
-                                              showInvalidTime(context);
+                                              showInvalidTime(
+                                                  context,
+                                                  "Oops! Time Out of Bounds",
+                                                  "Please choose a time between 8:00 AM and 8:00 PM to proceed with your booking");
                                             }
                                           }
                                         }),
@@ -512,23 +521,64 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
         ),
       );
 
-  void showInvalidTime(BuildContext context) => showCupertinoDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (context) => CupertinoAlertDialog(
-            title: const Text("Oops! Time Out of Bounds"),
-            content: const Text(
-                "Please choose a time between 8:00 AM and 8:00 PM to proceed with your booking"),
-            actions: [
-              CupertinoButton(
-                child: const Text(
-                  "Ok",
-                  style: TextStyle(color: primaryColor),
-                ),
-                onPressed: () => Helper.pop(),
-              )
-            ],
-          ));
+  void showInvalidTime(BuildContext context, String title, String content) =>
+      showCupertinoDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+                title: Text(title),
+                content: Text(content),
+                actions: [
+                  CupertinoButton(
+                    child: const Text(
+                      "Ok",
+                      style: TextStyle(color: primaryColor),
+                    ),
+                    onPressed: () => Helper.pop(),
+                  )
+                ],
+              ));
+
+  TimeOfDay adjustTime(DateTime currentTime, TimeOfDay selectedTime) {
+    int minute = selectedTime.minute;
+    int hour = selectedTime.hour;
+
+    // Round to the nearest 30-minute interval
+    if (minute > 0 && minute <= 30) {
+      minute = 30;
+    } else if (minute > 30) {
+      minute = 0;
+      hour = (hour + 1) % 24;
+    }
+
+    TimeOfDay adjustedTime = TimeOfDay(hour: hour, minute: minute);
+
+    // Ensure the adjusted time is not before the current time
+    while (adjustedTime.hour < currentTime.hour ||
+        (adjustedTime.hour == currentTime.hour &&
+            adjustedTime.minute <= currentTime.minute)) {
+      minute = adjustedTime.minute;
+      hour = adjustedTime.hour;
+
+      if (minute == 0) {
+        minute = 30;
+      } else {
+        minute = 0;
+        hour = (hour + 1) % 24;
+      }
+
+      adjustedTime = TimeOfDay(hour: hour, minute: minute);
+    }
+
+    // Ensure the time is between 8:00 AM and 8:00 PM
+    if (adjustedTime.hour < 8) {
+      adjustedTime = const TimeOfDay(hour: 8, minute: 0);
+    } else if (adjustedTime.hour >= 20 && adjustedTime.minute > 0) {
+      adjustedTime = const TimeOfDay(hour: 20, minute: 0);
+    }
+
+    return adjustedTime;
+  }
 }
 
 clickChip({
