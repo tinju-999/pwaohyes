@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:pwaohyes/bookingaddress/bookingaddaddresswebpart2.dart';
 import 'package:pwaohyes/common/webfooter.dart';
 import 'package:pwaohyes/common/webheader.dart';
 import 'package:pwaohyes/provider/provider.dart';
@@ -30,9 +32,14 @@ class _BookingAddressWebState extends State<BookingAddressWeb> {
           mainAxisSize: MainAxisSize.max,
           children: [
             const WebHeader(),
-            Helper.allowHeight(20),
-            const BookingAddressWebPage(),
-            Helper.allowHeight(20),
+            Helper.allowHeight(10),
+            Selector<ProviderClass, bool>(
+              selector: (p0, p1) => p1.isAddAddressVisible!,
+              builder: (context, value, child) => value
+                  ? const AddAddressPageWeb()
+                  : const BookingAddressWebPage(),
+            ),
+            Helper.allowHeight(10),
             const WebFooter(),
           ],
         ),
@@ -56,44 +63,29 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 18),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
       color: white,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
         children: [
-          Expanded(
-            flex: 3,
-            child: Container(
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  color: primaryColor,
-                  borderRadius: BorderRadius.circular(18.0),
-                ),
-                child: Image.asset(
-                  'assets/images/bg2.jpeg',
-                  fit: BoxFit.fitHeight,
-                )),
-          ),
-          Helper.allowWidth(30),
-          Expanded(
-            flex: 8,
-            child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 18, horizontal: 36),
-                clipBehavior: Clip.hardEdge,
-                height: Helper.height / 1.3,
-                decoration: BoxDecoration(
-                  // color: primaryColor,
-                  borderRadius: BorderRadius.circular(18.0),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+          const Align(alignment: Alignment.centerLeft, child: BackButton()),
+          // Helper.allowHeight(15),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 8,
+                child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 18, horizontal: 36),
+                    clipBehavior: Clip.hardEdge,
+                    height: Helper.height / 1.3,
+                    decoration: BoxDecoration(
+                      // color: primaryColor,
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         const Column(
@@ -128,24 +120,103 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                             ),
                           ],
                         ),
-                        SizedBox(
-                          width: Helper.width / 6,
-                          child: MaterialButton(
-                            onPressed: () => {},
-                            elevation: 5.0,
-                            color: primaryColor,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 18, horizontal: 14),
-                            child: const Text("Confirm Booking",
-                                style: TextStyle(color: white)),
-                          ),
-                        ),
+                        Helper.allowHeight(15),
+                        mainView(context),
                       ],
+                    )),
+              ),
+              Helper.allowWidth(10),
+              Expanded(
+                flex: 6,
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(8.0)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 28, vertical: 26),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            // onTap: () async => await launchUrl(
+                            //     Uri.parse('https://ohyesworld.com/')),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                  color: white,
+                                  border: Border.all(color: primaryColor),
+                                  borderRadius: BorderRadius.circular(
+                                    8.0,
+                                  )),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.discount_rounded,
+                                    color: primaryColor,
+                                    size: 16,
+                                  ),
+                                  Helper.allowWidth(10),
+                                  const Text(
+                                    "Coupon & Promo code",
+                                    style: TextStyle(
+                                        fontSize: 12, color: primaryColor),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Helper.allowHeight(10),
+                          const Text(
+                            "Payment Summary",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 22),
+                          ),
+                          Helper.allowHeight(10),
+                          amountView("Total Amount", "- Rs 199"),
+                          amountView("Membership Offer", "- Rs 99"),
+                          amountView("Coupon & Promo Code", "Rs 39"),
+                          amountView("Platform Fee", "Rs 39"),
+                          Helper.allowHeight(20),
+                          const Divider(),
+                          amountView("Total", "Rs 901"),
+                          Helper.allowHeight(30),
+                          const Text(
+                            "You have Saved ₹ 298 on this bill",
+                            style: TextStyle(color: primaryColor),
+                          )
+                        ],
+                      ),
                     ),
-                    Helper.allowHeight(15),
-                    mainView(context),
+                    Helper.allowHeight(10),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(8.0)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 28, vertical: 26),
+                      child: const Text(
+                          "Note If you cancelled within 1 hour of placing your service a 100% refund will be issued. No refund for cancellation made after 1 hour."),
+                    )
                   ],
-                )),
+                ),
+                // Container(
+                //     clipBehavior: Clip.hardEdge,
+                //     decoration: BoxDecoration(
+                //       color: primaryColor,
+                //       borderRadius: BorderRadius.circular(18.0),
+                //     ),
+                //     child: Image.asset(
+                //       'assets/images/bg2.jpeg',
+                //       fit: BoxFit.fitHeight,
+                //     )),
+              ),
+            ],
           ),
         ],
       ),
@@ -158,7 +229,6 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
           controller: yourScrollController,
           thumbVisibility: false,
           child: ListView(
-            padding: const EdgeInsets.only(right: 26),
             controller: yourScrollController,
             children: [
               Consumer<ProviderClass>(
@@ -201,7 +271,11 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                                         ? InkWell(
                                             onTap: () => Initializer
                                                 .providerClass
-                                                ?.selectServiceDateIndex(index),
+                                                ?.selectServiceDateIndex(
+                                                    index,
+                                                    Initializer
+                                                            .bookingDateSuggestions[
+                                                        index]),
                                             child: clickChip(
                                               context: context,
                                               title: Initializer
@@ -234,7 +308,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                                                       child: child!),
                                               lastDate: DateTime(_now.year + 2),
                                             ).then((value) {
-                                              value
+                                              // value
                                               if (value != null) {
                                                 Initializer.providerClass
                                                     ?.selectServiceDate(value);
@@ -298,7 +372,8 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                                     : InkWell(
                                         onTap: () => showTimePicker(
                                           context: context,
-                                          initialEntryMode: TimePickerEntryMode.dial,
+                                          initialEntryMode:
+                                              TimePickerEntryMode.dial,
                                           builder: (context, child) => Theme(
                                               data: ThemeData.light().copyWith(
                                                 primaryColor: primaryColor,
@@ -384,138 +459,228 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    "Description",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
+                  const Text("Service Address",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   SizedBox(width: Helper.width / 4, child: const Divider()),
                   Helper.allowHeight(10),
-                  const Padding(
-                    padding: EdgeInsets.only(right: 120),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 120),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Flexible(
-                          child: Text(
-                            "Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam eu nibh elementum, accumsan ona neque ac, aliquet nunc. In eu ipsum fringilla, accumsan purus vel, pellentesque risus. Vivamus vehicula nl purus at eros interdum, in dignissim nullaInterdum et malesuada fames ac ante ipsum primis in faucibus. Etiam eu nibh elementum, accumsan ona neque.",
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(fontSize: 14),
+                        InkWell(
+                          onTap: () => Initializer.providerClass
+                              ?.addAddressVisibility(true),
+                          child: addressCustomfield(
+                            context,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                const Icon(CupertinoIcons.add,
+                                    color: primaryColor),
+                                Helper.allowWidth(15),
+                                const Text(
+                                  'ADD A NEW ADDRESS',
+                                  style: TextStyle(
+                                    color: primaryColor,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
+                        Helper.allowHeight(15.0),
+                        addressCustomfield(
+                          context,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 14),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius:
+                                            BorderRadius.circular(4.0)),
+                                    child: const Text(
+                                      "Home",
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                  ),
+                                  PopupMenuButton(
+                                    padding: EdgeInsets.zero,
+                                    iconSize: 18,
+                                    itemBuilder: (context) =>
+                                        <PopupMenuEntry<String>>[
+                                      const PopupMenuItem<String>(
+                                        value: 'Option 1',
+                                        child: Text('Edit'),
+                                      ),
+                                      const PopupMenuItem<String>(
+                                        value: 'Option 2',
+                                        child: Text('Delete'),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              // Helper.allowHeight(5.0),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text("Aju Alex"),
+                                  Helper.allowWidth(10.0),
+                                  const Text("8129322316")
+                                ],
+                              ),
+                              Helper.allowHeight(0.5),
+                              const Text(
+                                  "Amal Jyothi College of Engineering, Koovappally, Kottayam, Kerala - 686518"),
+                              //
+                            ],
+                          ),
+                        ),
+                        Helper.allowHeight(10.0),
+                        addressCustomfield(
+                          context,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 14),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius:
+                                            BorderRadius.circular(4.0)),
+                                    child: const Text(
+                                      "Work",
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                  ),
+                                  PopupMenuButton(
+                                    padding: EdgeInsets.zero,
+                                    iconSize: 18,
+                                    itemBuilder: (context) =>
+                                        <PopupMenuEntry<String>>[
+                                      const PopupMenuItem<String>(
+                                        value: 'Option 1',
+                                        child: Text('Edit'),
+                                      ),
+                                      const PopupMenuItem<String>(
+                                        value: 'Option 2',
+                                        child: Text('Delete'),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              // Helper.allowHeight(5.0),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text("Aju Alex"),
+                                  Helper.allowWidth(10.0),
+                                  const Text("8129322316")
+                                ],
+                              ),
+                              Helper.allowHeight(0.5),
+                              const Text(
+                                  "Amal Jyothi College of Engineering, Koovappally, Kottayam, Kerala - 686518"),
+                              //
+                            ],
+                          ),
+                        ),
+
+                        // Flexible(
+                        //   child: Text(
+                        //     "Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam eu nibh elementum, accumsan ona neque ac, aliquet nunc. In eu ipsum fringilla, accumsan purus vel, pellentesque risus. Vivamus vehicula nl purus at eros interdum, in dignissim nullaInterdum et malesuada fames ac ante ipsum primis in faucibus. Etiam eu nibh elementum, accumsan ona neque.",
+                        //     textAlign: TextAlign.justify,
+                        //     style: TextStyle(fontSize: 14),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
                 ],
               ),
-              Helper.allowHeight(15),
-              Row(
+              Helper.allowHeight(20),
+              Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    flex: 4,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                          "Included",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                  const Text("Add Description",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  SizedBox(width: Helper.width / 4, child: const Divider()),
+                  Helper.allowHeight(10),
+                  Padding(
+                      padding: const EdgeInsets.only(right: 120),
+                      child: TextFormField(
+                        maxLines: 6,
+                        maxLength: 500,
+                        decoration: InputDecoration(
+                          hintText: "Add description about work...",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        Helper.allowHeight(5),
-                        const Divider(),
-                        Helper.allowHeight(5),
-                        Column(
-                          children: List.generate(
-                              4,
-                              (index) => Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Icon(
-                                            Icons.check,
-                                            color: Colors.green,
-                                          ),
-                                          Helper.allowWidth(30),
-                                          const Flexible(
-                                            child: Text(
-                                              "Reloaded 1 of 850 libraries in 832ms (compile: 72 ms, reload: 228 ms, reassemble: 306 ms).",
-                                              style: TextStyle(fontSize: 14),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      if (index != 8) Helper.allowHeight(5.0)
-                                    ],
-                                  )),
-                        )
-                      ],
-                    ),
-                  ),
-                  Helper.allowWidth(30),
-                  Expanded(
-                    flex: 4,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                          "Excluded",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Helper.allowHeight(5),
-                        const Divider(),
-                        Helper.allowHeight(5),
-                        Column(
-                          children: List.generate(
-                              3,
-                              (index) => Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Icon(
-                                            Icons.close_outlined,
-                                            color: Colors.red,
-                                          ),
-                                          Helper.allowWidth(30),
-                                          const Flexible(
-                                            child: Text(
-                                              "Reloaded 1 of 850 libraries in 832ms (compile: 72 ms, reload: 228 ms, reassemble: 306 ms).",
-                                              style: TextStyle(fontSize: 14),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      if (index != 8) Helper.allowHeight(5.0)
-                                    ],
-                                  )),
-                        )
-                      ],
-                    ),
-                  )
+                      )),
                 ],
               ),
+              // Helper.allowHeight(10),
+              Row(
+                children: [
+                  Checkbox(
+                    value: true,
+                    onChanged: (_) {},
+                    activeColor: primaryColor,
+                  ),
+                  Helper.allowWidth(15),
+                  const Text("Agree the terms and conditions"),
+                ],
+              ),
+              Helper.allowHeight(20),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  width: Helper.width / 4,
+                  child: MaterialButton(
+                    onPressed: () => {},
+                    elevation: 5.0,
+                    color: primaryColor,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 18, horizontal: 14),
+                    child: const Text("Confirm Booking",
+                        style: TextStyle(color: white)),
+                  ),
+                ),
+              ),
+              Helper.allowHeight(20),
             ],
           ),
         ),
@@ -579,6 +744,95 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
 
     return adjustedTime;
   }
+
+  Widget addressCustomfield(BuildContext context, Widget child) => Container(
+        decoration: BoxDecoration(
+            // color: black,
+            border: Border.all(color: Colors.grey.withOpacity(0.4))),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+        child: child,
+      );
+
+  amountView(String title, String value) => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Helper.allowHeight(10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Text(title),
+              Text(value),
+            ],
+          ),
+        ],
+      );
+
+  Widget addAddressView(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 36),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 5,
+              child: Container(
+                height: Helper.height / 1.5,
+                decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(8.0)),
+                child: GoogleMap(
+                  initialCameraPosition:
+                      const CameraPosition(target: LatLng(10.1926, 76.3869)),
+                  onMapCreated: (controller) {},
+                ),
+              ),
+            ),
+            Helper.allowWidth(20.0),
+            Expanded(
+                flex: 5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InkWell(
+                      onTap: () => Helper.pop(),
+                      child: const Text(
+                        "Add New Address",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 24),
+                      ),
+                    ),
+                    Helper.allowHeight(20),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: "Name",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    Helper.allowHeight(10),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: "House/Flat Number",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    Helper.allowHeight(10),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: "Landmark",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
+                ))
+          ],
+        ),
+      );
 }
 
 clickChip({

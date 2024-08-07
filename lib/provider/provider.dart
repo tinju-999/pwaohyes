@@ -18,8 +18,13 @@ class ProviderClass extends ChangeNotifier {
   String _selectedServiceId = '0';
   String get selectedServiceId => _selectedServiceId;
 
+  bool _isAddAddressVisible = false;
+  bool? get isAddAddressVisible => _isAddAddressVisible;
+
   CombinedData get combineData => CombinedData(
       remainingTime: _remainingTime, isTimerRunning: isTimerRunning);
+
+  justChange() => notifyListeners();
 
   startTimer() {
     _remainingTime = 60;
@@ -109,15 +114,33 @@ class ProviderClass extends ChangeNotifier {
       value.month == date.month &&
       value.day == date.day;
 
-  selectServiceDateIndex(int index) {
+  selectServiceDateIndex(
+      int index, BookingDateTimeModel bookingDateSuggestion) {
     Initializer.bookingDateSuggestions.forEach((e) => e.isSelected = false);
     Initializer.bookingDateSuggestions[index].isSelected = true;
+    Initializer.selectedServiceDate = bookingDateSuggestion.date!;
+    Initializer.selectedServiceDate = DateTime(
+      Initializer.selectedServiceDate.year,
+      Initializer.selectedServiceDate.month,
+      Initializer.selectedServiceDate.day,
+    );
+    if (!isToday(Initializer.selectedServiceDate)) {
+      // Helper.setTimings(now);
+    }
     notifyListeners();
   }
 
   selectServiceTimeIndex(int index) {
     Initializer.bookingTimeSuggestions.forEach((e) => e.isSelected = false);
     Initializer.bookingTimeSuggestions[index].isSelected = true;
+    notifyListeners();
+  }
+
+  bool isToday(DateTime selectedServiceDate) =>
+      DateTime.now().difference(selectedServiceDate).inDays == 0;
+
+  addAddressVisibility(bool bool) {
+    _isAddAddressVisible = bool;
     notifyListeners();
   }
 }

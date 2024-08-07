@@ -6,7 +6,6 @@ import 'package:pwaohyes/common/webheader.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
-import 'package:pwaohyes/utils/initializer.dart';
 
 class ServiceHomeTabView extends StatelessWidget {
   final ProviderClass? providerClass;
@@ -27,14 +26,12 @@ class ServiceHomeTabView extends StatelessWidget {
               child: Selector<ProviderClass, bool>(
                 selector: (p0, p1) => p1.showSubServices!,
                 builder: (context, value, child) => CommonAnimationSwitcher(
-                  switchInCurve: Curves.easeInExpo,
-                  switchOutCurve: Curves.easeInOut,
-                  child: value
-                      ? Initializer.ohSubServices(
-                          context, Initializer.subServices, providerClass)
-                      : Initializer.ohYesServices(
-                          context, Initializer.services, providerClass),
-                ),
+                    switchInCurve: Curves.easeInExpo,
+                    switchOutCurve: Curves.easeInOut,
+                    child: value ? Container() : Container()
+                    // Initializer.ohYesServices(
+                    //     context, Initializer.services, providerClass),
+                    ),
               ),
             ),
             Helper.allowHeight(20),

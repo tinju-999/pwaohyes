@@ -18,7 +18,10 @@
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
+
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnYUucX2yQsHJjezFVAEb_25OnoxiN74E"></script> -->
+  <base href="/">
   <meta name="description" content="A new Flutter project.">
 
   <!-- iOS meta tags & icons -->
@@ -35,66 +38,10 @@
 </head>
 
 <body>
-  <script src="flutter_bootstrap.js" async>
-    // let deferredPrompt;
-
-    // window.addEventListener('beforeinstallprompt', (e) => {
-    //   deferredPrompt = e;
-    // });
-
-    // function promptInstall() {
-    //   deferredPrompt.prompt();
-    // }
-
-    // // Listen for app install event
-    // window.addEventListener('appinstalled', () => {
-    //   deferredPrompt = null;
-    //   appInstalled();
-    // });
-
-    // // Track how PWA was launched (either from browser or as PWA)
-    // function getLaunchMode() {
-    //   const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    //   if (deferredPrompt) hasPrompt();
-    //   if (document.referrer.startsWith('android-app://')) {
-    //     appLaunchedAsTWA();
-    //   } else if (navigator.standalone || isStandalone) {
-    //     appLaunchedAsPWA();
-    //   } else {
-    //     window.appLaunchedInBrowser();
-    //   }
-    // }
-    // window.addEventListener('load', function (ev) {
-    //   _flutter.loadr.loadEntrypoint({
-    //     serviceWorker: {
-    //       serviceWorkerVersion: serviceWorkerVersion,
-    //     },
-    //     onEntrypointLoaded: function (engineInitializer) {
-    //       let config = {
-    //         renderer: "html",
-    //       };
-    //       engineInitializer.initializeEngine(config).then(function (appRunner) {
-    //         appRunner.runApp();
-    //       });
-    //     }
-    //   });
-    //   if('serviceWorker' in navigator){
-    //     window.addEventListener('load', function(){
-    //       navigator.serviceWorker.register('/firebase-messaging-sw.js');
-    //     });
-    //   }
-    // });
-
-    // let defferedPrompt;
-    // window.addEventListener('beforeinstallprompt', (e) => {
-    //   localStorage.setItem('flutter.pwa-installable', JSON.stringify(true));
-    //   e.preventDefault();
-    //   defferedPrompt = e;
-    //   console.log('beforeinstallprompt event was fired')
-    // });
-
-    // function installApp(){
-    //   defferedPrompt.prompt();
+  <!-- src="flutter_bootstrap.js" async -->
+  <script>
+    // if ('serviceWorker' in navigator) {
+    //   navigator.serviceWorker.register('flutter.js');
     // }
   </script>
 </body>
