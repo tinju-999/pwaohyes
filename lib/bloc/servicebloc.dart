@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:pwaohyes/apiservice/serverhelper.dart';
+import 'package:pwaohyes/model/servicedetailedmodel.dart';
 import 'package:pwaohyes/model/servicemodel.dart';
 import 'package:pwaohyes/model/subcatmodel.dart';
 import 'package:pwaohyes/utils/helper.dart';
@@ -59,9 +60,43 @@ class ServiceBloc extends Cubit<ServiceState> {
     //   emit(SubServicesNotFetched());
     // }
   }
+
+  Future<void> getServiceDetail(String? catId) async {
+    try {
+      emit(GettingServiceDetail());
+      Response response =
+          await ServerHelper.get('services/by-guest-user/$catId');
+      if (response.statusCode == 200) {
+        Initializer.serviceDetailedModel =
+            ServiceDetailedModel.fromJson(jsonDecode(response.body));
+        if (Initializer.serviceDetailedModel.data!.serviceTypes!.isNotEmpty) {
+          Initializer.providerClass!.setServiceIdAndPrice(
+              Initializer.serviceDetailedModel.data!.serviceTypes!.first);
+        }
+     
+        //Initializer.providerClass!.amount
+        emit(ServiceDetailFetched());
+      } else {
+        emit(ServiceDetailNotFetched());
+      }
+    } catch (e) {
+      Helper.showLog("exception on getting service detailed view $e");
+      emit(ServiceDetailNotFetched());
+    }
+  }
 }
 
 class ServiceState {}
+
+//___________________________________________
+class GettingServiceDetail extends ServiceState {}
+
+class ServiceDetailFetched extends ServiceState {}
+
+class ServiceDetailNotFetched extends ServiceState {}
+
+class GettingServiceDetailError extends ServiceState {}
+//___________________________________________
 
 class FetchingServices extends ServiceState {}
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/service/servicehomemobileview.dart';
 import 'package:pwaohyes/service/servicehometabview.dart';
@@ -26,10 +27,17 @@ class _ServiceHomeState extends State<ServiceHome> {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenSize(
-      mobileView: ServiceHomeMobileView(providerClass: providerClass),
-      webView: ServiceHomeWebView(providerClass: providerClass),
-      tabView: ServiceHomeTabView(providerClass: providerClass),
+    return BlocListener<ServiceBloc, ServiceState>(
+      listener: (context, state) {
+        if (state is ServicesFetched) {
+           Initializer.providerClass?.getLocation();
+        }
+      },
+      child: ScreenSize(
+        mobileView: ServiceHomeMobileView(providerClass: providerClass),
+        webView: ServiceHomeWebView(providerClass: providerClass),
+        tabView: ServiceHomeTabView(providerClass: providerClass),
+      ),
     );
   }
 }

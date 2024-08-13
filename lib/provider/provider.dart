@@ -1,8 +1,12 @@
 // ignore_for_file: avoid_function_literals_in_foreach_calls
 
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pwaohyes/model/bookingdatemodel.dart';
+import 'package:pwaohyes/model/servicedetailedmodel.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 
@@ -15,8 +19,13 @@ class ProviderClass extends ChangeNotifier {
   bool? _showSubServices = false;
   bool? get showSubServices => _showSubServices;
 
-  String _selectedServiceId = '0';
+  String _selectedServiceId = '';
   String get selectedServiceId => _selectedServiceId;
+
+  String _amount = '';
+  String get amount => _amount;
+
+  //_amount
 
   bool _isAddAddressVisible = false;
   bool? get isAddAddressVisible => _isAddAddressVisible;
@@ -52,6 +61,14 @@ class ProviderClass extends ChangeNotifier {
 
   chooseService(String id, int index) {
     _selectedServiceId = id;
+    _amount = Initializer.serviceDetailedModel.data!.serviceTypes![index].price
+        .toString();
+    notifyListeners();
+  }
+
+  setServiceIdAndPrice(ServiceTypes first) {
+    _selectedServiceId = first.sId!;
+    _amount = first.price.toString();
     notifyListeners();
   }
 
@@ -142,6 +159,187 @@ class ProviderClass extends ChangeNotifier {
   addAddressVisibility(bool bool) {
     _isAddAddressVisible = bool;
     notifyListeners();
+  }
+
+  Future<bool> getLocation() async {
+    //  _currentModel =
+    //     type == LocationType.address ? addressLocation : searchLocation;
+    Completer<bool> completer = Completer<bool>();
+    try {
+      // _currentModel = LocationModel(state: LocationState.loading);
+      notifyListeners();
+      bool isGranted = await seekLocationPermission();
+      if (!isGranted) {
+        // _currentModel = LocationModel(state: LocationState.denied);
+        notifyListeners();
+        Helper.showCustomDialog(
+            title: "Location Permission Needed",
+            content: "Please enable location permission in device settings",
+            oneButtonDisabled: false,
+            actionOne: () => Helper.pop(),
+            actionOneText: "Cancel",
+            actionTwo: () async {
+              Helper.pop();
+              Geolocator.openAppSettings();
+            },
+            actionTwoText: "Enable");
+        completer.complete(false);
+      } else {
+        // bool serviceEnabled = await location!.requestService();
+        // if (serviceEnabled) {
+        await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.medium)
+            .then((position) async {
+          // await getNearbyAddress(position).then((foundNearby) async {
+          if (!kIsWeb) {
+            // if (!foundNearby) {
+            // _initialCameraPosition = CameraPosition(
+            //   target:
+            //       // LatLng(25.137386, 55.648788),
+            //       LatLng(position.latitude, position.longitude),
+            //   zoom: 14.4746,
+            // );
+            // List<Placemark> placemarks = await placemarkFromCoordinates(
+            //   position.latitude,
+            //   position.longitude,
+            //   // 25.137386,
+            //   // 55.648788,
+            // );
+
+            // String? postalCode = placemarks.first.postalCode ?? "";
+            // String? country = placemarks.first.country ?? "";
+            // String? state = placemarks.first.administrativeArea ?? "";
+            // String? locality = placemarks.first.locality ?? "";
+
+            // String one = placemarks.first.locality!.isNotEmpty
+            //     ? "${placemarks.first.locality!}"
+            //     : "";
+            // String two = placemarks.first.administrativeArea!.isNotEmpty
+            //     ? ", ${placemarks.first.administrativeArea!}"
+            //     : "";
+            // String three = placemarks.first.subLocality!.isNotEmpty
+            //     ? ", ${placemarks.first.subLocality!}"
+            //     : "";
+            // String address = one + two + three;
+
+            // _currentModel = LocationModel(
+            //   address: address,
+            //   locality: locality,
+            //   postalCode: postalCode,
+            //   stateN: state,
+            //   country: country,
+            //   isNearby: foundNearby,
+            //   position:
+            //       // LatLng(25.137386, 55.648788),
+            //       LatLng(position.latitude, position.longitude),
+            //   state: LocationState.success,
+            //   cameraPosition: _initialCameraPosition,
+            // );
+          } else {
+            // LatLng nearByPostion = LatLng(
+            //     double.parse(Initializer.nearbyAddress.first.latitude!),
+            //     double.parse(Initializer.nearbyAddress.first.longitude!));
+            // _initialCameraPosition = CameraPosition(
+            //   target:
+            //       // LatLng(25.137386, 55.648788),
+            //       nearByPostion,
+            //   zoom: 14.4746,
+            // );
+            // _currentModel = LocationModel(
+            //   isNearby: foundNearby,
+            //   address: Initializer.nearbyAddress.first.nickName,
+            //   locality: Initializer.nearbyAddress.first.addressLine1,
+            //   postalCode: Initializer.nearbyAddress.first.postcode,
+            //   stateN: Initializer.nearbyAddress.first.state,
+            //   country: Initializer.nearbyAddress.first.country,
+            //   position:
+            //       // LatLng(25.137386, 55.648788),
+            //       nearByPostion,
+            //   state: LocationState.success,
+            //   cameraPosition: _initialCameraPosition,
+            // );
+            // }
+
+            completer.complete(true);
+            // } else {
+            //   // _currentModel = LocationModel(
+            //   //   address: "N/A",
+            //   //   position: LatLng(position.latitude, position.longitude),
+            //   //   state: LocationState.success,
+            //   //   cameraPosition: _initialCameraPosition,
+            //   // );
+            //   completer.complete(true);
+            //   // GeoCode geoCode = GeoCode();
+            //   // Address address = await geoCode.reverseGeocoding(
+            //   //     latitude: position.latitude, longitude: position.longitude);
+            //   // Helper.showLog(address.region);
+            // }
+
+            // markers.clear();
+            // markers.add(Marker(
+            //   draggable: true,
+            //   markerId: MarkerId('dragLoc'),
+            //   position: initialCameraPosition.target,
+            // ));
+            notifyListeners();
+          }
+        });
+        // } else {
+        //   // _searchLocation.state = LocationState.denied;
+        //   // _currentModel = LocationModel(state: LocationState.denied);
+        //   notifyListeners();
+        //   Helper.showCustomDialog(
+        //     title: "Location Service",
+        //     content: "To search with us, please provide your current location.",
+        //     oneButtonDisabled: true,
+        //     actionTwo: () async {
+        //       Helper.pop();
+        //     },
+        //     actionTwoText: "Ok",
+        //   );
+        //   completer.complete(false);
+        // }
+      }
+      return completer.future;
+    } catch (e) {
+      Helper.showLog('exception on fetching location $e');
+      // _searchLocation = LocationModel(state: LocationState.error);
+      completer.complete(false);
+      // _currentModel = LocationModel(state: LocationState.denied);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<bool> seekLocationPermission() async {
+    Completer<bool> completer = Completer<bool>();
+    PermissionStatus locationPermission = await Permission.location.status;
+    if (!locationPermission.isGranted &&
+        !locationPermission.isPermanentlyDenied) {
+      locationPermission = await Permission.location.request();
+      if (!locationPermission.isGranted) {
+        locationPermission = await Permission.location.request();
+        if (!locationPermission.isGranted) {
+          locationPermission = await Permission.location.request();
+          if (locationPermission.isPermanentlyDenied) {
+            completer.complete(false);
+          } else if (locationPermission.isGranted) {
+            completer.complete(true);
+          }
+        } else {
+          completer.complete(true);
+        }
+      } else {
+        completer.complete(true);
+      }
+    } else {
+      if (locationPermission.isGranted) {
+        completer.complete(true);
+      } else {
+        completer.complete(false);
+      }
+    }
+    return completer.future;
   }
 }
 

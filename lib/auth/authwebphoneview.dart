@@ -63,7 +63,7 @@ class AuthWebPhoneView extends StatelessWidget {
                   current is OTPRequestingError,
               builder: (context, state) => MaterialButton(
                 onPressed: () => state is! RequestingOTP
-                    ? authBloc!.verifyPhone()
+                    ? authBloc!.verifyPhone("")
                     : Helper.showToast(msg: "Please wait"),
                 elevation: 0.0,
                 color: primaryColor,

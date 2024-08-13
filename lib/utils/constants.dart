@@ -18,3 +18,5 @@ const Widget copyright = Text(
   '\u{00A9} Oh Yes. All rights reserved.',
   style: TextStyle(color: grey)
 );
+
+String rupeeSymbol = '\u20B9';

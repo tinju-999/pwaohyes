@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -270,5 +271,17 @@ class Helper {
     } else {
       Helper.showLog('now.isBefore(endingTime)');
     }
+  }
+
+  static String getDeviceType() {
+    String deviceType = '';
+    if (Platform.isAndroid) {
+      deviceType = 'android';
+    } else if (Platform.isIOS) {
+      deviceType = 'ios';
+    } else {
+      deviceType = 'web';
+    }
+    return deviceType;
   }
 }

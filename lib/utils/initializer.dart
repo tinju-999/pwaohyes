@@ -1,13 +1,19 @@
+import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/model/bookingdatemodel.dart';
+import 'package:pwaohyes/model/otpverifiedmodel.dart';
+import 'package:pwaohyes/model/servicedetailedmodel.dart';
 import 'package:pwaohyes/model/servicemodel.dart';
 import 'package:pwaohyes/model/subcatmodel.dart';
+import 'package:pwaohyes/model/usermodel.dart';
 import 'package:pwaohyes/provider/provider.dart';
 
 class Initializer {
   //models
+  static OtpVerifiedModel otpVerifiedModel = OtpVerifiedModel();
+  static ServiceDetailedModel serviceDetailedModel = ServiceDetailedModel();
   static ServiceModel serviceModel = ServiceModel();
-   static SubCatModel subCatModel = SubCatModel();
+  static SubCatModel subCatModel = SubCatModel();
   static List<CategoryItems> serviceCategory = <CategoryItems>[];
   //blocs
   static ServiceBloc serviceBloc = ServiceBloc();
@@ -62,7 +68,9 @@ class Initializer {
 
   static ProviderClass? providerClass;
 
+  static UserModel userModel = UserModel();
 
+  static AuthBloc authBloc = AuthBloc();
 }
 
 class AddresstypeModel {

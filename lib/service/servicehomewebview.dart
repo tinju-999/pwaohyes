@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/booking/bookingweb.dart';
-import 'package:pwaohyes/common/animation.dart';
 import 'package:pwaohyes/common/webfooter.dart';
 import 'package:pwaohyes/common/webheader.dart';
 import 'package:pwaohyes/provider/provider.dart';
@@ -141,7 +140,9 @@ class ServicePageWeb extends StatelessWidget {
                         children: List.generate(
                             Initializer.subCatModel.data!.services!.length,
                             (index) => InkWell(
-                                  onTap: () => Helper.push(const BookingWeb()),
+                                  onTap: () => Helper.push(BookingWeb(
+                                      catId: Initializer.subCatModel.data!
+                                          .services![index].sId)),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
@@ -149,54 +150,40 @@ class ServicePageWeb extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Container(
-                                          clipBehavior: Clip.hardEdge,
-                                          constraints: const BoxConstraints(
-                                            maxHeight: 120,
-                                            maxWidth: 120,
-                                          ),
-                                          padding: const EdgeInsets.all(8.0),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              color: white,
-                                              border: Border.all(
-                                                  color: primaryColor)),
-                                          child: Initializer.subCatModel.data!
-                                                      .services![index].image !=
-                                                  null
-                                              ? ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                  child: CachedNetworkImage(
-                                                    imageUrl: Initializer
-                                                        .subCatModel
-                                                        .data!
-                                                        .services![index]
-                                                        .image!,
-                                                    width: 120,
-                                                    height: 120,
-                                                    fit: BoxFit.cover,
-                                                    errorWidget: (context, url,
-                                                            error) =>
-                                                        const Icon(Icons.error),
-                                                  ),
-                                                )
-                                              : ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                  child: CachedNetworkImage(
-                                                    imageUrl:
-                                                        "https://cdn.vectorstock.com/i/500p/82/99/no-image-available-like-missing-picture-vector-43938299.jpg",
-                                                    width: 120,
-                                                    height: 120,
-                                                    fit: BoxFit.cover,
-                                                    errorWidget: (context, url,
-                                                            error) =>
-                                                        const Icon(Icons.error),
-                                                  ),
-                                                )),
+                                        clipBehavior: Clip.hardEdge,
+                                        constraints: const BoxConstraints(
+                                          maxHeight: 120,
+                                          maxWidth: 120,
+                                        ),
+                                        padding: const EdgeInsets.all(8.0),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            color: white,
+                                            border: Border.all(
+                                                color: primaryColor)),
+                                        child: Initializer.subCatModel.data!
+                                                    .services![index].image !=
+                                                null
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: Initializer
+                                                      .subCatModel
+                                                      .data!
+                                                      .services![index]
+                                                      .image!,
+                                                  width: 120,
+                                                  height: 120,
+                                                  fit: BoxFit.cover,
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          noImageView(context),
+                                                ),
+                                              )
+                                            : noImageView(context),
+                                      ),
                                       Helper.allowHeight(15),
                                       SizedBox(
                                         // width: 120,
@@ -530,5 +517,17 @@ class ServicePageWeb extends StatelessWidget {
             ),
           )
         ],
+      );
+
+  noImageView(BuildContext context) => ClipRRect(
+        borderRadius: BorderRadius.circular(8.0),
+        child: CachedNetworkImage(
+          imageUrl:
+              "https://cdn.vectorstock.com/i/500p/82/99/no-image-available-like-missing-picture-vector-43938299.jpg",
+          width: 120,
+          height: 120,
+          fit: BoxFit.cover,
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+        ),
       );
 }

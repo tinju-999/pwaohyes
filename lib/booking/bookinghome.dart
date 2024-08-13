@@ -4,20 +4,16 @@ import 'package:pwaohyes/booking/bookingweb.dart';
 import 'package:pwaohyes/booking/bookingtab.dart';
 import 'package:pwaohyes/utils/screensize.dart';
 
-class BookingHome extends StatefulWidget {
-  const BookingHome({super.key});
+class BookingHome extends StatelessWidget {
+  final String? catId;
+  const BookingHome({super.key,required this.catId});
 
-  @override
-  State<BookingHome> createState() => _BookingHomeState();
-}
-
-class _BookingHomeState extends State<BookingHome> {
   @override
   Widget build(BuildContext context) {
-    return const ScreenSize(
-      mobileView: BookingMobile(),
-      webView: BookingWeb(),
-      tabView: BookingTab(),
+    return  ScreenSize(
+      mobileView: const BookingMobile(),
+      webView: BookingWeb(catId: catId),
+      tabView: const BookingTab(),
     );
   }
 }

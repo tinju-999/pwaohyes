@@ -16,9 +16,7 @@
     the `--base-href` argument provided to `flutter build`.
   -->
   <base href="$FLUTTER_BASE_HREF">
-
   <meta charset="UTF-8">
-
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnYUucX2yQsHJjezFVAEb_25OnoxiN74E"></script> -->
   <base href="/">
@@ -40,9 +38,11 @@
 <body>
   <!-- src="flutter_bootstrap.js" async -->
   <script>
-    // if ('serviceWorker' in navigator) {
-    //   navigator.serviceWorker.register('flutter.js');
-    // }
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('flutter-first-frame', function () {
+        navigator.serviceWorker.register('flutter.js');
+      });
+    }
   </script>
 </body>
 
