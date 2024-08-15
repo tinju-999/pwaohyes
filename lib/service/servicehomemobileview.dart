@@ -19,7 +19,7 @@ class ServiceHomeMobileView extends StatelessWidget {
       child: Scaffold(
         body: ListView(
           children: [
-            const WebHeader(),
+             WebHeader(route: ServiceHomeMobileView(providerClass: providerClass,),),
             Helper.allowHeight(15),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 18),

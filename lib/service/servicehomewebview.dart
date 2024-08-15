@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
-import 'package:pwaohyes/booking/bookingweb.dart';
 import 'package:pwaohyes/common/webfooter.dart';
 import 'package:pwaohyes/common/webheader.dart';
 import 'package:pwaohyes/provider/provider.dart';
@@ -33,10 +32,10 @@ class ServiceHomeWebView extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        const WebHeader(),
-                        Helper.allowHeight(20),
+                         WebHeader(route: ServiceHomeWebView(providerClass: providerClass),),
+                        Helper.allowHeight(10),
                         ServicePageWeb(providerClass: providerClass),
-                        Helper.allowHeight(20),
+                        Helper.allowHeight(10),
                         const WebFooter(),
                       ],
                     ),
@@ -140,9 +139,11 @@ class ServicePageWeb extends StatelessWidget {
                         children: List.generate(
                             Initializer.subCatModel.data!.services!.length,
                             (index) => InkWell(
-                                  onTap: () => Helper.push(BookingWeb(
-                                      catId: Initializer.subCatModel.data!
-                                          .services![index].sId)),
+                                  onTap: () =>
+                                      Initializer.providerClass?.getLocation(),
+                                  // Helper.push(BookingWeb(
+                                  //     catId: Initializer.subCatModel.data!
+                                  //         .services![index].sId)),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
@@ -169,18 +170,20 @@ class ServicePageWeb extends StatelessWidget {
                                                 borderRadius:
                                                     BorderRadius.circular(8.0),
                                                 child: CachedNetworkImage(
-                                                  imageUrl: Initializer
-                                                      .subCatModel
-                                                      .data!
-                                                      .services![index]
-                                                      .image!,
-                                                  width: 120,
-                                                  height: 120,
-                                                  fit: BoxFit.cover,
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          noImageView(context),
-                                                ),
+                                                    imageUrl: Initializer
+                                                        .subCatModel
+                                                        .data!
+                                                        .services![index]
+                                                        .image!,
+                                                    width: 120,
+                                                    height: 120,
+                                                    fit: BoxFit.cover,
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            const Icon(
+                                                              Icons.error,
+                                                              color: black,
+                                                            )),
                                               )
                                             : noImageView(context),
                                       ),
@@ -491,12 +494,15 @@ class ServicePageWeb extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(8.0),
                                       color: white,
                                       border: Border.all(color: primaryColor)),
-                                  child: Image.network(
-                                    Initializer.serviceCategory[index].image!,
+                                  child: CachedNetworkImage(
+                                    imageUrl: Initializer
+                                        .serviceCategory[index].image!,
                                     fit: BoxFit.contain,
                                     filterQuality: FilterQuality.high,
                                     width: 60,
                                     height: 60,
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
                                   )),
                               Helper.allowHeight(15),
                               SizedBox(

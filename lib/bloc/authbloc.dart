@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:pwaohyes/apiservice/serverhelper.dart';
 import 'package:pwaohyes/bookingaddress/bookingaddressweb.dart';
+import 'package:pwaohyes/model/citiesmodel.dart';
 import 'package:pwaohyes/model/otpverifiedmodel.dart';
 import 'package:pwaohyes/model/usermodel.dart';
 import 'package:pwaohyes/utils/helper.dart';
@@ -42,7 +43,7 @@ class AuthBloc extends Cubit<AuthState> {
         "mobileNumber": '+91$phone',
         "otp": otp,
         "device_token": 'null',
-        "device_type": Helper.getDeviceType(),
+        "device_type": 'web',
       });
       if (response.statusCode == 200 || response.statusCode == 201) {
         var data = jsonDecode(response.body);
@@ -86,11 +87,33 @@ class AuthBloc extends Cubit<AuthState> {
       emit(LoggingOutError());
     }
   }
+
+  Future<void> fetchCities() async {
+    try {
+      emit(FetchingCitiesData());
+      Response response = await ServerHelper.get('cities');
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        var data = jsonDecode(response.body);
+        Initializer.citiesModel = CitiesModel.fromJson(data);
+        emit(CitiesDataFetched());
+      } else {
+        emit(CitiesDataNotFetched());
+      }
+    } catch (e) {
+      Helper.showLog("Exception on fetching cities $e");
+      emit(FetchingCitiesDataError());
+    }
+  }
 }
 
 class AuthState {}
 
 class AuthEvent {}
+
+class FetchingCitiesData extends AuthState {}
+class CitiesDataFetched extends AuthState {}
+class CitiesDataNotFetched extends AuthState {}
+class FetchingCitiesDataError extends AuthState {}
 
 class GettingOtp extends AuthState {}
 

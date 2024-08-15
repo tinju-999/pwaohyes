@@ -31,7 +31,7 @@ class _BookingAddressWebState extends State<BookingAddressWeb> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const WebHeader(),
+            const WebHeader(route: BookingAddressWeb(),),
             Helper.allowHeight(10),
             Selector<ProviderClass, bool>(
               selector: (p0, p1) => p1.isAddAddressVisible!,

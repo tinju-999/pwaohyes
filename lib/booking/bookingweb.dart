@@ -35,7 +35,7 @@ class _BookingWebState extends State<BookingWeb> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const WebHeader(),
+             WebHeader(route: BookingWeb(catId:widget.catId)),
             Helper.allowHeight(20),
             const BookingWebPage(),
             Helper.allowHeight(20),

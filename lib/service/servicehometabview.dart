@@ -18,7 +18,7 @@ class ServiceHomeTabView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const WebHeader(),
+             WebHeader(route: ServiceHomeTabView(providerClass: providerClass),),
             Helper.allowHeight(20),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 18),

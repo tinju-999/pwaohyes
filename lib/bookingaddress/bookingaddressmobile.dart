@@ -24,7 +24,7 @@ class _BookingAddressMobileState extends State<BookingAddressMobile> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              const WebHeader(),
+              const WebHeader(route: BookingAddressMobile(),),
               Helper.allowHeight(10),
               const BookingAddressMobilePage(),
               Helper.allowHeight(10),

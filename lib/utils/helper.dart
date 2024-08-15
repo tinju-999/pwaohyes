@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,8 +13,8 @@ class Helper {
   static FocusNode? focusNode;
   static GlobalKey? key = NavigationService.navigatorKey;
   static BuildContext? context = key!.currentContext!;
-  static final width = MediaQuery.of(context!).size.width;
-  static final height = MediaQuery.of(context!).size.height;
+  static double width = MediaQuery.of(context!).size.width;
+  static double height = MediaQuery.of(context!).size.height;
 
   static String? appVersion;
   static allowHeight(double height) {
@@ -273,15 +272,15 @@ class Helper {
     }
   }
 
-  static String getDeviceType() {
-    String deviceType = '';
-    if (Platform.isAndroid) {
-      deviceType = 'android';
-    } else if (Platform.isIOS) {
-      deviceType = 'ios';
-    } else {
-      deviceType = 'web';
-    }
-    return deviceType;
-  }
+  // static String getDeviceType() {
+  //   String deviceType = '';
+  //   if (Platform.isAndroid) {
+  //     deviceType = 'android';
+  //   } else if (Platform.isIOS) {
+  //     deviceType = 'ios';
+  //   } else {
+  //     deviceType = 'web';
+  //   }
+  //   return deviceType;
+  // }
 }

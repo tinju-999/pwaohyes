@@ -18,7 +18,7 @@ class MobileAuthView extends StatelessWidget {
         padding: const EdgeInsets.all(18),
         child: Column(
           children: [
-            const WebHeader(),
+            const WebHeader(route: MobileAuthView()),
             Helper.allowHeight(20),
             const BookingAuthMobile(),
             Helper.allowHeight(20),

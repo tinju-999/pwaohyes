@@ -30,7 +30,7 @@ class _ServiceHomeState extends State<ServiceHome> {
     return BlocListener<ServiceBloc, ServiceState>(
       listener: (context, state) {
         if (state is ServicesFetched) {
-           Initializer.providerClass?.getLocation();
+          //  Initializer.providerClass?.getLocation();
         }
       },
       child: ScreenSize(

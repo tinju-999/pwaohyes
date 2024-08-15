@@ -36,14 +36,21 @@
 </head>
 
 <body>
-  <!-- src="flutter_bootstrap.js" async -->
-  <script>
-    if ('serviceWorker' in navigator) {
+  <script src="flutter_bootstrap.js" async>
+       if ('serviceWorker' in navigator) {
       window.addEventListener('flutter-first-frame', function () {
         navigator.serviceWorker.register('flutter.js');
       });
     }
-  </script>
+  </script>'
+  <!-- src="flutter_bootstrap.js" async -->
+  <!-- <script>
+    // if ('serviceWorker' in navigator) {
+    //   window.addEventListener('flutter-first-frame', function () {
+    //     navigator.serviceWorker.register('flutter.js');
+    //   });
+    // }
+  </script> -->
 </body>
 
 </html>

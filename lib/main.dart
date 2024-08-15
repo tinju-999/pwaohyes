@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
+import 'package:pwaohyes/bloc/locationbloc.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
+import 'package:pwaohyes/bookingaddress/bookingaddressweb.dart';
+import 'package:pwaohyes/location/locationpermissionview.dart';
+import 'package:pwaohyes/model/selectedaddressmodel.dart';
 import 'package:pwaohyes/model/usermodel.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/service/servicehome.dart';
@@ -20,6 +26,11 @@ Future<void> main() async {
   // Text('Has Install Prompt: ${PWAInstall().hasPrompt}');
 
   var token = await Preferences.getToken();
+  var location = await Preferences.getLocation();
+  if (location.isNotEmpty) {
+    Initializer.selectedAdddress =
+        SelectedAddressModel.fromJson(jsonDecode(location));
+  }
   if (token.isNotEmpty) {
     Initializer.userModel = UserModel(
       isLoggedIn: true,
@@ -49,7 +60,10 @@ class MyApp extends StatelessWidget {
               create: (context) => ProviderClass()),
         ],
         child: MultiBlocProvider(
-          providers: [BlocProvider<AuthBloc>(create: (context) => AuthBloc())],
+          providers: [
+            BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
+            BlocProvider<LocationBloc>(create: (context) => LocationBloc()),
+          ],
           child: MaterialApp(
               navigatorKey: NavigationService.navigatorKey,
               debugShowCheckedModeBanner: false,
@@ -70,9 +84,13 @@ class MyApp extends StatelessWidget {
                   Initializer.providerClass = context.read<ProviderClass>();
                   Initializer.serviceBloc = context.read<ServiceBloc>();
                   Initializer.authBloc = context.read<AuthBloc>();
+                  Initializer.locationBloc = context.read<LocationBloc>();
                   return
                       // const BookingAddressWeb();
-                      const ServiceHome();
+                      Initializer.selectedAdddress!.state ==
+                              LoadingState.success
+                          ? const ServiceHome()
+                          : const LocationPermissionView(route: null);
                 },
               )
               //

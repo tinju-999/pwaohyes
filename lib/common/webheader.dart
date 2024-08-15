@@ -2,13 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
+import 'package:pwaohyes/location/locationpermissionview.dart';
+import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/screensize.dart';
 
 class WebHeader extends StatelessWidget {
-  const WebHeader({super.key});
+  final dynamic route;
+  const WebHeader({super.key, required this.route});
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +92,25 @@ class WebHeader extends StatelessWidget {
                       const Text("About Us"),
                       Helper.allowWidth(20),
                       const Text("Get Started"),
+                      if (Initializer.selectedAdddress!.state == LoadingState.success)
+                        Helper.allowWidth(20),
+                       if (Initializer.selectedAdddress!.state == LoadingState.success)
+                        InkWell(
+                            onTap: () => Helper.push(
+                                LocationPermissionView(route: route)),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.location_city),
+                                Helper.allowWidth(5.0),
+                                Text(Initializer
+                                    .selectedAdddress!.locationName!),
+                                Helper.allowWidth(5.0),
+                                const Icon(
+                                  Icons.arrow_drop_down_rounded,
+                                  size: 16,
+                                )
+                              ],
+                            )),
                       if (Initializer.userModel.isLoggedIn!)
                         Helper.allowWidth(20),
                       if (Initializer.userModel.isLoggedIn!)

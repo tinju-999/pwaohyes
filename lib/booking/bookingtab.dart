@@ -22,7 +22,7 @@ class _BookingTabState extends State<BookingTab> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const WebHeader(),
+            const WebHeader(route: BookingTab(),),
             Helper.allowHeight(20),
             const BookingTabPage(),
             Helper.allowHeight(20),

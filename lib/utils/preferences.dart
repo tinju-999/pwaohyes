@@ -1,19 +1,19 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Preferences {
-  static Future<bool> setToken(String token) async {
+  static Future setToken(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setString("userToken", token);
+     prefs.setString("userToken", token);
   }
 
   static setRefreshToken(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setString("refreshToken", token);
+    prefs.setString("refreshToken", token);
   }
 
-  static Future<String> getRefershToken() async {
+  static Future getRefershToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("refreshToken") ?? "";
+     prefs.getString("refreshToken") ?? "";
   }
 
   static Future<String> getToken() async {
@@ -23,11 +23,22 @@ class Preferences {
 
   static setVerifiedData(String verifiedData) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setString("verifiedData", verifiedData);
+     prefs.setString("verifiedData", verifiedData);
   }
 
   static clearAll() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
+
+  static setLocation(String location) async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+     prefs.setString("location", location);
+  }
+
+  static Future<String> getLocation() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("location") ?? "";
+  }
+
 }

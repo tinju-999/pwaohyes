@@ -18,7 +18,7 @@ class WebAuth extends StatelessWidget {
         // padding: const EdgeInsets.all(18),
         child: Column(
           children: [
-            const WebHeader(),
+            const WebHeader(route: WebAuth()),
             Helper.allowHeight(10),
             const WebAuthView(),
             Helper.allowHeight(10),

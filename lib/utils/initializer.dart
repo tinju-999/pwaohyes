@@ -1,7 +1,10 @@
 import 'package:pwaohyes/bloc/authbloc.dart';
+import 'package:pwaohyes/bloc/locationbloc.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/model/bookingdatemodel.dart';
+import 'package:pwaohyes/model/citiesmodel.dart';
 import 'package:pwaohyes/model/otpverifiedmodel.dart';
+import 'package:pwaohyes/model/selectedaddressmodel.dart';
 import 'package:pwaohyes/model/servicedetailedmodel.dart';
 import 'package:pwaohyes/model/servicemodel.dart';
 import 'package:pwaohyes/model/subcatmodel.dart';
@@ -10,6 +13,7 @@ import 'package:pwaohyes/provider/provider.dart';
 
 class Initializer {
   //models
+  static CitiesModel citiesModel = CitiesModel(data: []);
   static OtpVerifiedModel otpVerifiedModel = OtpVerifiedModel();
   static ServiceDetailedModel serviceDetailedModel = ServiceDetailedModel();
   static ServiceModel serviceModel = ServiceModel();
@@ -71,6 +75,10 @@ class Initializer {
   static UserModel userModel = UserModel();
 
   static AuthBloc authBloc = AuthBloc();
+
+  static SelectedAddressModel? selectedAdddress = SelectedAddressModel(state: LoadingState.initial);
+
+  static LocationBloc locationBloc = LocationBloc();
 }
 
 class AddresstypeModel {
