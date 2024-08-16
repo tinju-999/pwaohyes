@@ -13,30 +13,33 @@ class ServiceBloc extends Cubit<ServiceState> {
   ServiceBloc() : super(ServiceState());
 
   getServices() async {
-    // try {
-    emit(FetchingServices());
-    Response response = await ServerHelper.get('home-public');
-    if (response.statusCode == 200) {
-      // var data = jsonDecode(response.body);
-      Initializer.serviceModel =
-          ServiceModel.fromJson(jsonDecode(response.body));
-      if (Initializer.serviceModel.errorCode == 0) {
-        Initializer.serviceCategory = Initializer.serviceModel.data!.content!
-            .where((e) => e.type == "category")
-            .first
-            .categoryItems!
-            .toList();
-        emit(ServicesFetched());
+    try {
+      emit(FetchingServices());
+      Response response =
+          await ServerHelper.get('home-public?lat=9.563092&lng=76.836966');
+      if (response.statusCode == 200) {
+        // var data = jsonDecode(response.body);
+        Initializer.serviceModel =
+            ServiceModel.fromJson(jsonDecode(response.body));
+        if (Initializer.serviceModel.errorCode == 0) {
+          Initializer.serviceCategory = Initializer.serviceModel.data!.content!
+              .where((e) => e.type == "category")
+              .first
+              .categoryItems!
+              .toList();
+          emit(ServicesFetched());
+        } else {
+          Helper.showSnack(response.reasonPhrase);
+          emit(ServicesNotFetched());
+        }
       } else {
+        Helper.showSnack(response.reasonPhrase);
         emit(ServicesNotFetched());
       }
-    } else {
+    } catch (e) {
+      Helper.showLog("Exception on services $e");
       emit(ServicesNotFetched());
     }
-    // } catch (e) {
-    //   Helper.showLog("Exception on services $e");
-    //   emit(ServicesNotFetched());
-    // }
   }
 
   getSubServices(String id) async {
@@ -73,7 +76,7 @@ class ServiceBloc extends Cubit<ServiceState> {
           Initializer.providerClass!.setServiceIdAndPrice(
               Initializer.serviceDetailedModel.data!.serviceTypes!.first);
         }
-     
+
         //Initializer.providerClass!.amount
         emit(ServiceDetailFetched());
       } else {

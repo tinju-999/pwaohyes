@@ -204,7 +204,9 @@ class LocationWebContentView extends StatelessWidget {
           Helper.allowHeight(20),
           BlocConsumer<LocationBloc, LocationState>(
             buildWhen: (previous, current) =>
-                current is GettingLocation || current is LocationFetched,
+                current is GettingLocation ||
+                current is LocationFetched ||
+                current is LocationNotFetched,
             listenWhen: (previous, current) => current is LocationFetched,
             listener: (context, state) async {
               if (state is LocationFetched) {

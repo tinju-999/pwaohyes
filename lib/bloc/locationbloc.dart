@@ -17,18 +17,15 @@ class LocationBloc extends Cubit<LocationState> {
       bool isGranted = await seekLocationPermission();
       if (!isGranted) {
         Helper.showCustomDialog(
-            title: "Location Permission Needed",
-            content: "Please enable location permission in device settings",
-            oneButtonDisabled: false,
-            actionOne: () => Helper.pop(),
-            actionOneText: "Cancel",
+            title: "Geolocation is blocked",
+            content:
+                "Looks like your geolocation permissions are blocked. Please, provide geolocation access in your browser settings.",
+            oneButtonDisabled: true,
             actionTwo: () async {
               Helper.pop();
-              await seekLocationPermission();
-              Initializer.selectedAdddress =
-                  SelectedAddressModel(state: LoadingState.loading);
             },
-            actionTwoText: "Enable");
+            actionTwoText: "Ok");
+            
         emit(LocationNotFetched());
       } else {
         await Geolocator.getCurrentPosition(
@@ -55,23 +52,18 @@ class LocationBloc extends Cubit<LocationState> {
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return false;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
       return false;
     }
 
-    return true;
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return false;
+    } else {
+      return true;
+    }
     // Completer<bool> completer = Completer<bool>();
     // LocationPermission permission = await Geolocator.checkPermission();
     // Helper.showLog('permission $permission');

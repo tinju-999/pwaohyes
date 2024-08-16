@@ -6,13 +6,11 @@ import 'package:provider/provider.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/bloc/locationbloc.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
-import 'package:pwaohyes/bookingaddress/bookingaddressweb.dart';
 import 'package:pwaohyes/location/locationpermissionview.dart';
 import 'package:pwaohyes/model/selectedaddressmodel.dart';
 import 'package:pwaohyes/model/usermodel.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/service/servicehome.dart';
-import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/preferences.dart';
 
@@ -70,14 +68,14 @@ class MyApp extends StatelessWidget {
               title: 'Oh Yes Services',
               theme: ThemeData(
                 fontFamily: 'Poppins',
-                colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
                 appBarTheme: const AppBarTheme(
                   toolbarHeight: 90,
-                  backgroundColor: white,
+                  // backgroundColor: white,
                   elevation: 0.0,
                 ),
                 useMaterial3: false,
-                scaffoldBackgroundColor: backgroundcolor,
+                // scaffoldBackgroundColor: backgroundcolor,
               ),
               home: Builder(
                 builder: (context) {
