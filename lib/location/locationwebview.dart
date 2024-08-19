@@ -4,19 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
-import 'package:pwaohyes/bloc/locationbloc.dart';
 import 'package:pwaohyes/common/webfooter.dart';
 import 'package:pwaohyes/common/webheader.dart';
 import 'package:pwaohyes/model/citiesmodel.dart';
 import 'package:pwaohyes/model/selectedaddressmodel.dart';
-import 'package:pwaohyes/provider/provider.dart';
-import 'package:pwaohyes/service/servicehome.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/preferences.dart';
+import 'package:pwaohyes/utils/routes.dart';
 
 class LocationWebView extends StatefulWidget {
   final dynamic route;
@@ -102,13 +99,13 @@ class LocationWebContentView extends StatelessWidget {
                               Initializer.selectedAdddress =
                                   SelectedAddressModel(
                                       locationName: data![index].name,
+                                   
                                       latLng: LatLng(
                                           double.parse(data![index].lat!),
                                           double.parse(data![index].lng!)));
                               await Preferences.setLocation(jsonEncode(
                                   Initializer.selectedAdddress!.toJson()));
-                              Helper.pushReplacement(
-                                  route ?? const ServiceHome());
+                              Helper.pushReplacementNamed(Services);
                             },
 
                             // Helper.push(BookingWeb(
@@ -165,86 +162,84 @@ class LocationWebContentView extends StatelessWidget {
               ),
             ],
           ),
-          Helper.allowHeight(30),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: Helper.width / 3,
-                child: const Divider(),
-              ),
-              Helper.allowWidth(10),
-              const Text("OR"),
-              Helper.allowWidth(10),
-              SizedBox(
-                width: Helper.width / 3,
-                child: const Divider(),
-              ),
-            ],
-          ),
-          Helper.allowHeight(30),
-          const Text(
-            "Find Nearby Services",
-            style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-          Helper.allowHeight(20),
-          SizedBox(
-            width: Helper.width / 3,
-            child: Text(
-              "We use your location to provide nearby services tailored for you. Please enable location services in your browser settings to allow us to fetch your location and enhance your experience.",
-              style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.blueGrey.shade600),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Helper.allowHeight(20),
-          BlocConsumer<LocationBloc, LocationState>(
-            buildWhen: (previous, current) =>
-                current is GettingLocation ||
-                current is LocationFetched ||
-                current is LocationNotFetched,
-            listenWhen: (previous, current) => current is LocationFetched,
-            listener: (context, state) async {
-              if (state is LocationFetched) {
-                await Future.delayed(const Duration(milliseconds: 1200)).then(
-                    (value) =>
-                        Helper.pushReplacement(route ?? const ServiceHome()));
-              }
-            },
-            builder: (context, state) =>
-                Selector<ProviderClass, SelectedAddressModel>(
-                    selector: (p0, p1) => p1.selectedAddressModel,
-                    builder: (context, value, child) {
-                      return MaterialButton(
-                        onPressed: () {
-                          if (state is! GettingLocation) {
-                            Initializer.locationBloc.getLocation();
-                          }
-                        },
-                        minWidth: Helper.width / 3.5,
-                        elevation: 5.0,
-                        color: primaryColor,
-                        padding: const EdgeInsets.symmetric(vertical: 18),
-                        child: state is GettingLocation
-                            ? const SizedBox(
-                                width: 15,
-                                height: 15,
-                                child: CircularProgressIndicator(
-                                  color: white,
-                                ),
-                              )
-                            : state is LocationFetchingError ||
-                                    state is LocationNotFetched
-                                ? const Text("Geolocation is blocked",
-                                    style: TextStyle(color: white))
-                                : const Text("Enable Location Services",
-                                    style: TextStyle(color: white)),
-                      );
-                    }),
-          ),
+          // Helper.allowHeight(30),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     SizedBox(
+          //       width: Helper.width / 3,
+          //       child: const Divider(),
+          //     ),
+          //     Helper.allowWidth(10),
+          //     const Text("OR"),
+          //     Helper.allowWidth(10),
+          //     SizedBox(
+          //       width: Helper.width / 3,
+          //       child: const Divider(),
+          //     ),
+          //   ],
+          // ),
+          // Helper.allowHeight(30),
+          // const Text(
+          //   "Find Nearby Services",
+          //   style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+          //   textAlign: TextAlign.center,
+          // ),
+          // Helper.allowHeight(20),
+          // SizedBox(
+          //   width: Helper.width / 3,
+          //   child: Text(
+          //     "We use your location to provide nearby services tailored for you. Please enable location services in your browser settings to allow us to fetch your location and enhance your experience.",
+          //     style: TextStyle(
+          //         fontSize: 13,
+          //         fontWeight: FontWeight.w500,
+          //         color: Colors.blueGrey.shade600),
+          //     textAlign: TextAlign.center,
+          //   ),
+          // ),
+          // Helper.allowHeight(20),
+          // BlocConsumer<LocationBloc, LocationState>(
+          //   buildWhen: (previous, current) =>
+          //       current is GettingLocation ||
+          //       current is LocationFetched ||
+          //       current is LocationNotFetched,
+          //   listenWhen: (previous, current) => current is LocationFetched,
+          //   listener: (context, state) async {
+          //     if (state is LocationFetched) {
+          //       await Future.delayed(const Duration(milliseconds: 1200)).then(
+          //           (value) =>
+          //               Helper.pushReplacementNamed(Services));
+          //     }
+          //   },
+          //   builder: (context, state) =>
+          //       Selector<ProviderClass, SelectedAddressModel>(
+          //           selector: (p0, p1) => p1.selectedAddressModel,
+          //           builder: (context, value, child) {
+          //             return MaterialButton(
+          //               onPressed: () {
+          //                 if (state is! GettingLocation) {
+          //                   Initializer.locationBloc.getLocation();
+          //                 }
+          //               },
+          //               minWidth: Helper.width / 3.5,
+          //               elevation: 5.0,
+          //               color: primaryColor,
+          //               padding: const EdgeInsets.symmetric(vertical: 18),
+          //               child: state is GettingLocation
+          //                   ? const SizedBox(
+          //                       width: 15,
+          //                       height: 15,
+          //                       child: CircularProgressIndicator(color: white),
+          //                     )
+          //                   : state is LocationFetchingError ||
+          //                           state is LocationNotFetched
+          //                       ? const Text("Geolocation is blocked",
+          //                           style: TextStyle(color: white))
+          //                       : const Text("Enable Location Services",
+          //                           style: TextStyle(color: white)),
+          //             );
+          //           }),
+          // ),
         ],
       ),
     );

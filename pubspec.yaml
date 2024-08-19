@@ -95,7 +95,7 @@ flutter:
     #         style: italic
     - family: Quicksand
       fonts:
-        - asset: assets/fonts/Quicksand/Quicksand-Bold.ttf
+        - asset: assets/fonts/Quicksand/QuicksandBold.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #

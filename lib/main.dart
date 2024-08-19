@@ -13,6 +13,7 @@ import 'package:pwaohyes/service/servicehome.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/preferences.dart';
+import 'package:pwaohyes/utils/routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +26,7 @@ Future<void> main() async {
 
   var token = await Preferences.getToken();
   var location = await Preferences.getLocation();
-  Helper.showLog("the token is $token");
+  Helper.showLog("the token is $token and location is $location");
   if (location.isNotEmpty) {
     Initializer.selectedAdddress =
         SelectedAddressModel.fromJson(jsonDecode(location));
@@ -78,6 +79,12 @@ class MyApp extends StatelessWidget {
                 useMaterial3: false,
                 // scaffoldBackgroundColor: backgroundcolor,
               ),
+              // onGenerateRoute: (RouteSettings route){
+
+              // },
+              initialRoute: LocationView,
+              routes: routes,
+
               home: Builder(
                 builder: (context) {
                   Initializer.providerClass = context.read<ProviderClass>();
@@ -85,9 +92,9 @@ class MyApp extends StatelessWidget {
                   Initializer.authBloc = context.read<AuthBloc>();
                   Initializer.locationBloc = context.read<LocationBloc>();
                   return
+                      // const ServiceHome();
                       // const BookingAddressWeb();
-                      Initializer.selectedAdddress!.state ==
-                              LoadingState.success
+                      Initializer.selectedAdddress != null
                           ? const ServiceHome()
                           : const LocationPermissionView(route: null);
                 },

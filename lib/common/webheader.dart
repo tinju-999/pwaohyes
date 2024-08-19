@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/location/locationpermissionview.dart';
-import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
@@ -92,11 +91,9 @@ class WebHeader extends StatelessWidget {
                       const Text("About Us"),
                       Helper.allowWidth(20),
                       const Text("Get Started"),
-                      if (Initializer.selectedAdddress!.state ==
-                          LoadingState.success)
+                      if (Initializer.selectedAdddress!= null)
                         Helper.allowWidth(20),
-                      if (Initializer.selectedAdddress!.state ==
-                          LoadingState.success)
+                      if (Initializer.selectedAdddress != null)
                         InkWell(
                             onTap: () => Helper.push(
                                 LocationPermissionView(route: route)),

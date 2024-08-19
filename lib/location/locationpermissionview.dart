@@ -24,7 +24,9 @@ class _LocationPermissionViewState extends State<LocationPermissionView> {
     return ScreenSize(
       mobileView: Container(),
       tabView: Container(),
-      webView:  LocationWebView(route: widget.route,),
+      webView: LocationWebView(
+        route: widget.route,
+      ),
     );
   }
 

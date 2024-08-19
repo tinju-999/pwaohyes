@@ -135,7 +135,13 @@ class Helper {
             duration: const Duration(microseconds: 600)));
   }
 
+
+  static pushReplacementNamed(String routeName)=> Navigator.of(context!).pushReplacementNamed(routeName);
+
+
+
   static pushAndRemoveUntil(dynamic namedRoute) {
+   
     return Navigator.of(context!).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => namedRoute), (route) => false);
   }

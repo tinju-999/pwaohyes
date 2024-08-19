@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pwaohyes/model/selectedaddressmodel.dart';
-import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/preferences.dart';
@@ -15,8 +14,7 @@ class LocationBloc extends Cubit<LocationState> {
   getLocation() async {
     try {
       emit(GettingLocation());
-      Initializer.selectedAdddress =
-          SelectedAddressModel(state: LoadingState.loading);
+      Initializer.selectedAdddress = SelectedAddressModel();
       bool isGranted = await seekLocationPermission();
       if (!isGranted) {
         Helper.showCustomDialog(
@@ -36,11 +34,10 @@ class LocationBloc extends Cubit<LocationState> {
             .then((position) async {
           Initializer.selectedAdddress = SelectedAddressModel(
               locationName: "LatLong",
-              state: LoadingState.success,
+              // state: LoadingState.success,
               latLng: LatLng(position.latitude, position.longitude));
           await Preferences.setLocation(
               jsonEncode(Initializer.selectedAdddress!.toJson()));
-
           emit(LocationFetched());
         });
       }
