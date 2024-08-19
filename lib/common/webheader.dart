@@ -11,7 +11,7 @@ import 'package:pwaohyes/utils/screensize.dart';
 
 class WebHeader extends StatelessWidget {
   final dynamic route;
-  const WebHeader({super.key, required this.route});
+  const WebHeader({super.key, this.route});
 
   @override
   Widget build(BuildContext context) {

@@ -33,11 +33,11 @@ class _LocationWebViewState extends State<LocationWebView> {
     return Scaffold(
       body: ListView(
         children: [
-          WebHeader(
-            route: LocationWebView(
-              route: widget.route,
-            ),
-          ),
+          const WebHeader(
+              // route: LocationWebView(
+              //   route: widget.route,
+              // ),
+              ),
           Helper.allowHeight(10),
           BlocBuilder<AuthBloc, AuthState>(
               buildWhen: (previous, current) =>
@@ -237,8 +237,12 @@ class LocationWebContentView extends StatelessWidget {
                                   color: white,
                                 ),
                               )
-                            : const Text("Enable Location Services",
-                                style: TextStyle(color: white)),
+                            : state is LocationFetchingError ||
+                                    state is LocationNotFetched
+                                ? const Text("Geolocation is blocked",
+                                    style: TextStyle(color: white))
+                                : const Text("Enable Location Services",
+                                    style: TextStyle(color: white)),
                       );
                     }),
           ),

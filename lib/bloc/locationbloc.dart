@@ -41,7 +41,7 @@ class LocationBloc extends Cubit<LocationState> {
       }
     } catch (e) {
       Helper.showLog("Location fetching error $e");
-      emit(LocationFetchingError());
+      emit(LocationFetchingError());  
     }
   }
 
