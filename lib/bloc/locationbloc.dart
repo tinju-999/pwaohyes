@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -5,6 +7,7 @@ import 'package:pwaohyes/model/selectedaddressmodel.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
+import 'package:pwaohyes/utils/preferences.dart';
 
 class LocationBloc extends Cubit<LocationState> {
   LocationBloc() : super(LocationState());
@@ -25,23 +28,25 @@ class LocationBloc extends Cubit<LocationState> {
               Helper.pop();
             },
             actionTwoText: "Ok");
-            
+
         emit(LocationNotFetched());
       } else {
         await Geolocator.getCurrentPosition(
                 desiredAccuracy: LocationAccuracy.medium)
             .then((position) async {
-          // if (!kIsWeb) {
           Initializer.selectedAdddress = SelectedAddressModel(
-              latLng: LatLng(position.latitude, position.longitude),
-              locationName: "Current Address");
-          // }
+              locationName: "LatLong",
+              state: LoadingState.success,
+              latLng: LatLng(position.latitude, position.longitude));
+          await Preferences.setLocation(
+              jsonEncode(Initializer.selectedAdddress!.toJson()));
+
           emit(LocationFetched());
         });
       }
     } catch (e) {
       Helper.showLog("Location fetching error $e");
-      emit(LocationFetchingError());  
+      emit(LocationFetchingError());
     }
   }
 

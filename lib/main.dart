@@ -10,6 +10,7 @@ import 'package:pwaohyes/model/selectedaddressmodel.dart';
 import 'package:pwaohyes/model/usermodel.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/service/servicehome.dart';
+import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/preferences.dart';
 
@@ -24,6 +25,7 @@ Future<void> main() async {
 
   var token = await Preferences.getToken();
   var location = await Preferences.getLocation();
+  Helper.showLog("the token is $token");
   if (location.isNotEmpty) {
     Initializer.selectedAdddress =
         SelectedAddressModel.fromJson(jsonDecode(location));
