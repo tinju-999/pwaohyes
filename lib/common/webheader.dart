@@ -11,7 +11,7 @@ import 'package:pwaohyes/utils/screensize.dart';
 
 class WebHeader extends StatelessWidget {
   final dynamic route;
-  const WebHeader({super.key, required this.route});
+  const WebHeader({super.key, this.route});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class WebHeader extends StatelessWidget {
       builder: (context, state) => ScreenSize(
         mobileView: Container(
           padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
-          decoration: const BoxDecoration(color: white),
+          decoration: const BoxDecoration(color: Colors.white),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -52,7 +52,7 @@ class WebHeader extends StatelessWidget {
           ),
         ),
         webView: Container(
-          color: white,
+          color: Colors.white,
           padding: const EdgeInsets.only(left: 46, right: 46),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,9 +92,11 @@ class WebHeader extends StatelessWidget {
                       const Text("About Us"),
                       Helper.allowWidth(20),
                       const Text("Get Started"),
-                      if (Initializer.selectedAdddress!.state == LoadingState.success)
+                      if (Initializer.selectedAdddress!.state ==
+                          LoadingState.success)
                         Helper.allowWidth(20),
-                       if (Initializer.selectedAdddress!.state == LoadingState.success)
+                      if (Initializer.selectedAdddress!.state ==
+                          LoadingState.success)
                         InkWell(
                             onTap: () => Helper.push(
                                 LocationPermissionView(route: route)),

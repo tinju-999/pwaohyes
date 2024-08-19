@@ -33,7 +33,7 @@ class WebFooter extends StatelessWidget {
                   Colors.white.withOpacity(0.85), BlendMode.dstOut),
               child: Image.asset(
                 logo,
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.contain,
                 width: 160,
               ),
             ),
@@ -131,9 +131,9 @@ class WebFooter extends StatelessWidget {
             children: [
               Image.asset(
                 logo,
-                fit: BoxFit.contain,
-                width: 60,
-                height: 60,
+                fit: BoxFit.fitHeight,
+                width: 120,
+                height: 120,
               ),
             ],
           ),
