@@ -8,14 +8,18 @@ class ServerHelper {
   static Future<Response> post(String url, Map data) async {
     // Helper.showLog(Helper.userModel.token ?? "");
     Helper.showLog('${apiEnvironment.baseUrl + url} -- $data');
+    Helper.showLog('Token: Bearer ${Initializer.userModel.token ?? ""}');
+    Helper.showLog(
+        'Refresh token: Bearer ${Initializer.userModel.refreshToken ?? ""}');
     // var body = json.encode(data);
     // try {
     return await http
         .post(Uri.parse(apiEnvironment.baseUrl + url),
             headers: {
-              // 'Accept': 'application/json',
               'Content-Type': 'application/x-www-form-urlencoded',
-              'Authorization': 'Bearer ${Initializer.userModel.token!}',
+              'Authorization':'Bearer ${Initializer.userModel.token ?? ""}',
+              'Refreshtoken':
+                  'Bearer ${Initializer.userModel.refreshToken ?? ""}',
             },
             body: data)
         .timeout(const Duration(seconds: 20));
@@ -35,15 +39,17 @@ class ServerHelper {
 
   static Future<Response> get(String url) async {
     try {
-      var response = await http.get(
-        Uri.parse(apiEnvironment.baseUrl + url),
-        headers: {
-          // 'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer ${Initializer.userModel.token!}',
-        },
-      );
       Helper.showLog(apiEnvironment.baseUrl + url);
+      Helper.showLog('Token: Bearer ${Initializer.userModel.token ?? ""}');
+      Helper.showLog(
+          'Refresh token: Bearer ${Initializer.userModel.refreshToken ?? ""}');
+      var response =
+          await http.get(Uri.parse(apiEnvironment.baseUrl + url), headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Bearer ${Initializer.userModel.token ?? ""}',
+        'Refreshtoken': 'Bearer ${Initializer.userModel.refreshToken ?? ""}',
+      });
+
       return response;
       // if (response.statusCode == 200) {
       //   return jsonDecode(response.body);

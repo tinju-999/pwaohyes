@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/location/locationpermissionview.dart';
+import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
+import 'package:pwaohyes/utils/routes.dart';
 import 'package:pwaohyes/utils/screensize.dart';
 
 class WebHeader extends StatelessWidget {
@@ -91,9 +93,11 @@ class WebHeader extends StatelessWidget {
                       const Text("About Us"),
                       Helper.allowWidth(20),
                       const Text("Get Started"),
-                      if (Initializer.selectedAdddress!= null)
+                      if (Initializer.selectedAdddress!.loadingState !=
+                          LoadingState.initial)
                         Helper.allowWidth(20),
-                      if (Initializer.selectedAdddress != null)
+                      if (Initializer.selectedAdddress!.loadingState !=
+                          LoadingState.initial)
                         InkWell(
                             onTap: () => Helper.push(
                                 LocationPermissionView(route: route)),
@@ -114,7 +118,13 @@ class WebHeader extends StatelessWidget {
                         Helper.allowWidth(20),
                       if (Initializer.userModel.isLoggedIn!)
                         InkWell(
-                            onTap: () => Initializer.authBloc.doLogout(),
+                            onTap: () {
+                              if (Initializer.userModel.isLoggedIn!) {
+                                Initializer.authBloc.doLogout();
+                              } else {
+                                Helper.pushReplacementNamed(authUser);
+                              }
+                            },
                             child: const Text("Logout")),
                       Helper.allowWidth(20),
                     ],

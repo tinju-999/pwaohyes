@@ -1,6 +1,7 @@
 class UserModel {
   bool? isLoggedIn;
-  String? token;
+  String? token, refreshToken;
 
-  UserModel({this.isLoggedIn = false, this.token = ""});
+  UserModel({this.isLoggedIn = false, this.token = "", this.refreshToken =""});
 }
+    

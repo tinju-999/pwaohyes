@@ -1,10 +1,22 @@
+import 'package:pwaohyes/auth/authscreen.dart';
+import 'package:pwaohyes/booking/bookingweb.dart';
+import 'package:pwaohyes/bookingaddress/bookingaddaddresswebpart2.dart';
+import 'package:pwaohyes/bookingaddress/bookingaddressweb.dart';
 import 'package:pwaohyes/location/locationpermissionview.dart';
 import 'package:pwaohyes/service/servicehome.dart';
 
-const String LocationView = "/serviceLocation";
-const String Services = "/ohyesservices";
+const String locationView = "/serviceLocation";
+const String services = "/ohyesservices";
+const String bookingOne = "/servicebooking";
+const String confirmBooking = "/confirmBooking";
+const String authUser = '/authUser';
+const String addAddress = '/addAddress';
 
 final routes = {
-  LocationView: (context) => const LocationPermissionView(route: null),
-  Services: (context) => const ServiceHome(),
+  locationView: (context) => const LocationPermissionView(route: null),
+  services: (context) => const ServiceHome(),
+  bookingOne: (context) => const BookingWeb(),
+  confirmBooking: (context) => const BookingAddressWeb(),
+  authUser: (context) => const AuthScreen(),
+  addAddress: (context) => const AddAddressPageWeb(),
 };

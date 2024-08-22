@@ -31,7 +31,9 @@ class _BookingAddressWebState extends State<BookingAddressWeb> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const WebHeader(route: BookingAddressWeb(),),
+            const WebHeader(
+              route: BookingAddressWeb(),
+            ),
             Helper.allowHeight(10),
             Selector<ProviderClass, bool>(
               selector: (p0, p1) => p1.isAddAddressVisible!,
@@ -495,125 +497,66 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                           ),
                         ),
                         Helper.allowHeight(15.0),
-                        addressCustomfield(
-                          context,
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 4, horizontal: 14),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey[200],
-                                        borderRadius:
-                                            BorderRadius.circular(4.0)),
-                                    child: const Text(
-                                      "Home",
-                                      style: TextStyle(fontSize: 10),
-                                    ),
-                                  ),
-                                  PopupMenuButton(
-                                    padding: EdgeInsets.zero,
-                                    iconSize: 18,
-                                    itemBuilder: (context) =>
-                                        <PopupMenuEntry<String>>[
-                                      const PopupMenuItem<String>(
-                                        value: 'Option 1',
-                                        child: Text('Edit'),
-                                      ),
-                                      const PopupMenuItem<String>(
-                                        value: 'Option 2',
-                                        child: Text('Delete'),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              // Helper.allowHeight(5.0),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Text("Aju Alex"),
-                                  Helper.allowWidth(10.0),
-                                  const Text("8129322316")
-                                ],
-                              ),
-                              Helper.allowHeight(0.5),
-                              const Text(
-                                  "Amal Jyothi College of Engineering, Koovappally, Kottayam, Kerala - 686518"),
-                              //
-                            ],
-                          ),
-                        ),
-                        Helper.allowHeight(10.0),
-                        addressCustomfield(
-                          context,
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 4, horizontal: 14),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey[200],
-                                        borderRadius:
-                                            BorderRadius.circular(4.0)),
-                                    child: const Text(
-                                      "Work",
-                                      style: TextStyle(fontSize: 10),
-                                    ),
-                                  ),
-                                  PopupMenuButton(
-                                    padding: EdgeInsets.zero,
-                                    iconSize: 18,
-                                    itemBuilder: (context) =>
-                                        <PopupMenuEntry<String>>[
-                                      const PopupMenuItem<String>(
-                                        value: 'Option 1',
-                                        child: Text('Edit'),
-                                      ),
-                                      const PopupMenuItem<String>(
-                                        value: 'Option 2',
-                                        child: Text('Delete'),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              // Helper.allowHeight(5.0),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Text("Aju Alex"),
-                                  Helper.allowWidth(10.0),
-                                  const Text("8129322316")
-                                ],
-                              ),
-                              Helper.allowHeight(0.5),
-                              const Text(
-                                  "Amal Jyothi College of Engineering, Koovappally, Kottayam, Kerala - 686518"),
-                              //
-                            ],
-                          ),
-                        ),
+                        // addressCustomfield(
+                        //   context,
+                        //   Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     children: [
+                        //       Row(
+                        //         mainAxisAlignment:
+                        //             MainAxisAlignment.spaceBetween,
+                        //         crossAxisAlignment: CrossAxisAlignment.center,
+                        //         mainAxisSize: MainAxisSize.max,
+                        //         children: [
+                        //           Container(
+                        //             padding: const EdgeInsets.symmetric(
+                        //                 vertical: 4, horizontal: 14),
+                        //             decoration: BoxDecoration(
+                        //                 color: Colors.grey[200],
+                        //                 borderRadius:
+                        //                     BorderRadius.circular(4.0)),
+                        //             child: const Text(
+                        //               "Home",
+                        //               style: TextStyle(fontSize: 10),
+                        //             ),
+                        //           ),
+                        //           PopupMenuButton(
+                        //             padding: EdgeInsets.zero,
+                        //             iconSize: 18,
+                        //             itemBuilder: (context) =>
+                        //                 <PopupMenuEntry<String>>[
+                        //               const PopupMenuItem<String>(
+                        //                 value: 'Option 1',
+                        //                 child: Text('Edit'),
+                        //               ),
+                        //               const PopupMenuItem<String>(
+                        //                 value: 'Option 2',
+                        //                 child: Text('Delete'),
+                        //               ),
+                        //             ],
+                        //           )
+                        //         ],
+                        //       ),
+                        //       // Helper.allowHeight(5.0),
+                        //       Row(
+                        //         mainAxisAlignment: MainAxisAlignment.start,
+                        //         crossAxisAlignment: CrossAxisAlignment.center,
+                        //         mainAxisSize: MainAxisSize.min,
+                        //         children: [
+                        //           const Text("Aju Alex"),
+                        //           Helper.allowWidth(10.0),
+                        //           const Text("8129322316")
+                        //         ],
+                        //       ),
+                        //       Helper.allowHeight(0.5),
+                        //       const Text(
+                        //           "Amal Jyothi College of Engineering, Koovappally, Kottayam, Kerala - 686518"),
+                        //       //
+                        //     ],
+                        //   ),
+                        // ),
+                        // Helper.allowHeight(10.0),
 
                         // Flexible(
                         //   child: Text(

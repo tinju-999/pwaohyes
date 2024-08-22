@@ -11,9 +11,9 @@ class Preferences {
     prefs.setString("refreshToken", token);
   }
 
-  static Future getRefershToken() async {
+  static Future<String> getRefershToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-     prefs.getString("refreshToken") ?? "";
+    return prefs.getString("refreshToken") ?? "";
   }
 
   static Future<String> getToken() async {

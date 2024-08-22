@@ -42,28 +42,36 @@ class AuthBloc extends Cubit<AuthState> {
       Response response = await ServerHelper.post('verify', {
         "mobileNumber": '+91$phone',
         "otp": otp,
-        "device_token": 'null',
+        "device_token": 'xxx',
         "device_type": 'web',
       });
       if (response.statusCode == 200 || response.statusCode == 201) {
         var data = jsonDecode(response.body);
+        Helper.showLog('auth data $data');
         Initializer.otpVerifiedModel = OtpVerifiedModel.fromJson(data);
         await Preferences.setToken(
             Initializer.otpVerifiedModel.data!.accessToken!);
-        await Preferences.setRefreshToken(
-            Initializer.otpVerifiedModel.data!.refreshToken!);
-
+       
+        //7034444303
         await Preferences.setVerifiedData(
             jsonEncode(Initializer.otpVerifiedModel.toJson()));
-        Helper.pushAndRemoveUntil(const BookingAddressWeb());
+        Helper.pushReplacement(const BookingAddressWeb());
         Helper.showSnack(data['message']);
+        Initializer.userModel = UserModel(
+            token: Initializer.otpVerifiedModel.data!.accessToken!,
+            isLoggedIn: true,
+            refreshToken: Initializer.otpVerifiedModel.data!.refreshToken!);
         emit(OTPVerified());
       } else {
         Helper.showLog(jsonDecode(response.body)['msg']);
         Helper.showLog(response.reasonPhrase);
+        Initializer.userModel =
+            UserModel(token: "", isLoggedIn: false, refreshToken: "");
         emit(OTPNotVerified());
-      }
+      } 
     } catch (e) {
+      Initializer.userModel =
+          UserModel(token: "", isLoggedIn: false, refreshToken: "");
       Helper.showLog('Exception on verifying otp $e');
       emit(VerifyingOTPError());
     }
@@ -77,7 +85,7 @@ class AuthBloc extends Cubit<AuthState> {
       if (response.statusCode == 200 || response.statusCode == 204) {
         // var data = jsonDecode(response.body);
         await Preferences.clearAll();
-        Initializer.userModel = UserModel();
+        Initializer.userModel = UserModel(isLoggedIn: false);
         emit(LoggoutSuccess());
       } else {
         emit(LoggoutFailed());
@@ -90,15 +98,15 @@ class AuthBloc extends Cubit<AuthState> {
 
   Future<void> fetchCities() async {
     try {
-      emit(FetchingCitiesData());
-      Response response = await ServerHelper.get('cities');
-      if (response.statusCode == 200 || response.statusCode == 204) {
-        var data = jsonDecode(response.body);
-        Initializer.citiesModel = CitiesModel.fromJson(data);
-        emit(CitiesDataFetched());
-      } else {
-        emit(CitiesDataNotFetched());
-      }
+    emit(FetchingCitiesData());
+    Response response = await ServerHelper.get('cities');
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      var data = jsonDecode(response.body);
+      Initializer.citiesModel = CitiesModel.fromJson(data);
+      emit(CitiesDataFetched());
+    } else {
+      emit(CitiesDataNotFetched());
+    }
     } catch (e) {
       Helper.showLog("Exception on fetching cities $e");
       emit(FetchingCitiesDataError());
@@ -111,8 +119,11 @@ class AuthState {}
 class AuthEvent {}
 
 class FetchingCitiesData extends AuthState {}
+
 class CitiesDataFetched extends AuthState {}
+
 class CitiesDataNotFetched extends AuthState {}
+
 class FetchingCitiesDataError extends AuthState {}
 
 class GettingOtp extends AuthState {}

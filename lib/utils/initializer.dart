@@ -76,7 +76,7 @@ class Initializer {
 
   static AuthBloc authBloc = AuthBloc();
 
-  static SelectedAddressModel? selectedAdddress = SelectedAddressModel(state: LoadingState.initial);
+  static SelectedAddressModel? selectedAdddress = SelectedAddressModel(loadingState: LoadingState.initial, latLng: null);
 
   static LocationBloc locationBloc = LocationBloc();
 }

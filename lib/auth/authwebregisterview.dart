@@ -137,10 +137,10 @@ class _AuthWebRegisterViewState extends State<AuthWebRegisterView> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
-                    'Regiter Now',
+                    'Login Now',
                     style: TextStyle(fontSize: 36, color: primaryColor),
                   ),
-                  Helper.allowHeight(20),
+                  Helper.allowHeight(15),
                   SizedBox(
                     width: Helper.width / 3,
                     child: TextFormField(
@@ -160,7 +160,7 @@ class _AuthWebRegisterViewState extends State<AuthWebRegisterView> {
                           ),
                         )),
                   ),
-                  Helper.allowHeight(5),
+                  Helper.allowHeight(15),
                   SizedBox(
                     width: Helper.width / 3,
                     child: BlocConsumer<AuthBloc, AuthState>(

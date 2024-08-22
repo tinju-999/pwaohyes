@@ -137,6 +137,7 @@ class Helper {
 
 
   static pushReplacementNamed(String routeName)=> Navigator.of(context!).pushReplacementNamed(routeName);
+  static pushNamed(String routeName, [Map? arguments]) => Navigator.of(context!).pushNamed(routeName, arguments: arguments);
 
 
 

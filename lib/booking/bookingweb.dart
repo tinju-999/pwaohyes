@@ -15,17 +15,31 @@ import 'package:pwaohyes/utils/initializer.dart';
 
 class BookingWeb extends StatefulWidget {
   final String? catId;
-  const BookingWeb({super.key, required this.catId});
+  const BookingWeb({super.key, this.catId});
 
   @override
   State<BookingWeb> createState() => _BookingWebState();
 }
 
 class _BookingWebState extends State<BookingWeb> {
+  String? title = "";
+  bool? isLoaded = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // if (!isLoaded!) {
+  final arg = ModalRoute.of(context)!.settings.arguments as Map;
+    var catId = arg['catId'];
+    title = arg['title'];
+    Initializer.serviceBloc.getServiceDetail(catId);
+    // }
+  
+  }
+
   @override
   initState() {
     super.initState();
-    Initializer.serviceBloc.getServiceDetail(widget.catId);
+    isLoaded = true;
   }
 
   @override
@@ -35,10 +49,10 @@ class _BookingWebState extends State<BookingWeb> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-             WebHeader(route: BookingWeb(catId:widget.catId)),
-            Helper.allowHeight(20),
-            const BookingWebPage(),
-            Helper.allowHeight(20),
+            WebHeader(route: BookingWeb(catId: widget.catId)),
+            Helper.allowHeight(15),
+            BookingWebPage(title: title),
+            Helper.allowHeight(15),
             const WebFooter(),
           ],
         ),
@@ -48,7 +62,8 @@ class _BookingWebState extends State<BookingWeb> {
 }
 
 class BookingWebPage extends StatefulWidget {
-  const BookingWebPage({super.key});
+  final String? title;
+  const BookingWebPage({super.key, this.title});
 
   @override
   State<BookingWebPage> createState() => _BookingWebPageState();
@@ -71,8 +86,23 @@ class _BookingWebPageState extends State<BookingWebPage> {
             : state is ServiceDetailFetched
                 ? Column(
                     children: [
-                      const Align(
-                          alignment: Alignment.centerLeft, child: BackButton()),
+                      Helper.allowHeight(15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          const Align(
+                              alignment: Alignment.centerLeft,
+                              child: BackButton()),
+                          Helper.allowWidth(15),
+                          Text(
+                            widget.title!,
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
+                          )
+                        ],
+                      ),
                       Helper.allowHeight(30),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,6 +123,7 @@ class _BookingWebPageState extends State<BookingWebPage> {
                                   ? CachedNetworkImage(
                                       imageUrl: Initializer.serviceDetailedModel
                                           .data!.service!.image!.first,
+                                      fit: BoxFit.cover,
                                       errorWidget: (context, url, error) =>
                                           Image.asset(
                                         'assets/images/bg2.jpeg',
@@ -162,24 +193,40 @@ class _BookingWebPageState extends State<BookingWebPage> {
                                               selector: (p0, p1) => p1.amount,
                                               builder:
                                                   (context, value, child) =>
-                                                      Text(
-                                                "$rupeeSymbol $value",
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 24),
-                                              ),
+                                                      value == "0"
+                                                          ? const Text(
+                                                              "Free",
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color: Colors
+                                                                      .green,
+                                                                  fontSize: 24),
+                                                            )
+                                                          : Text(
+                                                              "$rupeeSymbol $value",
+                                                              style: const TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize: 24),
+                                                            ),
                                             ),
                                           ],
                                         ),
                                         SizedBox(
                                           width: Helper.width / 6,
                                           child: MaterialButton(
-                                            onPressed: () => Initializer
-                                                    .userModel.isLoggedIn!
-                                                ? Helper.push(
-                                                    const BookingAddress())
-                                                : Helper.push(
-                                                    const AuthScreen()),
+                                            onPressed: () {
+                                              Helper.showLog(
+                                                  'service id ${Initializer.serviceDetailedModel.data!.service!.categoryId!.sId}');
+                                              Initializer.userModel.isLoggedIn!
+                                                  ? Helper.push(
+                                                      const BookingAddress())
+                                                  : Helper.push(
+                                                      const AuthScreen());
+                                            },
                                             // Helper.push(const BookingAddress()),
                                             elevation: 5.0,
                                             color: primaryColor,
@@ -268,7 +315,7 @@ class _BookingWebPageState extends State<BookingWebPage> {
                   child: Text(
                     Initializer
                         .serviceDetailedModel.data!.service!.description!.text!,
-                    textAlign: TextAlign.justify,
+                    textAlign: TextAlign.start,
                     style: const TextStyle(fontSize: 14),
                   ),
                 ),

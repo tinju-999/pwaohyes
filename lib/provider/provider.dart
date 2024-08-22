@@ -172,7 +172,7 @@ class ProviderClass extends ChangeNotifier {
     Completer<bool> completer = Completer<bool>();
     try {
       _selectedAddressModel =
-          SelectedAddressModel(state: LoadingState.loading);
+          SelectedAddressModel(loadingState: LoadingState.loading);
       notifyListeners();
       bool isGranted = await seekLocationPermission();
       if (!isGranted) {
@@ -188,7 +188,7 @@ class ProviderClass extends ChangeNotifier {
               Helper.pop();
               await seekLocationPermission();
               _selectedAddressModel =
-                  SelectedAddressModel(state: LoadingState.loading);
+                  SelectedAddressModel(loadingState: LoadingState.loading);
               notifyListeners();
             },
             actionTwoText: "Enable");
@@ -202,7 +202,7 @@ class ProviderClass extends ChangeNotifier {
           // await getNearbyAddress(position).then((foundNearby) async {
           if (!kIsWeb) {
             _selectedAddressModel = SelectedAddressModel(
-                state: LoadingState.success,
+                loadingState: LoadingState.success,
                 latLng: LatLng(position.latitude, position.longitude),
                 locationName: "Current Address");
             // if (!foundNearby) {
@@ -250,7 +250,7 @@ class ProviderClass extends ChangeNotifier {
             // );
           } else {
                _selectedAddressModel = SelectedAddressModel(
-                state: LoadingState.success,
+                loadingState: LoadingState.success,
                 latLng: LatLng(position.latitude, position.longitude),
                 locationName: "Current Address");
             // LatLng nearByPostion = LatLng(

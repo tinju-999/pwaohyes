@@ -9,6 +9,7 @@ import 'package:pwaohyes/common/webfooter.dart';
 import 'package:pwaohyes/common/webheader.dart';
 import 'package:pwaohyes/model/citiesmodel.dart';
 import 'package:pwaohyes/model/selectedaddressmodel.dart';
+import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
@@ -99,13 +100,14 @@ class LocationWebContentView extends StatelessWidget {
                               Initializer.selectedAdddress =
                                   SelectedAddressModel(
                                       locationName: data![index].name,
-                                   
+                                      loadingState: LoadingState.success,
+                                      cityId: data![index].sId,
                                       latLng: LatLng(
                                           double.parse(data![index].lat!),
                                           double.parse(data![index].lng!)));
                               await Preferences.setLocation(jsonEncode(
                                   Initializer.selectedAdddress!.toJson()));
-                              Helper.pushReplacementNamed(Services);
+                              Helper.pushReplacementNamed(services);
                             },
 
                             // Helper.push(BookingWeb(

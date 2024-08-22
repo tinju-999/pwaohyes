@@ -3,18 +3,20 @@ import 'package:pwaohyes/provider/provider.dart';
 
 class SelectedAddressModel {
   LatLng? latLng;
-  LoadingState? state;
-  String? locationName;
+  LoadingState? loadingState;
+  String? locationName, cityId;
   SelectedAddressModel({
     this.latLng,
     this.locationName,
-    this.state = LoadingState.initial,
+    this.cityId,
+    this.loadingState = LoadingState.initial,
   });
 
   factory SelectedAddressModel.fromJson(Map<String, dynamic> json) {
     return SelectedAddressModel(
       locationName: json['locationName'],
-      // state: json['loadingState'] ?? LoadingState.initial,
+      cityId: json['cityId'],
+      loadingState: LoadingState.values.firstWhere((e)=> e.name == json['loadingState']),
       latLng: json['latLng'] != null ? LatLng.fromJson(json['latLng']) : null,
     );
   }
@@ -22,7 +24,8 @@ class SelectedAddressModel {
   Map<String, dynamic> toJson() {
     return {
       'locationName': locationName,
-      // 'state': state!,
+      'loadingState': loadingState!.name,
+      'cityId': cityId,
       'latLng': latLng?.toJson(),
     };
   }

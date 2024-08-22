@@ -14,9 +14,30 @@ import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/preferences.dart';
 import 'package:pwaohyes/utils/routes.dart';
+import 'dart:js';
+//7034444303
+void useJsObject(JsObject jsObject) {
+   // Ensure jsObject is not null
+  if (jsObject != null) {
+    // Example: Call a method on the JavaScript object
+    context.callMethod('console.log', [jsObject]);
+  } else {
+    print('jsObject is null');
+  }
+}
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Create a JavaScript object with properties
+  var jsObject = JsObject.jsify({'key': 'value'});
+  
+  // Call a JavaScript function
+  context.callMethod('alert', ['Hello from Dart!']);
+  
+  // Pass the JavaScript object to another function
+  useJsObject(jsObject);
 
   // PWAInstall().setup(installCallback: () {
   //   debugPrint('APP INSTALLED!');
@@ -25,25 +46,25 @@ Future<void> main() async {
   // Text('Has Install Prompt: ${PWAInstall().hasPrompt}');
 
   var token = await Preferences.getToken();
+  var refreshToken = await Preferences.getRefershToken();
   var location = await Preferences.getLocation();
-  Helper.showLog("the token is $token and location is $location");
+  Helper.showLog("the token: $token");
+  Helper.showLog("the refresh-token: $refreshToken");
   if (location.isNotEmpty) {
     Initializer.selectedAdddress =
         SelectedAddressModel.fromJson(jsonDecode(location));
   }
   if (token.isNotEmpty) {
-    Initializer.userModel = UserModel(
-      isLoggedIn: true,
-      token: token,
-    );
+    Initializer.userModel =
+        UserModel(isLoggedIn: true, token: token, refreshToken: refreshToken);
   } else {
-    Initializer.userModel = UserModel(
-      isLoggedIn: false,
-      token: "",
-    );
+    Initializer.userModel =
+        UserModel(isLoggedIn: false, token: "", refreshToken: "");
   }
   runApp(const MyApp());
 }
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -82,9 +103,8 @@ class MyApp extends StatelessWidget {
               // onGenerateRoute: (RouteSettings route){
 
               // },
-              initialRoute: LocationView,
+              initialRoute: locationView,
               routes: routes,
-
               home: Builder(
                 builder: (context) {
                   Initializer.providerClass = context.read<ProviderClass>();
@@ -94,7 +114,9 @@ class MyApp extends StatelessWidget {
                   return
                       // const ServiceHome();
                       // const BookingAddressWeb();
-                      Initializer.selectedAdddress != null
+
+                      Initializer.selectedAdddress!.loadingState !=
+                              LoadingState.initial
                           ? const ServiceHome()
                           : const LocationPermissionView(route: null);
                 },

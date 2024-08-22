@@ -131,10 +131,20 @@ class WebFooter extends StatelessWidget {
             children: [
               Image.asset(
                 logo,
-                fit: BoxFit.fitHeight,
-                width: 120,
-                height: 120,
+                fit: BoxFit.contain,
+                width: 140,
+                height: 140,
               ),
+              // ColorFiltered(
+              //   colorFilter: ColorFilter.mode(
+              //       Colors.black.withOpacity(0.5), BlendMode.dstOut),
+              //   child: Image.asset(
+              //     logo,
+              //     fit: BoxFit.contain,
+              //     width: 180,
+              //     height: 180,
+              //   ),
+              // ),
             ],
           ),
           Helper.allowHeight(5.0),
@@ -162,7 +172,7 @@ class WebFooter extends StatelessWidget {
                 ),
               ),
               Expanded(
-                flex: 4,
+                flex: 3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,

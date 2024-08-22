@@ -12,11 +12,35 @@ import 'package:pwaohyes/utils/initializer.dart';
 class ServiceBloc extends Cubit<ServiceState> {
   ServiceBloc() : super(ServiceState());
 
+  addAddress(Map data) async {
+    try {
+      emit(AddingAddress());
+      Response response = await ServerHelper.post('user/address', data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Helper.showLog(response.reasonPhrase);
+        Helper.showSnack(response.reasonPhrase);
+        emit(AddressAdded());
+      } else {
+        Helper.showSnack(response.reasonPhrase);
+        Helper.showLog(response.reasonPhrase);
+        emit(AddressNotAdded());
+      }
+    } catch (e) {
+      Helper.showLog("Exception on adding address $e");
+      Helper.showSnack("Unexpected Exception");
+      emit(AddressAddingFailed());
+    }
+  }
+
   getServices() async {
     try {
       emit(FetchingServices());
-      Response response =
-          await ServerHelper.get('home-public?lat=9.563092&lng=76.836966');
+      Helper.showLog(Initializer.selectedAdddress!.latLng.toString());
+      // Response authResponse = await ServerHelper.post('refresh', {"refreshToken": Initializer.userModel.refreshToken ?? ""});
+      // if (authResponse.statusCode == 200 || authResponse.statusCode == 201) {
+      // Helper.showLog(jsonDecode(authResponse.body));
+      Response response = await ServerHelper.get(
+          'home-public?lat=${Initializer.selectedAdddress!.latLng!.latitude}&lng=${Initializer.selectedAdddress!.latLng!.longitude}&city=${Initializer.selectedAdddress!.cityId}');
       if (response.statusCode == 200) {
         // var data = jsonDecode(response.body);
         Initializer.serviceModel =
@@ -36,6 +60,7 @@ class ServiceBloc extends Cubit<ServiceState> {
         Helper.showSnack(response.reasonPhrase);
         emit(ServicesNotFetched());
       }
+      // }
     } catch (e) {
       Helper.showLog("Exception on services $e");
       emit(ServicesNotFetched());
@@ -90,6 +115,14 @@ class ServiceBloc extends Cubit<ServiceState> {
 }
 
 class ServiceState {}
+
+class AddingAddress extends ServiceState {}
+
+class AddressAdded extends ServiceState {}
+
+class AddressNotAdded extends ServiceState {}
+
+class AddressAddingFailed extends ServiceState {}
 
 //___________________________________________
 class GettingServiceDetail extends ServiceState {}

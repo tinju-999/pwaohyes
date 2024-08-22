@@ -85,7 +85,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 //         fontSize: 16,
                                 //         color: primaryColor,
                                 //       ),
-                                //     ),
+                                //     ), 
                                 //   ),
                               ],
                             ),

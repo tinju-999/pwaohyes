@@ -10,6 +10,7 @@ import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
+import 'package:pwaohyes/utils/routes.dart';
 
 class ServiceHomeWebView extends StatelessWidget {
   final ProviderClass? providerClass;
@@ -32,7 +33,10 @@ class ServiceHomeWebView extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                         WebHeader(route: ServiceHomeWebView(providerClass: providerClass),),
+                        WebHeader(
+                          route:
+                              ServiceHomeWebView(providerClass: providerClass),
+                        ),
                         Helper.allowHeight(10),
                         ServicePageWeb(providerClass: providerClass),
                         Helper.allowHeight(10),
@@ -133,77 +137,85 @@ class ServicePageWeb extends StatelessWidget {
                 : state is SubServicesFetched ||
                         Initializer.subCatModel.data!.services!.isNotEmpty
                     ? Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 26.0,
-                        runSpacing: 26.0,
-                        children: List.generate(
-                            Initializer.subCatModel.data!.services!.length,
-                            (index) => InkWell(
-                                  onTap: () =>
-                                      Initializer.providerClass?.getLocation(),
-                                  // Helper.push(BookingWeb(
-                                  //     catId: Initializer.subCatModel.data!
-                                  //         .services![index].sId)),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        clipBehavior: Clip.hardEdge,
-                                        constraints: const BoxConstraints(
-                                          maxHeight: 120,
-                                          maxWidth: 120,
-                                        ),
-                                        padding: const EdgeInsets.all(8.0),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            color: white,
-                                            border: Border.all(
-                                                color: primaryColor)),
-                                        child: Initializer.subCatModel.data!
-                                                    .services![index].image !=
-                                                null
-                                            ? ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: CachedNetworkImage(
-                                                    imageUrl: Initializer
-                                                        .subCatModel
-                                                        .data!
-                                                        .services![index]
-                                                        .image!,
-                                                    width: 120,
-                                                    height: 120,
-                                                    fit: BoxFit.cover,
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            const Icon(
-                                                              Icons.error,
-                                                              color: black,
-                                                            )),
-                                              )
-                                            : noImageView(context),
+                      alignment: WrapAlignment.center,
+                      spacing: 26.0,
+                      runSpacing: 26.0,
+                      children: List.generate(
+                          Initializer.subCatModel.data!.services!.length,
+                          (index) => InkWell(
+                                onTap: () =>
+                                    // Initializer.providerClass?.getLocation(),
+                                    Helper.pushNamed(bookingOne, {
+                                  "catId": Initializer.subCatModel.data!
+                                      .services![index].sId,
+                                  "title": Initializer.subCatModel.data!
+                                      .services![index].title
+                                }),
+                                // Helper.pushNamed(BookingWeb(
+                                //     catId: Initializer.subCatModel.data!
+                                //         .services![index].sId)),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      clipBehavior: Clip.hardEdge,
+                                      constraints: const BoxConstraints(
+                                        maxHeight: 120,
+                                        maxWidth: 120,
                                       ),
-                                      Helper.allowHeight(15),
-                                      SizedBox(
-                                        // width: 120,
-                                        child: Text(
-                                          Initializer.subCatModel.data!
-                                              .services![index].title!,
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: quicksand,
-                                          ),
+                                      padding: const EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          color: white,
+                                          border: Border.all(
+                                              color: primaryColor)),
+                                      child: Initializer.subCatModel.data!
+                                                  .services![index].image !=
+                                              null
+                                          ? ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      8.0),
+                                              child: CachedNetworkImage(
+                                                  imageUrl: Initializer
+                                                      .subCatModel
+                                                      .data!
+                                                      .services![index]
+                                                      .image!,
+                                                  width: 120,
+                                                  height: 120,
+                                                  fit: BoxFit.cover,
+                                                  errorWidget: (context,
+                                                          url, error) =>
+                                                      const Icon(
+                                                        Icons.error,
+                                                        color: black,
+                                                      )),
+                                            )
+                                          : noImageView(context),
+                                    ),
+                                    Helper.allowHeight(15),
+                                    SizedBox(
+                                      // width: 120,
+                                      child: Text(
+                                        Initializer.subCatModel.data!
+                                            .services![index].title!,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: quicksand,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                )),
-                      )
+                                    ),
+                                  ],
+                                ),
+                              )),
+                    )
                     : const Center(
                         child: Text("Something went wrong"),
                       ),
@@ -466,7 +478,8 @@ class ServicePageWeb extends StatelessWidget {
             ),
           ),
           Helper.allowHeight(20),
-          Flexible(
+          SizedBox(
+            width: Helper.width / 1.5,
             child: SingleChildScrollView(
               padding: const EdgeInsets.only(left: 18, right: 18),
               child: Wrap(
@@ -506,7 +519,7 @@ class ServicePageWeb extends StatelessWidget {
                                   )),
                               Helper.allowHeight(15),
                               SizedBox(
-                                // width: 120,
+                                width: 140,
                                 child: Text(
                                   Initializer.serviceCategory[index].name!,
                                   textAlign: TextAlign.center,

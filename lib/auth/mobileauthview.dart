@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
@@ -100,7 +99,7 @@ class BookingAuthMobile extends StatelessWidget {
                                   height: 20,
                                   child:
                                       CircularProgressIndicator(color: white))
-                              : const Text("Register Now",
+                              : const Text("Login Now",
                                   style: TextStyle(color: white)),
                         ),
                       ),
