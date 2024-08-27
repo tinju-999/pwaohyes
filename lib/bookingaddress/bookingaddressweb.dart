@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:pwaohyes/bookingaddress/bookingaddaddresswebpart2.dart';
-import 'package:pwaohyes/common/webfooter.dart';
-import 'package:pwaohyes/common/webheader.dart';
+import 'package:pwaohyes/common/footer.dart';
+import 'package:pwaohyes/common/header.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
@@ -18,6 +18,7 @@ class BookingAddressWeb extends StatefulWidget {
 }
 
 class _BookingAddressWebState extends State<BookingAddressWeb> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     Helper.setDateAndTimings();
@@ -31,9 +32,7 @@ class _BookingAddressWebState extends State<BookingAddressWeb> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const WebHeader(
-              route: BookingAddressWeb(),
-            ),
+            Header(route: const BookingAddressWeb(), scaffoldKey: scaffoldKey),
             Helper.allowHeight(10),
             Selector<ProviderClass, bool>(
               selector: (p0, p1) => p1.isAddAddressVisible!,
@@ -42,7 +41,7 @@ class _BookingAddressWebState extends State<BookingAddressWeb> {
                   : const BookingAddressWebPage(),
             ),
             Helper.allowHeight(10),
-            const WebFooter(),
+            const Footer(),
           ],
         ),
       ),

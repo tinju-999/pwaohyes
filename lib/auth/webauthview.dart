@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwaohyes/auth/authwebregisterview.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
-import 'package:pwaohyes/common/webfooter.dart';
-import 'package:pwaohyes/common/webheader.dart';
+import 'package:pwaohyes/common/footer.dart';
+import 'package:pwaohyes/common/header.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
@@ -13,16 +13,21 @@ class WebAuth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
       body: SingleChildScrollView(
         // padding: const EdgeInsets.all(18),
         child: Column(
           children: [
-            const WebHeader(route: WebAuth()),
+            Header(
+              route: const WebAuth(),
+              scaffoldKey: scaffoldKey,
+            ),
             Helper.allowHeight(10),
             const WebAuthView(),
             Helper.allowHeight(10),
-            const WebFooter(),
+            const Footer(),
           ],
         ),
       ),

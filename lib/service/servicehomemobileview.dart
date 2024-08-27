@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pwaohyes/common/animation.dart';
-import 'package:pwaohyes/common/webfooter.dart';
-import 'package:pwaohyes/common/webheader.dart';
+import 'package:pwaohyes/common/footer.dart';
+import 'package:pwaohyes/common/header.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
@@ -15,11 +15,17 @@ class ServiceHomeMobileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
     return SafeArea(
       child: Scaffold(
         body: ListView(
           children: [
-             WebHeader(route: ServiceHomeMobileView(providerClass: providerClass,),),
+            Header(
+                route: ServiceHomeMobileView(
+                  providerClass: providerClass,
+                ),
+                scaffoldKey: scaffoldKey),
             Helper.allowHeight(15),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 18),
@@ -42,7 +48,7 @@ class ServiceHomeMobileView extends StatelessWidget {
               ),
             ),
             Helper.allowHeight(15),
-            const WebFooter(),
+            const Footer(),
           ],
         ),
       ),

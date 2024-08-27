@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:pwaohyes/common/webfooter.dart';
-import 'package:pwaohyes/common/webheader.dart';
+import 'package:pwaohyes/common/footer.dart';
+import 'package:pwaohyes/common/header.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
@@ -15,6 +15,7 @@ class BookingTab extends StatefulWidget {
 }
 
 class _BookingTabState extends State<BookingTab> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,11 +23,14 @@ class _BookingTabState extends State<BookingTab> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const WebHeader(route: BookingTab(),),
+            Header(
+              route: const BookingTab(),
+              scaffoldKey: scaffoldKey,
+            ),
             Helper.allowHeight(20),
             const BookingTabPage(),
             Helper.allowHeight(20),
-            const WebFooter(),
+            const Footer(),
           ],
         ),
       ),

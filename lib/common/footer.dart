@@ -3,8 +3,8 @@ import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/screensize.dart';
 
-class WebFooter extends StatelessWidget {
-  const WebFooter({super.key});
+class Footer extends StatelessWidget {
+  const Footer({super.key});
 
   @override
   Widget build(BuildContext context) {

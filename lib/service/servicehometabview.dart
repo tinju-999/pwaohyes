@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pwaohyes/common/animation.dart';
-import 'package:pwaohyes/common/webfooter.dart';
-import 'package:pwaohyes/common/webheader.dart';
+import 'package:pwaohyes/common/footer.dart';
+import 'package:pwaohyes/common/header.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
@@ -13,12 +13,16 @@ class ServiceHomeTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-             WebHeader(route: ServiceHomeTabView(providerClass: providerClass),),
+            Header(
+                route: ServiceHomeTabView(providerClass: providerClass),
+                scaffoldKey: scaffoldKey),
             Helper.allowHeight(20),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 18),
@@ -35,7 +39,7 @@ class ServiceHomeTabView extends StatelessWidget {
               ),
             ),
             Helper.allowHeight(20),
-            const WebFooter(),
+            const Footer(),
           ],
         ),
       ),

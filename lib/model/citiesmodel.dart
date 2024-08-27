@@ -1,6 +1,6 @@
 class CitiesModel {
 	int? errorCode;
-	List<Data>? data;
+	List<CityData>? data;
 	bool? toast;
 	String? message;
 
@@ -9,8 +9,8 @@ class CitiesModel {
 	CitiesModel.fromJson(Map<String, dynamic> json) {
 		errorCode = json['error_code'];
 		if (json['data'] != null) {
-			data = <Data>[];
-			json['data'].forEach((v) { data!.add(Data.fromJson(v)); });
+			data = <CityData>[];
+			json['data'].forEach((v) { data!.add(CityData.fromJson(v)); });
 		}
 		toast = json['toast'];
 		message = json['message'];
@@ -28,7 +28,7 @@ class CitiesModel {
 	}
 }
 
-class Data {
+class CityData {
 	Location? location;
 	String? sId;
 	String? name;
@@ -37,9 +37,9 @@ class Data {
 	String? lng;
 	String? icon;
 
-	Data({this.location, this.sId, this.name, this.isAvailable, this.lat, this.lng, this.icon});
+	CityData({this.location, this.sId, this.name, this.isAvailable, this.lat, this.lng, this.icon});
 
-	Data.fromJson(Map<String, dynamic> json) {
+	CityData.fromJson(Map<String, dynamic> json) {
 		location = json['location'] != null ? Location.fromJson(json['location']) : null;
 		sId = json['_id'];
 		name = json['name'];

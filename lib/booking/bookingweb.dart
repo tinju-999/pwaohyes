@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:pwaohyes/auth/authscreen.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/bookingaddress/bookingaddresshome.dart';
-import 'package:pwaohyes/common/webfooter.dart';
-import 'package:pwaohyes/common/webheader.dart';
+import 'package:pwaohyes/common/footer.dart';
+import 'package:pwaohyes/common/header.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
@@ -22,18 +22,18 @@ class BookingWeb extends StatefulWidget {
 }
 
 class _BookingWebState extends State<BookingWeb> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   String? title = "";
   bool? isLoaded = false;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // if (!isLoaded!) {
-  final arg = ModalRoute.of(context)!.settings.arguments as Map;
+    final arg = ModalRoute.of(context)!.settings.arguments as Map;
     var catId = arg['catId'];
     title = arg['title'];
     Initializer.serviceBloc.getServiceDetail(catId);
     // }
-  
   }
 
   @override
@@ -49,11 +49,14 @@ class _BookingWebState extends State<BookingWeb> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            WebHeader(route: BookingWeb(catId: widget.catId)),
+            Header(
+              route: BookingWeb(catId: widget.catId),
+              scaffoldKey: scaffoldKey,
+            ),
             Helper.allowHeight(15),
             BookingWebPage(title: title),
             Helper.allowHeight(15),
-            const WebFooter(),
+            const Footer(),
           ],
         ),
       ),

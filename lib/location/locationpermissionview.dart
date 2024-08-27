@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:pwaohyes/location/locationmobileview.dart';
 import 'package:pwaohyes/location/locationwebview.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/screensize.dart';
@@ -22,11 +23,9 @@ class _LocationPermissionViewState extends State<LocationPermissionView> {
   @override
   Widget build(BuildContext context) {
     return ScreenSize(
-      mobileView: Container(),
-      tabView: Container(),
-      webView: LocationWebView(
-        route: widget.route,
-      ),
+      mobileView: const LocationMobileView(),
+      tabView: LocationWebView(route: widget.route),
+      webView: LocationWebView(route: widget.route),
     );
   }
 

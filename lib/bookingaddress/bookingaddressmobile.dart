@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:pwaohyes/common/webfooter.dart';
-import 'package:pwaohyes/common/webheader.dart';
+import 'package:pwaohyes/common/footer.dart';
+import 'package:pwaohyes/common/header.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
@@ -15,6 +15,8 @@ class BookingAddressMobile extends StatefulWidget {
 }
 
 class _BookingAddressMobileState extends State<BookingAddressMobile> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,11 +26,13 @@ class _BookingAddressMobileState extends State<BookingAddressMobile> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              const WebHeader(route: BookingAddressMobile(),),
+              Header(
+                  route: const BookingAddressMobile(),
+                  scaffoldKey: scaffoldKey),
               Helper.allowHeight(10),
               const BookingAddressMobilePage(),
               Helper.allowHeight(10),
-              const WebFooter(),
+              const Footer(),
             ],
           ),
         ),

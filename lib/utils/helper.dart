@@ -135,14 +135,12 @@ class Helper {
             duration: const Duration(microseconds: 600)));
   }
 
-
-  static pushReplacementNamed(String routeName)=> Navigator.of(context!).pushReplacementNamed(routeName);
-  static pushNamed(String routeName, [Map? arguments]) => Navigator.of(context!).pushNamed(routeName, arguments: arguments);
-
-
+  static pushReplacementNamed(String routeName) =>
+      Navigator.of(context!).pushReplacementNamed(routeName);
+  static pushNamed(String routeName, [Map? arguments]) =>
+      Navigator.of(context!).pushNamed(routeName, arguments: arguments);
 
   static pushAndRemoveUntil(dynamic namedRoute) {
-   
     return Navigator.of(context!).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => namedRoute), (route) => false);
   }
@@ -278,6 +276,9 @@ class Helper {
       Helper.showLog('now.isBefore(endingTime)');
     }
   }
+
+  static double getPercentage(double totalValue, num value) =>
+      (((value / totalValue) * 100) * 100);
 
   // static String getDeviceType() {
   //   String deviceType = '';

@@ -10,34 +10,30 @@ import 'package:pwaohyes/model/selectedaddressmodel.dart';
 import 'package:pwaohyes/model/usermodel.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/service/servicehome.dart';
+import 'package:pwaohyes/slotbooking/slotbookingview.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/preferences.dart';
 import 'package:pwaohyes/utils/routes.dart';
-import 'dart:js';
+// import 'dart:js';
 //7034444303
-void useJsObject(JsObject jsObject) {
-   // Ensure jsObject is not null
-  if (jsObject != null) {
-    // Example: Call a method on the JavaScript object
-    context.callMethod('console.log', [jsObject]);
-  } else {
-    print('jsObject is null');
-  }
-}
-
+// void useJsObject(JsObject jsObject) {
+//    // Ensure jsObject is not null
+//   // Example: Call a method on the JavaScript object
+//   context.callMethod('console.log', [jsObject]);
+// }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Create a JavaScript object with properties
-  var jsObject = JsObject.jsify({'key': 'value'});
-  
-  // Call a JavaScript function
-  context.callMethod('alert', ['Hello from Dart!']);
-  
+  // var jsObject = JsObject.jsify({'key': 'value'});
+
+  // // Call a JavaScript function
+  // context.callMethod('alert', ['Hello from Dart!']);
+
   // Pass the JavaScript object to another function
-  useJsObject(jsObject);
+  // useJsObject(jsObject);
 
   // PWAInstall().setup(installCallback: () {
   //   debugPrint('APP INSTALLED!');
@@ -63,8 +59,6 @@ Future<void> main() async {
   }
   runApp(const MyApp());
 }
-
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -103,7 +97,7 @@ class MyApp extends StatelessWidget {
               // onGenerateRoute: (RouteSettings route){
 
               // },
-              initialRoute: locationView,
+              initialRoute: slotBooking,
               routes: routes,
               home: Builder(
                 builder: (context) {
@@ -111,14 +105,14 @@ class MyApp extends StatelessWidget {
                   Initializer.serviceBloc = context.read<ServiceBloc>();
                   Initializer.authBloc = context.read<AuthBloc>();
                   Initializer.locationBloc = context.read<LocationBloc>();
-                  return
-                      // const ServiceHome();
-                      // const BookingAddressWeb();
+                  return const SlotBookingView();
+                  // const ServiceHome();
+                  // const BookingAddressWeb();
 
-                      Initializer.selectedAdddress!.loadingState !=
-                              LoadingState.initial
-                          ? const ServiceHome()
-                          : const LocationPermissionView(route: null);
+                  // Initializer.selectedAdddress!.loadingState ==
+                  //         LoadingState.success
+                  //     ? const ServiceHome()
+                  //     : const LocationPermissionView(route: null);
                 },
               )
               //

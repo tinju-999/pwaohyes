@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
-import 'package:pwaohyes/common/webfooter.dart';
-import 'package:pwaohyes/common/webheader.dart';
+import 'package:pwaohyes/common/footer.dart';
+import 'package:pwaohyes/common/header.dart';
 import 'package:pwaohyes/provider/provider.dart';
+import 'package:pwaohyes/slotbooking/slotbookingview.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
@@ -18,6 +19,8 @@ class ServiceHomeWebView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
       body: BlocBuilder<ServiceBloc, ServiceState>(
         buildWhen: (previous, current) =>
@@ -25,28 +28,24 @@ class ServiceHomeWebView extends StatelessWidget {
             current is ServicesFetched ||
             current is ServicesNotFetched,
         builder: (context, state) => state is FetchingServices
-            ? const Center(
-                child: CupertinoActivityIndicator(),
-              )
+            ? const Center(child: CupertinoActivityIndicator())
             : state is ServicesFetched || Initializer.serviceCategory.isNotEmpty
                 ? SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        WebHeader(
-                          route:
-                              ServiceHomeWebView(providerClass: providerClass),
-                        ),
+                        Header(
+                            route: ServiceHomeWebView(
+                                providerClass: providerClass),
+                            scaffoldKey: scaffoldKey),
                         Helper.allowHeight(10),
                         ServicePageWeb(providerClass: providerClass),
                         Helper.allowHeight(10),
-                        const WebFooter(),
+                        const Footer(),
                       ],
                     ),
                   )
-                : const Center(
-                    child: Text("Something went wrong services"),
-                  ),
+                : const Center(child: Text("Something went wrong services")),
       ),
     );
   }
@@ -118,17 +117,19 @@ class ServicePageWeb extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            "Sub Categories",
-            style: TextStyle(fontSize: 26),
+            "Discover Subcategories",
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
           ),
-          Helper.allowHeight(5),
-          SizedBox(
-            width: Helper.width / 4,
-            child: Divider(
-              color: Colors.grey[200],
-            ),
+          const Text(
+            "Dive deeper into our subcategories to find more specific options tailored to your needs",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.blueGrey),
+            textAlign: TextAlign.center,
           ),
-          Helper.allowHeight(20),
+          Helper.allowHeight(30),
           BlocBuilder<ServiceBloc, ServiceState>(
             builder: (context, state) => state is FetchingSubServices
                 ? const Center(
@@ -137,85 +138,83 @@ class ServicePageWeb extends StatelessWidget {
                 : state is SubServicesFetched ||
                         Initializer.subCatModel.data!.services!.isNotEmpty
                     ? Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 26.0,
-                      runSpacing: 26.0,
-                      children: List.generate(
-                          Initializer.subCatModel.data!.services!.length,
-                          (index) => InkWell(
-                                onTap: () =>
-                                    // Initializer.providerClass?.getLocation(),
-                                    Helper.pushNamed(bookingOne, {
-                                  "catId": Initializer.subCatModel.data!
-                                      .services![index].sId,
-                                  "title": Initializer.subCatModel.data!
-                                      .services![index].title
-                                }),
-                                // Helper.pushNamed(BookingWeb(
-                                //     catId: Initializer.subCatModel.data!
-                                //         .services![index].sId)),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      clipBehavior: Clip.hardEdge,
-                                      constraints: const BoxConstraints(
-                                        maxHeight: 120,
-                                        maxWidth: 120,
+                        alignment: WrapAlignment.center,
+                        spacing: 26.0,
+                        runSpacing: 26.0,
+                        children: List.generate(
+                            Initializer.subCatModel.data!.services!.length,
+                            (index) => InkWell(
+                                  onTap: () =>
+                                      // Initializer.providerClass?.getLocation(),
+                                      Helper.pushNamed(bookingOne, {
+                                    "catId": Initializer
+                                        .subCatModel.data!.services![index].sId,
+                                    "title": Initializer.subCatModel.data!
+                                        .services![index].title
+                                  }),
+                                  // Helper.pushNamed(BookingWeb(
+                                  //     catId: Initializer.subCatModel.data!
+                                  //         .services![index].sId)),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        clipBehavior: Clip.hardEdge,
+                                        constraints: const BoxConstraints(
+                                          maxHeight: 120,
+                                          maxWidth: 120,
+                                        ),
+                                        padding: const EdgeInsets.all(8.0),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            color: white,
+                                            border: Border.all(
+                                                color: primaryColor)),
+                                        child: Initializer.subCatModel.data!
+                                                    .services![index].image !=
+                                                null
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: CachedNetworkImage(
+                                                    imageUrl: Initializer
+                                                        .subCatModel
+                                                        .data!
+                                                        .services![index]
+                                                        .image!,
+                                                    width: 120,
+                                                    height: 120,
+                                                    fit: BoxFit.cover,
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            const Icon(
+                                                              Icons.error,
+                                                              color: black,
+                                                            )),
+                                              )
+                                            : noImageView(context),
                                       ),
-                                      padding: const EdgeInsets.all(8.0),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                          color: white,
-                                          border: Border.all(
-                                              color: primaryColor)),
-                                      child: Initializer.subCatModel.data!
-                                                  .services![index].image !=
-                                              null
-                                          ? ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      8.0),
-                                              child: CachedNetworkImage(
-                                                  imageUrl: Initializer
-                                                      .subCatModel
-                                                      .data!
-                                                      .services![index]
-                                                      .image!,
-                                                  width: 120,
-                                                  height: 120,
-                                                  fit: BoxFit.cover,
-                                                  errorWidget: (context,
-                                                          url, error) =>
-                                                      const Icon(
-                                                        Icons.error,
-                                                        color: black,
-                                                      )),
-                                            )
-                                          : noImageView(context),
-                                    ),
-                                    Helper.allowHeight(15),
-                                    SizedBox(
-                                      // width: 120,
-                                      child: Text(
-                                        Initializer.subCatModel.data!
-                                            .services![index].title!,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: quicksand,
+                                      Helper.allowHeight(15),
+                                      SizedBox(
+                                        // width: 120,
+                                        child: Text(
+                                          Initializer.subCatModel.data!
+                                              .services![index].title!,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: quicksand,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                    )
+                                    ],
+                                  ),
+                                )),
+                      )
                     : const Center(
                         child: Text("Something went wrong"),
                       ),
@@ -467,17 +466,19 @@ class ServicePageWeb extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            "Categories",
-            style: TextStyle(fontSize: 26),
+            "Choose From Various Categories",
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
           ),
-          Helper.allowHeight(5),
-          SizedBox(
-            width: Helper.width / 4,
-            child: Divider(
-              color: Colors.grey[200],
-            ),
+          const Text(
+            "Explore a wide range of categories to find what you need",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.blueGrey),
+            textAlign: TextAlign.center,
           ),
-          Helper.allowHeight(20),
+          Helper.allowHeight(40),
           SizedBox(
             width: Helper.width / 1.5,
             child: SingleChildScrollView(
@@ -534,7 +535,38 @@ class ServicePageWeb extends StatelessWidget {
                         )),
               ),
             ),
-          )
+          ),
+          Helper.allowHeight(40),
+          const Text(
+            "Book My Slot",
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          const Text(
+            "Effortlessly book your appointment",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.blueGrey),
+            textAlign: TextAlign.center,
+          ),
+          Helper.allowHeight(40),
+          InkWell(
+            onTap: () => Helper.pushNamed(slotBooking),
+            child: Container(
+              clipBehavior: Clip.hardEdge,
+              constraints: BoxConstraints(maxHeight: Helper.height / 2.5),
+              width: Helper.width / 1.5,
+              decoration: BoxDecoration(
+                color: primaryColor.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Image.network(
+                'https://scholarlykitchen.sspnet.org/wp-content/uploads/2017/12/iStock-629383254.jpg',
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
         ],
       );
 

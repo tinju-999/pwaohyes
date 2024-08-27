@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,21 +18,20 @@ import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/preferences.dart';
 import 'package:pwaohyes/utils/routes.dart';
 
-class LocationWebView extends StatefulWidget {
-  final dynamic route;
-  const LocationWebView({super.key, required this.route});
+class LocationMobileView extends StatefulWidget {
+  const LocationMobileView({super.key});
 
   @override
-  State<LocationWebView> createState() => _LocationWebViewState();
+  State<LocationMobileView> createState() => _LocationMobileViewState();
 }
 
-class _LocationWebViewState extends State<LocationWebView> {
+class _LocationMobileViewState extends State<LocationMobileView> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
       endDrawer: const CustomDrawer(),
+      key: scaffoldKey,
       body: ListView(
         children: [
           Header(scaffoldKey: scaffoldKey),
@@ -44,9 +44,9 @@ class _LocationWebViewState extends State<LocationWebView> {
                   current is FetchingCitiesDataError,
               builder: (context, state) => state is CitiesDataFetched ||
                       Initializer.citiesModel.data!.isNotEmpty
-                  ? LocationWebContentView(
+                  ? LocationMobileContentView(
                       data: Initializer.citiesModel.data!,
-                      route: widget.route,
+                      // route: widget.route,
                     )
                   : state is FetchingCitiesData &&
                           Initializer.citiesModel.data!.isEmpty
@@ -60,27 +60,28 @@ class _LocationWebViewState extends State<LocationWebView> {
   }
 }
 
-class LocationWebContentView extends StatelessWidget {
+class LocationMobileContentView extends StatelessWidget {
   final List<CityData>? data;
-  final dynamic route;
-  const LocationWebContentView({super.key, this.data, required this.route});
+  // final dynamic route;
+  //required this.route
+  const LocationMobileContentView({super.key, this.data});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 60),
+      padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 18),
       color: white,
       child: Column(
         children: [
           const Text(
             "Choose From Popular Cities",
-            style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           const Text(
             "Select a city for provide out cutting edge service to you",
             style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: Colors.blueGrey),
             textAlign: TextAlign.center,
@@ -91,8 +92,8 @@ class LocationWebContentView extends StatelessWidget {
               Expanded(
                 child: Wrap(
                   alignment: WrapAlignment.center,
-                  spacing: 36.0,
-                  runSpacing: 26.0,
+                  spacing: 30.0,
+                  runSpacing: 14.0,
                   children: List.generate(
                       data!.length,
                       (index) => InkWell(
@@ -121,8 +122,8 @@ class LocationWebContentView extends StatelessWidget {
                                 Container(
                                     clipBehavior: Clip.hardEdge,
                                     constraints: const BoxConstraints(
-                                      maxHeight: 120,
-                                      maxWidth: 120,
+                                      maxHeight: 90,
+                                      maxWidth: 90,
                                     ),
                                     padding: const EdgeInsets.all(26.0),
                                     decoration: BoxDecoration(
@@ -135,8 +136,8 @@ class LocationWebContentView extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(8.0),
                                       child: CachedNetworkImage(
                                           imageUrl: data![index].icon!,
-                                          width: 120,
-                                          height: 120,
+                                          width: 140,
+                                          height: 140,
                                           fit: BoxFit.cover,
                                           errorWidget: (context, url, error) {
                                             return const Icon(
@@ -164,84 +165,6 @@ class LocationWebContentView extends StatelessWidget {
               ),
             ],
           ),
-          // Helper.allowHeight(30),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     SizedBox(
-          //       width: Helper.width / 3,
-          //       child: const Divider(),
-          //     ),
-          //     Helper.allowWidth(10),
-          //     const Text("OR"),
-          //     Helper.allowWidth(10),
-          //     SizedBox(
-          //       width: Helper.width / 3,
-          //       child: const Divider(),
-          //     ),
-          //   ],
-          // ),
-          // Helper.allowHeight(30),
-          // const Text(
-          //   "Find Nearby Services",
-          //   style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-          //   textAlign: TextAlign.center,
-          // ),
-          // Helper.allowHeight(20),
-          // SizedBox(
-          //   width: Helper.width / 3,
-          //   child: Text(
-          //     "We use your location to provide nearby services tailored for you. Please enable location services in your browser settings to allow us to fetch your location and enhance your experience.",
-          //     style: TextStyle(
-          //         fontSize: 13,
-          //         fontWeight: FontWeight.w500,
-          //         color: Colors.blueGrey.shade600),
-          //     textAlign: TextAlign.center,
-          //   ),
-          // ),
-          // Helper.allowHeight(20),
-          // BlocConsumer<LocationBloc, LocationState>(
-          //   buildWhen: (previous, current) =>
-          //       current is GettingLocation ||
-          //       current is LocationFetched ||
-          //       current is LocationNotFetched,
-          //   listenWhen: (previous, current) => current is LocationFetched,
-          //   listener: (context, state) async {
-          //     if (state is LocationFetched) {
-          //       await Future.delayed(const Duration(milliseconds: 1200)).then(
-          //           (value) =>
-          //               Helper.pushReplacementNamed(Services));
-          //     }
-          //   },
-          //   builder: (context, state) =>
-          //       Selector<ProviderClass, SelectedAddressModel>(
-          //           selector: (p0, p1) => p1.selectedAddressModel,
-          //           builder: (context, value, child) {
-          //             return MaterialButton(
-          //               onPressed: () {
-          //                 if (state is! GettingLocation) {
-          //                   Initializer.locationBloc.getLocation();
-          //                 }
-          //               },
-          //               minWidth: Helper.width / 3.5,
-          //               elevation: 5.0,
-          //               color: primaryColor,
-          //               padding: const EdgeInsets.symmetric(vertical: 18),
-          //               child: state is GettingLocation
-          //                   ? const SizedBox(
-          //                       width: 15,
-          //                       height: 15,
-          //                       child: CircularProgressIndicator(color: white),
-          //                     )
-          //                   : state is LocationFetchingError ||
-          //                           state is LocationNotFetched
-          //                       ? const Text("Geolocation is blocked",
-          //                           style: TextStyle(color: white))
-          //                       : const Text("Enable Location Services",
-          //                           style: TextStyle(color: white)),
-          //             );
-          //           }),
-          // ),
         ],
       ),
     );
