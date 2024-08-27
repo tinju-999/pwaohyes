@@ -152,7 +152,7 @@ class SlotBookingWebContent extends StatelessWidget {
                         children: [
                           const Flexible(
                             child: Text(
-                              "Pet Shop",
+                              "Pet Shop ",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
