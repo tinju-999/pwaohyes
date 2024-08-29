@@ -4,17 +4,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/bloc/locationbloc.dart';
+import 'package:pwaohyes/bloc/myqbloc.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/location/locationpermissionview.dart';
 import 'package:pwaohyes/model/selectedaddressmodel.dart';
 import 'package:pwaohyes/model/usermodel.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/service/servicehome.dart';
-import 'package:pwaohyes/slotbooking/slotbookingview.dart';
+import 'package:pwaohyes/slotbooking/shopview/shopview.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/preferences.dart';
 import 'package:pwaohyes/utils/routes.dart';
+import 'package:url_strategy/url_strategy.dart';
 // import 'dart:js';
 //7034444303
 // void useJsObject(JsObject jsObject) {
@@ -25,6 +27,7 @@ import 'package:pwaohyes/utils/routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setPathUrlStrategy();
 
   // Create a JavaScript object with properties
   // var jsObject = JsObject.jsify({'key': 'value'});
@@ -78,6 +81,8 @@ class MyApp extends StatelessWidget {
           providers: [
             BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
             BlocProvider<LocationBloc>(create: (context) => LocationBloc()),
+            BlocProvider<MyQBloc>(create: (context) => MyQBloc()),
+            //MyQBloc
           ],
           child: MaterialApp(
               navigatorKey: NavigationService.navigatorKey,
@@ -97,27 +102,39 @@ class MyApp extends StatelessWidget {
               // onGenerateRoute: (RouteSettings route){
 
               // },
-              initialRoute: slotBooking,
+              initialRoute: locationView,
+              // slotBookingShop,
               routes: routes,
+              onGenerateRoute: (settings) {
+                Uri uri = Uri.parse(settings.name!);
+                if (uri.pathSegments.isNotEmpty &&
+                    uri.pathSegments.first == 'slotBookingShop') {
+                  final id = uri.queryParameters['id'];
+                  return MaterialPageRoute(
+                    builder: (context) => SlotShopView(id: id),
+                  );
+                }
+                return null;
+              },
               home: Builder(
                 builder: (context) {
                   Initializer.providerClass = context.read<ProviderClass>();
                   Initializer.serviceBloc = context.read<ServiceBloc>();
                   Initializer.authBloc = context.read<AuthBloc>();
                   Initializer.locationBloc = context.read<LocationBloc>();
-                  return const SlotBookingView();
-                  // const ServiceHome();
-                  // const BookingAddressWeb();
+                  Initializer.myQBloc = context.read<MyQBloc>();
+                  return
+                      // const SlotShopView();
 
-                  // Initializer.selectedAdddress!.loadingState ==
-                  //         LoadingState.success
-                  //     ? const ServiceHome()
-                  //     : const LocationPermissionView(route: null);
+                      // const ServiceHome();
+                      // const BookingAddressWeb();
+
+                      Initializer.selectedAdddress!.loadingState ==
+                              LoadingState.success
+                          ? const ServiceHome()
+                          : const LocationPermissionView(route: null);
                 },
-              )
-              //
-              // const AuthScreen(),
-              ),
+              )),
         ),
       ),
     );

@@ -7,7 +7,6 @@ import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/common/footer.dart';
 import 'package:pwaohyes/common/header.dart';
 import 'package:pwaohyes/provider/provider.dart';
-import 'package:pwaohyes/slotbooking/slotbookingview.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
@@ -45,7 +44,7 @@ class ServiceHomeWebView extends StatelessWidget {
                       ],
                     ),
                   )
-                : const Center(child: Text("Something went wrong services")),
+                : const Center(child: Text("Something went wrong")),
       ),
     );
   }
@@ -536,6 +535,26 @@ class ServicePageWeb extends StatelessWidget {
               ),
             ),
           ),
+          if (Initializer.selectedAdddress!.cityId !=
+              "663a875e79785516bb955401")
+            bookMySlotView(context),
+        ],
+      );
+
+  noImageView(BuildContext context) => ClipRRect(
+        borderRadius: BorderRadius.circular(8.0),
+        child: CachedNetworkImage(
+          imageUrl:
+              "https://cdn.vectorstock.com/i/500p/82/99/no-image-available-like-missing-picture-vector-43938299.jpg",
+          width: 120,
+          height: 120,
+          fit: BoxFit.cover,
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+        ),
+      );
+
+  Widget bookMySlotView(BuildContext context) => Column(
+        children: [
           Helper.allowHeight(40),
           const Text(
             "Book My Slot",
@@ -561,24 +580,12 @@ class ServicePageWeb extends StatelessWidget {
                 color: primaryColor.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(12.0),
               ),
-              child: Image.network(
-                'https://scholarlykitchen.sspnet.org/wp-content/uploads/2017/12/iStock-629383254.jpg',
+              child: Image.asset(
+                slotbookingbanner,
                 fit: BoxFit.cover,
               ),
             ),
           ),
         ],
-      );
-
-  noImageView(BuildContext context) => ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child: CachedNetworkImage(
-          imageUrl:
-              "https://cdn.vectorstock.com/i/500p/82/99/no-image-available-like-missing-picture-vector-43938299.jpg",
-          width: 120,
-          height: 120,
-          fit: BoxFit.cover,
-          errorWidget: (context, url, error) => const Icon(Icons.error),
-        ),
       );
 }

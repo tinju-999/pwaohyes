@@ -277,6 +277,48 @@ class Helper {
     }
   }
 
+  static String toTitleCase(String input) {
+  if (input.isEmpty) return input;
+
+  // Trim leading and trailing whitespaces
+  input = input.trim();
+
+  // Split the input into words using space as a delimiter
+  List<String> words = input.split(' ');
+
+  // Capitalize the first letter of each word
+  List<String> titleCaseWords = words.map((word) {
+    if (word.isEmpty) return word; // Handle any empty strings (e.g., multiple spaces)
+    return word[0].toUpperCase() + word.substring(1).toLowerCase();
+  }).toList();
+
+  // Join the words back together
+  return titleCaseWords.join(' ');
+}
+
+
+  static String toSentenceCase(String input) {
+    if (input.isEmpty) return input;
+
+    // Trim leading and trailing whitespaces
+    input = input.trim();
+
+    // Convert the entire input to lowercase
+    input = input.toLowerCase();
+
+    // Split the input into sentences using '. ', '!', and '?' as delimiters
+    List<String> sentences = input.split(RegExp(r'(?<=[.!?])\s+'));
+
+    // Capitalize the first letter of each sentence
+    List<String> sentenceCaseSentences = sentences.map((sentence) {
+      if (sentence.isEmpty) return sentence;
+      return sentence[0].toUpperCase() + sentence.substring(1);
+    }).toList();
+
+    // Join the sentences back together
+    return sentenceCaseSentences.join(' ');
+  }
+
   static double getPercentage(double totalValue, num value) =>
       (((value / totalValue) * 100) * 100);
 

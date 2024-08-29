@@ -13,6 +13,8 @@ import 'package:pwaohyes/utils/initializer.dart';
 enum LoadingState { initial, loading, success, failed, error }
 
 class ProviderClass extends ChangeNotifier {
+  DateTime? _serviceTime = Initializer.now;
+  DateTime get serviceTime => _serviceTime!;
   Timer? _timer;
   int _remainingTime = 60;
   int get remainingTime => _remainingTime;
@@ -39,6 +41,12 @@ class ProviderClass extends ChangeNotifier {
       remainingTime: _remainingTime, isTimerRunning: isTimerRunning);
 
   justChange() => notifyListeners();
+
+  void selectSlotServiceDate(DateTime value) {
+    _serviceTime = value;
+    Initializer.selectedSlotedServiceDate = _serviceTime;
+    notifyListeners();
+  }
 
   startTimer() {
     _remainingTime = 60;
@@ -249,7 +257,7 @@ class ProviderClass extends ChangeNotifier {
             //   cameraPosition: _initialCameraPosition,
             // );
           } else {
-               _selectedAddressModel = SelectedAddressModel(
+            _selectedAddressModel = SelectedAddressModel(
                 loadingState: LoadingState.success,
                 latLng: LatLng(position.latitude, position.longitude),
                 locationName: "Current Address");
@@ -381,6 +389,32 @@ class ProviderClass extends ChangeNotifier {
     // //   }
     // // }
     // return completer.future;
+  }
+
+  changeSlotService(int index) {
+    for (var e in Initializer.myqpadCategoryModel.data!.cateoryList!) {
+      e.isSelected = false;
+    }
+    Initializer.myqpadCategoryModel.data!.cateoryList![index].isSelected = true;
+    Initializer.selectedMyQCategory =
+        Initializer.myqpadCategoryModel.data!.cateoryList![index].sId;
+    Helper.showLog(
+        "Selected cat id : ${Initializer.myqpadCategoryModel.data!.cateoryList![index].sId}");
+    Initializer.selectedMyQCategoryName =
+        Initializer.myqpadCategoryModel.data!.cateoryList![index].businessName!;
+    Initializer.myQBloc.getMyQShops(
+        businessName: Initializer.selectedMyQCategoryName, query: '');
+    notifyListeners();
+  }
+
+  changeSlotShopService(int index) {
+    for (var e in Initializer.shopViewModel.services!) {
+      e.isSelected = false;
+    }
+    Initializer.shopViewModel.services![index].isSelected = true;
+    notifyListeners();
+    Initializer.myQBloc.getShopsSlots(
+        Initializer.shopViewModel.services![index].sId, Initializer.selectedSlotedServiceDate);
   }
 }
 

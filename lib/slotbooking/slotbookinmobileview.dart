@@ -12,10 +12,9 @@ import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
-import 'package:pwaohyes/utils/routes.dart';
 
-class SlotBookingWebView extends StatelessWidget {
-  const SlotBookingWebView({super.key});
+class SlotBookingMobileView extends StatelessWidget {
+  const SlotBookingMobileView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,7 @@ class SlotBookingWebView extends StatelessWidget {
               listener: (context, state) {},
               builder: (context, state) => state is GettingMyQCats
                   ? const Center(child: CircularProgressIndicator())
-                  : SlotBookingWebContent(
+                  : SlotBookingMobileContent(
                       data: Initializer.myqpadCategoryModel)),
           Helper.allowHeight(10),
           const Footer(),
@@ -43,39 +42,22 @@ class SlotBookingWebView extends StatelessWidget {
   }
 }
 
-class SlotBookingWebContent extends StatelessWidget {
+class SlotBookingMobileContent extends StatelessWidget {
   final MyqpadCategoryModel? data;
-  const SlotBookingWebContent({super.key, required this.data});
+  const SlotBookingMobileContent({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     // CarouselSliderController buttonCarouselController =
     //     CarouselSliderController();
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 18),
+      padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 18),
       color: white,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // CarouselSlider.builder(
-          //   carouselController: buttonCarouselController,
-          //   itemCount: Initializer.carouselItems.length,
-          //   itemBuilder: (context, index, realIndex) => SizedBox(
-          //     width: MediaQuery.of(context).size.width,
-          //     child: Image.network(
-          //       Initializer.carouselItems[index],
-          //       fit: BoxFit.cover,
-          //     ),
-          //   ),
-          //   options: CarouselOptions(
-          //       height: 300.0,
-          //       autoPlay: true,
-          //       autoPlayInterval: const Duration(seconds: 3),
-          //       enlargeStrategy: CenterPageEnlargeStrategy.scale),
-          // ),
-          // Helper.allowHeight(30),
           titleAndSearchView(),
           Helper.allowHeight(40),
           Center(
@@ -158,7 +140,7 @@ class SlotBookingWebContent extends StatelessWidget {
                   current is ShopsListNotFound ||
                   current is GettingShopsListError,
               builder: (context, state) => state is ShopsListFetched
-                  ? serviceView(context)
+                  ? serviceView()
                   : state is GettingShopsList
                       ? const Center(child: CupertinoActivityIndicator())
                       : state is ShopsListNotFound
@@ -173,7 +155,7 @@ class SlotBookingWebContent extends StatelessWidget {
     );
   }
 
-  Widget serviceView(BuildContext context) => SizedBox(
+  Widget serviceView() => SizedBox(
         width: Helper.width / 1.2,
         child: Wrap(
           alignment: WrapAlignment.center,
@@ -183,102 +165,94 @@ class SlotBookingWebContent extends StatelessWidget {
           spacing: 26,
           children: List.generate(
             Initializer.myqpadShopsModel.data!.length,
-            (index) => InkWell(
-              onTap: () {
-                Helper.showLog(
-                    "Shop Id : ${Initializer.myqpadShopsModel.data![index].sId}");
-                Navigator.pushNamed(context,
-                    '/slotBookingShop?id=${Initializer.myqpadShopsModel.data![index].sId}');
-              },
-              child: Container(
-                clipBehavior: Clip.hardEdge,
-                constraints: BoxConstraints(
-                  maxHeight: 150,
-                  maxWidth: Helper.width / 4,
-                ),
-                height: 150,
-                width: Helper.width / 3.5,
-                decoration: BoxDecoration(
-                  // border: Border.all(color: Colors.grey, width: 01.5),
-                  borderRadius: BorderRadius.circular(8.0),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.0),
-                      blurRadius: 4.0,
-                      spreadRadius: 2.0,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl: ServerHelper.myQPadUrlImage +
-                          Initializer.myqpadShopsModel.data![index].logo!,
-                      fit: BoxFit.cover,
-                      height: Helper.height,
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.image_not_supported_rounded),
-                      progressIndicatorBuilder: (context, url, progress) =>
-                          const Center(
-                        child: CupertinoActivityIndicator(
-                          color: Colors.grey,
-                        ),
+            (index) => Container(
+              clipBehavior: Clip.hardEdge,
+              constraints: BoxConstraints(
+                maxHeight: 150,
+                maxWidth: Helper.width / 4.5,
+              ),
+              height: 150,
+              width: Helper.width / 3.5,
+              decoration: BoxDecoration(
+                // border: Border.all(color: Colors.grey, width: 01.5),
+                borderRadius: BorderRadius.circular(8.0),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    offset: const Offset(0.0, 0.0),
+                    blurRadius: 4.0,
+                    spreadRadius: 2.0,
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CachedNetworkImage(
+                    imageUrl: ServerHelper.myQPadUrlImage +
+                        Initializer.myqpadShopsModel.data![index].logo!,
+                    fit: BoxFit.cover,
+                    height: Helper.height,
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.image_not_supported_rounded),
+                    progressIndicatorBuilder: (context, url, progress) =>
+                        const Center(
+                      child: CupertinoActivityIndicator(
+                        color: Colors.grey,
                       ),
-                      width: Helper.getPercentage(Helper.width / 3.5, 5),
                     ),
-                    Helper.allowWidth(5.0),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
+                    width: Helper.getPercentage(Helper.width / 3.5, 5),
+                  ),
+                  Helper.allowWidth(5.0),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            Helper.toTitleCase(Initializer
+                                .myqpadShopsModel.data![index].businessName!),
+                            maxLines: 2,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Flexible(
+                            child: Text(
                               Helper.toTitleCase(Initializer
-                                  .myqpadShopsModel.data![index].businessName!),
-                              maxLines: 2,
+                                  .myqpadShopsModel
+                                  .data![index]
+                                  .businessCategory!
+                                  .businessName!),
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: 12,
+                                color: primaryColor,
+                                fontWeight: FontWeight.w100,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Flexible(
-                              child: Text(
-                                Helper.toTitleCase(Initializer
-                                    .myqpadShopsModel
-                                    .data![index]
-                                    .businessCategory!
-                                    .businessName!),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.w100,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                          ),
+                          Helper.allowHeight(2.5),
+                          Expanded(
+                            child: Text(
+                              Helper.toTitleCase(
+                                  "${Initializer.myqpadShopsModel.data![index].addressLine1!} ${Initializer.myqpadShopsModel.data![index].addressLine2 ?? ""}"),
+                              maxLines: 3,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                                overflow: TextOverflow.visible,
                               ),
                             ),
-                            Helper.allowHeight(2.5),
-                            Expanded(
-                              child: Text(
-                                Helper.toTitleCase(
-                                    "${Initializer.myqpadShopsModel.data![index].addressLine1!} ${Initializer.myqpadShopsModel.data![index].addressLine2 ?? ""}"),
-                                maxLines: 3,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w300,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
             ),
           ),
@@ -290,14 +264,14 @@ class SlotBookingWebContent extends StatelessWidget {
         child: Column(
           children: [
             const Text(
-              "Services",
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              '',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const Text(
               "Find The Perfect Service For You",
               style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.blueGrey),
               textAlign: TextAlign.center,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pwaohyes/utils/helper.dart';
 
+const slotbookingbanner = "assets/images/slotbookingbanner.png";
+
 //colors
 const backgroundcolor = Color(0xffefefef);
 const primaryColor = Color(0xffF46523);

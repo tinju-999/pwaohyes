@@ -5,6 +5,8 @@ import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 
 class ServerHelper {
+  static String myQPadUrl = "https://api.myqpad.com";
+  static String myQPadUrlImage = "https://api.myqpad.com/file/get/";
   static Future<Response> post(String url, Map data) async {
     // Helper.showLog(Helper.userModel.token ?? "");
     Helper.showLog('${apiEnvironment.baseUrl + url} -- $data');
@@ -17,7 +19,7 @@ class ServerHelper {
         .post(Uri.parse(apiEnvironment.baseUrl + url),
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
-              'Authorization':'Bearer ${Initializer.userModel.token ?? ""}',
+              'Authorization': 'Bearer ${Initializer.userModel.token ?? ""}',
               'Refreshtoken':
                   'Bearer ${Initializer.userModel.refreshToken ?? ""}',
             },
@@ -65,5 +67,22 @@ class ServerHelper {
       Helper.showLog(e.toString());
       throw Exception();
     }
+  }
+
+  static Future<Response> getMyQPost(String url, Map data) async {
+    Helper.showLog('${myQPadUrl + url} -- $data');
+    Helper.showLog('Token: Bearer ${Initializer.userModel.token ?? ""}');
+    Helper.showLog(
+        'Refresh token: Bearer ${Initializer.userModel.refreshToken ?? ""}');
+    return await http
+        .post(Uri.parse(myQPadUrl + url),
+            headers: {
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+              // 'Authorization': 'Bearer ${Initializer.userModel.token ?? ""}',
+              // 'Refreshtoken':
+              //     'Bearer ${Initializer.userModel.refreshToken ?? ""}',
+            },
+            body: data)
+        .timeout(const Duration(seconds: 20));
   }
 }
