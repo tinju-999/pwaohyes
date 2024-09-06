@@ -398,115 +398,86 @@ class SlotShopWebContent extends StatelessWidget {
           GlobalKey<FormState> formKey,
           TextEditingController phoneController,
           TextEditingController otpController) =>
-      showModalBottomSheet(
+      showDialog(
         context: context,
-        builder: (context) => Form(
-          key: formKey,
-          child: BlocConsumer<AuthBloc, AuthState>(
-            listenWhen: (previous, current) =>
-                current is OTPNotVerified ||
-                current is OTPVerified ||
-                current is VerifyingOTPError,
-            listener: (context, state) {
-              if (state is OTPNotVerified || state is VerifyingOTPError) {
-                phoneController.clear();
-                otpController.clear();
-                Helper.pop();
-              }
-              if (state is OTPVerified) {
-                Helper.pop();
-                Initializer.serviceBloc.bookService({
-                  "name": phoneController.text,
-                  "phone": phoneController.text,
-                  "service_id": Initializer.selectedShopServiceId,
-                  "slot_id": Initializer.selectedShopSlotId,
-                  "number_of_slots": "1",
-                  "booked_date": Initializer.seletedShopSlotDate.toString(),
-                  "booking_amount":
-                      Initializer.shopSlotModel.serviceInfo!.amount.toString(),
-                });
-                phoneController.clear();
-                otpController.clear();
-              }
-            },
-            buildWhen: (previous, current) =>
-                current is VerifyingOTP ||
-                current is OTPVerified ||
-                current is OTPNotVerified ||
-                current is VerifyingOTPError ||
-                current is RequestingOTP ||
-                current is OTPRequested ||
-                current is OTPNotRequested ||
-                current is OTPNotRequested,
-            builder: (context, state) => Container(
-              decoration: const BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(18.0),
-                    topRight: Radius.circular(18.0),
-                  )),
-              padding: const EdgeInsets.only(
-                  top: 32, bottom: 18, left: 14, right: 14),
-              width: Helper.width,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    "Verify Now",
-                    style: TextStyle(fontSize: 26),
-                  ),
-                  Helper.allowHeight(5),
-                  const Text(
-                    "Please Enter Your Mobile Number To Verify",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: grey,
+        builder: (context) => AlertDialog(
+          content: Form(
+            key: formKey,
+            child: BlocConsumer<AuthBloc, AuthState>(
+              listenWhen: (previous, current) =>
+                  current is OTPNotVerified ||
+                  current is OTPVerified ||
+                  current is VerifyingOTPError,
+              listener: (context, state) {
+                if (state is OTPNotVerified || state is VerifyingOTPError) {
+                  phoneController.clear();
+                  otpController.clear();
+                  Helper.pop();
+                }
+                if (state is OTPVerified) {
+                  Helper.pop();
+                  Initializer.serviceBloc.bookService({
+                    "name": phoneController.text,
+                    "phone": phoneController.text,
+                    "service_id": Initializer.selectedShopServiceId,
+                    "slot_id": Initializer.selectedShopSlotId,
+                    "number_of_slots": "1",
+                    "booked_date": Initializer.seletedShopSlotDate.toString(),
+                    "booking_amount": Initializer
+                        .shopSlotModel.serviceInfo!.amount
+                        .toString(),
+                  });
+                  phoneController.clear();
+                  otpController.clear();
+                }
+              },
+              buildWhen: (previous, current) =>
+                  current is VerifyingOTP ||
+                  current is OTPVerified ||
+                  current is OTPNotVerified ||
+                  current is VerifyingOTPError ||
+                  current is RequestingOTP ||
+                  current is OTPRequested ||
+                  current is OTPNotRequested ||
+                  current is OTPNotRequested,
+              builder: (context, state) => Container(
+                decoration: const BoxDecoration(
+                    color: white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(18.0),
+                      topRight: Radius.circular(18.0),
+                    )),
+                padding: const EdgeInsets.all(8),
+                width: Helper.width,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Verify Now",
+                      style: TextStyle(fontSize: 22),
                     ),
-                  ),
-                  Helper.allowHeight(10),
-                  TextFormField(
-                      autofocus: true,
-                      controller: phoneController,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Please enter mobile number";
-                        } else {
-                          return null;
-                        }
-                      },
-                      maxLength: 10,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      buildCounter: (context,
-                              {required currentLength,
-                              required isFocused,
-                              required maxLength}) =>
-                          Helper.shrink(),
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 14, horizontal: 14),
-                        hintText: "Mobile Number",
-                        hintStyle: const TextStyle(fontSize: 13, color: grey),
-                        border: OutlineInputBorder(
-                          borderSide: const BorderSide(color: grey),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      )),
-                  if (state is OTPRequested) Helper.allowHeight(10),
-                  if (state is OTPRequested || otpController.text.isNotEmpty)
+                    Helper.allowHeight(5),
+                    const Text(
+                      "Please enter your mobile number to verify",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: grey,
+                      ),
+                    ),
+                    Helper.allowHeight(10),
                     TextFormField(
                         autofocus: true,
-                        controller: otpController,
+                        controller: phoneController,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Please enter a valid OTP";
+                            return "Please enter mobile number";
                           } else {
                             return null;
                           }
                         },
-                        maxLength: 4,
+                        maxLength: 10,
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly
@@ -519,48 +490,83 @@ class SlotShopWebContent extends StatelessWidget {
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 14, horizontal: 14),
-                          hintText: "OTP",
+                          hintText: "Mobile Number",
                           hintStyle: const TextStyle(fontSize: 13, color: grey),
                           border: OutlineInputBorder(
                             borderSide: const BorderSide(color: grey),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         )),
-                  Helper.allowHeight(10),
-                  SizedBox(
-                    width: Helper.width,
-                    child: MaterialButton(
-                      onPressed: () {
-                        if (state is! RequestingOTP || state is! VerifyingOTP) {
-                          if (state is OTPRequested) {
-                            if (formKey.currentState!.validate()) {
-                              Initializer.authBloc.verifyOtp(
-                                  otpController.text, phoneController.text);
+                    if (state is OTPRequested) Helper.allowHeight(10),
+                    if (state is OTPRequested || otpController.text.isNotEmpty)
+                      TextFormField(
+                          autofocus: true,
+                          controller: otpController,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Please enter a valid OTP";
+                            } else {
+                              return null;
                             }
-                          } else {
-                            if (formKey.currentState!.validate()) {
-                              Initializer.authBloc
-                                  .verifyPhone(phoneController.text);
+                          },
+                          maxLength: 4,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          buildCounter: (context,
+                                  {required currentLength,
+                                  required isFocused,
+                                  required maxLength}) =>
+                              Helper.shrink(),
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 14, horizontal: 14),
+                            hintText: "OTP",
+                            hintStyle:
+                                const TextStyle(fontSize: 13, color: grey),
+                            border: OutlineInputBorder(
+                              borderSide: const BorderSide(color: grey),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          )),
+                    Helper.allowHeight(10),
+                    SizedBox(
+                      width: Helper.width,
+                      child: MaterialButton(
+                        onPressed: () {
+                          if (state is! RequestingOTP ||
+                              state is! VerifyingOTP) {
+                            if (state is OTPRequested) {
+                              if (formKey.currentState!.validate()) {
+                                Initializer.authBloc.verifyOtp(
+                                    otpController.text, phoneController.text);
+                              }
+                            } else {
+                              if (formKey.currentState!.validate()) {
+                                Initializer.authBloc
+                                    .verifyPhone(phoneController.text);
+                              }
                             }
                           }
-                        }
-                      },
-                      elevation: 5.0,
-                      color: primaryColor,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 13, horizontal: 6),
-                      child: state is RequestingOTP || state is VerifyingOTP
-                          ? const Center(
-                              child: CupertinoActivityIndicator(
-                                  color: Colors.white))
-                          : state is OTPRequested
-                              ? const Text("Verify OTP",
-                                  style: TextStyle(color: white))
-                              : const Text("Send OTP",
-                                  style: TextStyle(color: white)),
-                    ),
-                  )
-                ],
+                        },
+                        elevation: 5.0,
+                        color: primaryColor,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 13, horizontal: 6),
+                        child: state is RequestingOTP || state is VerifyingOTP
+                            ? const Center(
+                                child: CupertinoActivityIndicator(
+                                    color: Colors.white))
+                            : state is OTPRequested
+                                ? const Text("Verify OTP",
+                                    style: TextStyle(color: white))
+                                : const Text("Send OTP",
+                                    style: TextStyle(color: white)),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

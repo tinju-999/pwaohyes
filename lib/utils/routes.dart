@@ -10,7 +10,7 @@ import 'package:pwaohyes/slotbooking/slotbookingview.dart';
 import 'package:pwaohyes/subservice/subservicehome.dart';
 
 const String locationView = "/serviceLocation";
-const String services = "/ohyesservices";
+const String allServices = "/allServices";
 const String bookingOne = "/servicebooking";
 const String confirmBooking = "/confirmBooking";
 const String authUser = '/authUser';
@@ -22,7 +22,7 @@ const String subServices = '/subServices';
 
 final routes = {
   locationView: (context) => const LocationPermissionView(route: null),
-  services: (context) => const ServiceHome(),
+  allServices: (context) => const ServiceHome(),
   bookingOne: (context) => const BookingWeb(),
   confirmBooking: (context) => const BookingAddressWeb(),
   authUser: (context) => const AuthScreen(),

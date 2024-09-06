@@ -119,7 +119,7 @@ class MyApp extends StatelessWidget {
               // onGenerateRoute: (RouteSettings route){
 
               // },
-              initialRoute: locationView,
+              // initialRoute: locationView,
               routes: routes,
               onGenerateRoute: (settings) {
                 Uri uri = Uri.parse(settings.name!);
@@ -148,7 +148,7 @@ class MyApp extends StatelessWidget {
                             route: null,
                           ),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'ohyesservices') {
+                } else if (uri.pathSegments.first == 'allServices') {
                   return MaterialPageRoute(
                       builder: (context) => const ServiceHome(),
                       settings: RouteSettings(name: settings.name));
@@ -164,9 +164,17 @@ class MyApp extends StatelessWidget {
                   return MaterialPageRoute(
                       builder: (context) => const SlotBookingView(),
                       settings: RouteSettings(name: settings.name));
-                } 
+                }
                 //SubServiceHome
-                return null;
+                return Initializer.selectedAdddress!.loadingState ==
+                        LoadingState.success
+                    ? MaterialPageRoute(
+                        builder: (context) => const ServiceHome(),
+                        settings: const RouteSettings(name: "allServices"))
+                    : MaterialPageRoute(
+                        builder: (context) =>
+                            const LocationPermissionView(route: null),
+                        settings: const RouteSettings(name: 'serviceLocation'));
               },
               home: Builder(
                 builder: (context) {

@@ -17,17 +17,18 @@ class _SlotShopViewState extends State<SlotShopView> {
   @override
   void initState() {
     Initializer.selectedShopId = widget.id;
+    Initializer.seletedShopSlotDate = DateTime.now();
     Initializer.myQBloc.getMyQOneShop(widget.id!);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: ScreenSize(
-          mobileView: const SlotBookingShopMobileView(),
-          webView: const SlotBookingShopWebView(),
-          tabView: Container()),
+          mobileView: SlotBookingShopMobileView(),
+          webView: SlotBookingShopWebView(),
+          tabView: SlotBookingShopWebView()),
     );
   }
 }

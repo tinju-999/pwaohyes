@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/common/footer.dart';
 import 'package:pwaohyes/common/header.dart';
+import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
@@ -31,7 +32,7 @@ class SubServiceMobileView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Header(
-                              removeBadge: false,
+                            removeBadge: false,
                             route: const SubServiceMobileView(),
                             scaffoldKey: scaffoldKey),
                         Helper.allowHeight(10),
@@ -163,6 +164,35 @@ class SubServicePageWeb extends StatelessWidget {
                     : const Center(
                         child: Text("Something went wrong"),
                       ),
+          ),
+          Helper.allowHeight(20),
+          SizedBox(
+            width: Helper.width / 2,
+            child: MaterialButton(
+              onPressed: () => Initializer.selectedAdddress!.loadingState ==
+                      LoadingState.success
+                  ? Helper.pushReplacementNamed(allServices)
+                  : Helper.pushReplacementNamed(locationView),
+              elevation: 0.0,
+              color: primaryColor,
+              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 14),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(
+                    CupertinoIcons.arrow_left,
+                    color: white,
+                    size: 14,
+                  ),
+                  Helper.allowWidth(8),
+                  const Text(
+                    "Go Back To Services",
+                    style: TextStyle(color: white, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       );

@@ -127,7 +127,7 @@ class ServiceBloc extends Cubit<ServiceState> {
         Helper.pop();
         if (Initializer.selectedAdddress!.loadingState ==
             LoadingState.success) {
-          Helper.pushReplacementNamed(services);
+          Helper.pushReplacementNamed(allServices);
         } else {
           Helper.pushReplacementNamed(locationView);
         }

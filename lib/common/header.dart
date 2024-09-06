@@ -53,7 +53,7 @@ class WebViewHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           InkWell(
-            onTap: () => Helper.pushNamed(services),
+            onTap: () => Helper.pushNamed(allServices),
             child: Image.asset(
               logo,
               fit: BoxFit.contain,
@@ -148,7 +148,7 @@ class MobileViewHeader extends StatelessWidget {
         children: [
           !removeBadge!
               ? InkWell(
-                  onTap: () => Helper.pushNamed(services),
+                  onTap: () => Helper.pushNamed(allServices),
                   child: Image.asset(
                     logo,
                     fit: BoxFit.contain,
@@ -201,11 +201,11 @@ class MobileViewHeader extends StatelessWidget {
                           "Logout",
                           overflow: TextOverflow.ellipsis,
                         )),
-                  Helper.allowWidth(20),
-                  IconButton(
-                      onPressed: () =>
-                          scaffoldKey!.currentState!.openEndDrawer(),
-                      icon: const Icon(Icons.menu))
+                  // Helper.allowWidth(20),
+                  // IconButton(
+                  //     onPressed: () =>
+                  //         scaffoldKey!.currentState!.openEndDrawer(),
+                  //     icon: const Icon(Icons.menu))
                 ],
               )
             ],

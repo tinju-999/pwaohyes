@@ -28,13 +28,12 @@ class Footer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                  Colors.white.withOpacity(0.85), BlendMode.dstOut),
+            Opacity(
+              opacity: 0.2,
               child: Image.asset(
                 logo,
                 fit: BoxFit.contain,
-                width: 160,
+                width: 140,
               ),
             ),
             Helper.allowHeight(25),

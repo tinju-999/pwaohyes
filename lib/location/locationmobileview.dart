@@ -110,7 +110,7 @@ class LocationMobileContentView extends StatelessWidget {
                                 double.parse(data![index].lng!)));
                         await Preferences.setLocation(
                             jsonEncode(Initializer.selectedAdddress!.toJson()));
-                        Helper.pushReplacementNamed(services);
+                        Helper.pushReplacementNamed(allServices);
                       },
 
                       // Helper.push(BookingWeb(

@@ -46,7 +46,7 @@ class AuthBloc extends Cubit<AuthState> {
       });
       var data = jsonDecode(response.body);
       Helper.showLog(data['error_code']);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && data['message'] != "Invalid OTP") {
         var data = jsonDecode(response.body);
         Helper.showLog('auth data $data');
         Initializer.otpVerifiedModel = OtpVerifiedModel.fromJson(data);
@@ -58,7 +58,7 @@ class AuthBloc extends Cubit<AuthState> {
         await Preferences.setVerifiedData(
             jsonEncode(Initializer.otpVerifiedModel.toJson()));
         // Helper.pushReplacement(const BookingAddressWeb());
-        Helper.showSnack(data['message']);
+        // Helper.showSnack(data['message']);
 
         Initializer.userModel = UserModel(
             phone: phone,
