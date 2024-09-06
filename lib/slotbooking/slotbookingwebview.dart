@@ -12,7 +12,6 @@ import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
-import 'package:pwaohyes/utils/routes.dart';
 
 class SlotBookingWebView extends StatelessWidget {
   const SlotBookingWebView({super.key});
@@ -22,7 +21,8 @@ class SlotBookingWebView extends StatelessWidget {
     return Scaffold(
       body: ListView(
         children: [
-          const Header(scaffoldKey: null),
+          const Header(
+                removeBadge: false,scaffoldKey: null),
           Helper.allowHeight(10),
           BlocConsumer<MyQBloc, MyQState>(
               buildWhen: (previous, current) =>
@@ -32,9 +32,11 @@ class SlotBookingWebView extends StatelessWidget {
                   current is GettingMyQCatsError,
               listener: (context, state) {},
               builder: (context, state) => state is GettingMyQCats
-                  ? const Center(child: CircularProgressIndicator())
-                  : SlotBookingWebContent(
-                      data: Initializer.myqpadCategoryModel)),
+                  ? const Center(child: CupertinoActivityIndicator())
+                  : state is MyQCatsFetched
+                      ? SlotBookingWebContent(
+                          data: Initializer.myqpadCategoryModel)
+                      : Helper.shrink()),
           Helper.allowHeight(10),
           const Footer(),
         ],
@@ -51,125 +53,119 @@ class SlotBookingWebContent extends StatelessWidget {
   Widget build(BuildContext context) {
     // CarouselSliderController buttonCarouselController =
     //     CarouselSliderController();
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 18),
-      color: white,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // CarouselSlider.builder(
-          //   carouselController: buttonCarouselController,
-          //   itemCount: Initializer.carouselItems.length,
-          //   itemBuilder: (context, index, realIndex) => SizedBox(
-          //     width: MediaQuery.of(context).size.width,
-          //     child: Image.network(
-          //       Initializer.carouselItems[index],
-          //       fit: BoxFit.cover,
-          //     ),
-          //   ),
-          //   options: CarouselOptions(
-          //       height: 300.0,
-          //       autoPlay: true,
-          //       autoPlayInterval: const Duration(seconds: 3),
-          //       enlargeStrategy: CenterPageEnlargeStrategy.scale),
-          // ),
-          // Helper.allowHeight(30),
-          titleAndSearchView(),
-          Helper.allowHeight(40),
-          Center(
-            child: Consumer<ProviderClass>(
-              builder: (context, value, child) => Wrap(
-                alignment: WrapAlignment.center,
-                runSpacing: 16.0,
-                children: List.generate(
-                  data!.data!.cateoryList!.length,
-                  (index) => Container(
-                    margin: const EdgeInsets.only(right: 20),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              border: Border.all(
-                                  color: data!
-                                          .data!.cateoryList![index].isSelected!
-                                      ? primaryColor
-                                      : Colors.transparent,
-                                  width: 3.0),
-                              shape: BoxShape.circle),
-                          padding: const EdgeInsets.all(4.0),
-                          child: InkWell(
-                            onTap: () {
-                              if (!data!
-                                  .data!.cateoryList![index].isSelected!) {
-                                Initializer.providerClass!
-                                    .changeSlotService(index);
-                              }
-                            },
-                            child: Container(
-                              clipBehavior: Clip.hardEdge,
-                              width: 80,
-                              height: 80,
-                              decoration: const BoxDecoration(
-                                color: Colors.white70,
-                                shape: BoxShape.circle,
-                              ),
-                              child: CachedNetworkImage(
-                                imageUrl: ServerHelper.myQPadUrlImage +
-                                    data!.data!.cateoryList![index].logo!,
-                                errorWidget: (context, url, error) =>
-                                    const Icon(
-                                        Icons.image_not_supported_rounded),
-                                progressIndicatorBuilder:
-                                    (context, url, progress) => const Center(
-                                  child: CupertinoActivityIndicator(
-                                    color: Colors.grey,
-                                  ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // CarouselSlider.builder(
+        //   carouselController: buttonCarouselController,
+        //   itemCount: Initializer.carouselItems.length,
+        //   itemBuilder: (context, index, realIndex) => SizedBox(
+        //     width: MediaQuery.of(context).size.width,
+        //     child: Image.network(
+        //       Initializer.carouselItems[index],
+        //       fit: BoxFit.cover,
+        //     ),
+        //   ),
+        //   options: CarouselOptions(
+        //       height: 300.0,
+        //       autoPlay: true,
+        //       autoPlayInterval: const Duration(seconds: 3),
+        //       enlargeStrategy: CenterPageEnlargeStrategy.scale),
+        // ),
+        Helper.allowHeight(40),
+        titleAndSearchView(),
+        Helper.allowHeight(40),
+        Center(
+          child: Consumer<ProviderClass>(
+            builder: (context, value, child) => Wrap(
+              alignment: WrapAlignment.center,
+              runSpacing: 16.0,
+              children: List.generate(
+                data!.data!.cateoryList!.length,
+                (index) => Container(
+                  margin: const EdgeInsets.only(right: 20),
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            border: Border.all(
+                                color:
+                                    data!.data!.cateoryList![index].isSelected!
+                                        ? primaryColor
+                                        : Colors.transparent,
+                                width: 3.0),
+                            shape: BoxShape.circle),
+                        padding: const EdgeInsets.all(4.0),
+                        child: InkWell(
+                          onTap: () {
+                            if (!data!.data!.cateoryList![index].isSelected!) {
+                              Initializer.providerClass!
+                                  .changeSlotService(index);
+                            }
+                          },
+                          child: Container(
+                            clipBehavior: Clip.hardEdge,
+                            width: 80,
+                            height: 80,
+                            decoration: const BoxDecoration(
+                              color: Colors.white70,
+                              shape: BoxShape.circle,
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl: ServerHelper.myQPadUrlImage +
+                                  data!.data!.cateoryList![index].logo!,
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.image_not_supported_rounded),
+                              progressIndicatorBuilder:
+                                  (context, url, progress) => const Center(
+                                child: CupertinoActivityIndicator(
+                                  color: Colors.grey,
                                 ),
-                                fit: BoxFit.cover,
                               ),
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                        Helper.allowHeight(15),
-                        Text(
-                          data!.data!.cateoryList![index].businessName!,
-                          style: TextStyle(
-                            color: data!.data!.cateoryList![index].isSelected!
-                                ? primaryColor
-                                : Colors.black,
-                          ),
+                      ),
+                      Helper.allowHeight(15),
+                      Text(
+                        data!.data!.cateoryList![index].businessName!,
+                        style: TextStyle(
+                          color: data!.data!.cateoryList![index].isSelected!
+                              ? primaryColor
+                              : Colors.black,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
           ),
-          Helper.allowHeight(40),
-          BlocBuilder<MyQBloc, MyQState>(
-              buildWhen: (previous, current) =>
-                  current is GettingShopsList ||
-                  current is ShopsListFetched ||
-                  current is ShopsListNotFetched ||
-                  current is ShopsListNotFound ||
-                  current is GettingShopsListError,
-              builder: (context, state) => state is ShopsListFetched
-                  ? serviceView(context)
-                  : state is GettingShopsList
-                      ? const Center(child: CupertinoActivityIndicator())
-                      : state is ShopsListNotFound
-                          ? Center(
-                              child: Text(
-                              "No Shops Listed In '${Initializer.selectedMyQCategoryName}' Category",
-                            ))
-                          : Helper.shrink()),
-          Helper.allowHeight(40),
-        ],
-      ),
+        ),
+        Helper.allowHeight(40),
+        BlocBuilder<MyQBloc, MyQState>(
+            buildWhen: (previous, current) =>
+                current is GettingShopsList ||
+                current is ShopsListFetched ||
+                current is ShopsListNotFetched ||
+                current is ShopsListNotFound ||
+                current is GettingShopsListError,
+            builder: (context, state) => state is ShopsListFetched
+                ? serviceView(context)
+                : state is GettingShopsList
+                    ? const Center(child: CupertinoActivityIndicator())
+                    : state is ShopsListNotFound
+                        ? Center(
+                            child: Text(
+                            "No Shops Listed In '${Initializer.selectedMyQCategoryName}' Category",
+                          ))
+                        : Helper.shrink()),
+        Helper.allowHeight(40),
+      ],
     );
   }
 

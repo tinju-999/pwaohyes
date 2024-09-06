@@ -1,3 +1,4 @@
+
 import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/bloc/locationbloc.dart';
 import 'package:pwaohyes/bloc/myqbloc.dart';
@@ -17,7 +18,10 @@ import 'package:pwaohyes/model/usermodel.dart';
 import 'package:pwaohyes/provider/provider.dart';
 
 class Initializer {
-  static DateTime? selectedSlotedServiceDate = now;
+  static DateTime? seletedShopSlotDate = now;
+  static String? selectedShopId = "";
+  static String? selectedShopServiceId;
+  static String? selectedShopSlotId;
 
   void resetAll() {
     selectedMyQCategory = "";
@@ -149,6 +153,8 @@ class Initializer {
   static LocationBloc locationBloc = LocationBloc();
 
   static MyQBloc myQBloc = MyQBloc();
+
+
 }
 
 class AddresstypeModel {

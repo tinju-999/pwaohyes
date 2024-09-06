@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Preferences {
   static Future setToken(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-     prefs.setString("userToken", token);
+    prefs.setString("userToken", token);
   }
 
   static setRefreshToken(String token) async {
@@ -23,7 +23,7 @@ class Preferences {
 
   static setVerifiedData(String verifiedData) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-     prefs.setString("verifiedData", verifiedData);
+    prefs.setString("verifiedData", verifiedData);
   }
 
   static clearAll() async {
@@ -32,8 +32,8 @@ class Preferences {
   }
 
   static setLocation(String location) async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-     prefs.setString("location", location);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("location", location);
   }
 
   static Future<String> getLocation() async {
@@ -41,4 +41,13 @@ class Preferences {
     return prefs.getString("location") ?? "";
   }
 
+  static setPhone(String phone) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("phone", phone);
+  }
+
+   static Future<String> getPhone() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("phone") ?? "";
+  }
 }

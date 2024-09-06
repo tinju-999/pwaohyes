@@ -21,6 +21,7 @@ class WebAuth extends StatelessWidget {
         child: Column(
           children: [
             Header(
+                  removeBadge: false,
               route: const WebAuth(),
               scaffoldKey: scaffoldKey,
             ),

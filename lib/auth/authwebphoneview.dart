@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
@@ -73,7 +74,7 @@ class AuthWebPhoneView extends StatelessWidget {
                     ? const SizedBox(
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator(color: white))
+                        child: CupertinoActivityIndicator(color: white))
                     : const Text("Get OTP", style: TextStyle(color: white)),
               ),
             ),

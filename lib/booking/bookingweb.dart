@@ -3,9 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:pwaohyes/auth/authscreen.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
-import 'package:pwaohyes/bookingaddress/bookingaddresshome.dart';
 import 'package:pwaohyes/common/footer.dart';
 import 'package:pwaohyes/common/header.dart';
 import 'package:pwaohyes/provider/provider.dart';
@@ -14,8 +12,8 @@ import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 
 class BookingWeb extends StatefulWidget {
-  final String? catId;
-  const BookingWeb({super.key, this.catId});
+  final String? catId, title;
+  const BookingWeb({super.key, this.catId, this.title});
 
   @override
   State<BookingWeb> createState() => _BookingWebState();
@@ -23,23 +21,10 @@ class BookingWeb extends StatefulWidget {
 
 class _BookingWebState extends State<BookingWeb> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  String? title = "";
-  bool? isLoaded = false;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // if (!isLoaded!) {
-    final arg = ModalRoute.of(context)!.settings.arguments as Map;
-    var catId = arg['catId'];
-    title = arg['title'];
-    Initializer.serviceBloc.getServiceDetail(catId);
-    // }
-  }
 
   @override
   initState() {
     super.initState();
-    isLoaded = true;
   }
 
   @override
@@ -50,11 +35,12 @@ class _BookingWebState extends State<BookingWeb> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Header(
+                  removeBadge: false,
               route: BookingWeb(catId: widget.catId),
               scaffoldKey: scaffoldKey,
             ),
             Helper.allowHeight(15),
-            BookingWebPage(title: title),
+            BookingWebPage(title: widget.title),
             Helper.allowHeight(15),
             const Footer(),
           ],
@@ -90,23 +76,6 @@ class _BookingWebPageState extends State<BookingWebPage> {
                 ? Column(
                     children: [
                       Helper.allowHeight(15),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          const Align(
-                              alignment: Alignment.centerLeft,
-                              child: BackButton()),
-                          Helper.allowWidth(15),
-                          Text(
-                            widget.title!,
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600),
-                          )
-                        ],
-                      ),
-                      Helper.allowHeight(30),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -221,21 +190,13 @@ class _BookingWebPageState extends State<BookingWebPage> {
                                         SizedBox(
                                           width: Helper.width / 6,
                                           child: MaterialButton(
-                                            onPressed: () {
-                                              Helper.showLog(
-                                                  'service id ${Initializer.serviceDetailedModel.data!.service!.categoryId!.sId}');
-                                              Initializer.userModel.isLoggedIn!
-                                                  ? Helper.push(
-                                                      const BookingAddress())
-                                                  : Helper.push(
-                                                      const AuthScreen());
-                                            },
+                                            onPressed: () => Helper.getApp(),
                                             // Helper.push(const BookingAddress()),
                                             elevation: 5.0,
                                             color: primaryColor,
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 18, horizontal: 14),
-                                            child: const Text("Book Now",
+                                            child: const Text("Use App",
                                                 style: TextStyle(color: white)),
                                           ),
                                         ),

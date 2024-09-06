@@ -34,7 +34,7 @@ class _LocationWebViewState extends State<LocationWebView> {
       endDrawer: const CustomDrawer(),
       body: ListView(
         children: [
-          Header(scaffoldKey: scaffoldKey),
+          Header(scaffoldKey: scaffoldKey,    removeBadge: false,),
           Helper.allowHeight(10),
           BlocBuilder<AuthBloc, AuthState>(
               buildWhen: (previous, current) =>
@@ -231,7 +231,7 @@ class LocationWebContentView extends StatelessWidget {
           //                   ? const SizedBox(
           //                       width: 15,
           //                       height: 15,
-          //                       child: CircularProgressIndicator(color: white),
+          //                       child: CupertinoActivityIndicator(color: white),
           //                     )
           //                   : state is LocationFetchingError ||
           //                           state is LocationNotFetched

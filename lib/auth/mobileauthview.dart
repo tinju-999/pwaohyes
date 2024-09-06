@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
@@ -21,6 +22,7 @@ class MobileAuthView extends StatelessWidget {
         child: Column(
           children: [
             Header(
+                  removeBadge: false,
               route: const MobileAuthView(),
               scaffoldKey: scaffoldKey,
             ),
@@ -104,7 +106,7 @@ class BookingAuthMobile extends StatelessWidget {
                                   width: 20,
                                   height: 20,
                                   child:
-                                      CircularProgressIndicator(color: white))
+                                      CupertinoActivityIndicator(color: white))
                               : const Text("Login Now",
                                   style: TextStyle(color: white)),
                         ),

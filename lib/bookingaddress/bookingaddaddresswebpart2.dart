@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_function_literals_in_foreach_calls
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -260,7 +261,7 @@ class _AddAddressPageWebState extends State<AddAddressPageWeb> {
                             ? const SizedBox(
                                 width: 20,
                                 height: 20,
-                                child: CircularProgressIndicator(color: white))
+                                child: CupertinoActivityIndicator(color: white))
                             : const Text("Save Address",
                                 style: TextStyle(color: white)),
                       ),

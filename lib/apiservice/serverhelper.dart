@@ -1,3 +1,4 @@
+
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:pwaohyes/apiservice/ip.dart';
@@ -69,7 +70,24 @@ class ServerHelper {
     }
   }
 
-  static Future<Response> getMyQPost(String url, Map data) async {
+  static Future<Response> getMyQPost(
+      String url, Map<String, dynamic> data) async {
+    Helper.showLog('${myQPadUrl + url} -- $data');
+    Helper.showLog('Token: Bearer ${Initializer.userModel.token ?? ""}');
+    Helper.showLog(
+        'Refresh token: Bearer ${Initializer.userModel.refreshToken ?? ""}');
+    return await http
+        .post(Uri.parse(myQPadUrl + url),
+            headers: {
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+              // 'Authorization': 'Bearer ${Initializer.userModel.token ?? ""}',
+              // 'Refreshtoken':
+              //     'Bearer ${Initializer.userModel.refreshToken ?? ""}',
+            },
+            body: data);
+  }
+
+  static getMyQPostSpecial(String url, Map data) async {
     Helper.showLog('${myQPadUrl + url} -- $data');
     Helper.showLog('Token: Bearer ${Initializer.userModel.token ?? ""}');
     Helper.showLog(

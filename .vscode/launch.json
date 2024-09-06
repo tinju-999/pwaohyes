@@ -14,9 +14,16 @@
                 "chrome",
                 "--web-renderer",
                 "html"
+                //------------
                 // flutter run -d web-server --web-port 1234 --web-hostname <your_ip_address> --web-renderer canvaskit
+                  //------------
                 //  "-d",
                 //  "web-server",
+                //  "--web-hostname",
+                //  "192.168.1.10",
+                //  "--web-port",
+                //  "8080"
+                //------------
                 //  "--web-port",
                 //  "8080",
                 //  "--web-hostname",

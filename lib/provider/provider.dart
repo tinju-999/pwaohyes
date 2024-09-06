@@ -44,8 +44,10 @@ class ProviderClass extends ChangeNotifier {
 
   void selectSlotServiceDate(DateTime value) {
     _serviceTime = value;
-    Initializer.selectedSlotedServiceDate = _serviceTime;
+    Initializer.seletedShopSlotDate = _serviceTime;
     notifyListeners();
+    Initializer.myQBloc.getShopsSlots(
+        Initializer.selectedShopServiceId, Initializer.seletedShopSlotDate);
   }
 
   startTimer() {
@@ -412,9 +414,22 @@ class ProviderClass extends ChangeNotifier {
       e.isSelected = false;
     }
     Initializer.shopViewModel.services![index].isSelected = true;
+    Initializer.selectedShopServiceId =
+        Initializer.shopViewModel.services![index].sId;
     notifyListeners();
-    Initializer.myQBloc.getShopsSlots(
-        Initializer.shopViewModel.services![index].sId, Initializer.selectedSlotedServiceDate);
+    Initializer.myQBloc.getShopsSlots(Initializer.selectedShopServiceId,
+        Initializer.seletedShopSlotDate);
+  }
+
+  void changeShopServiceSlot(int index) {
+    for (var e in Initializer.shopSlotModel.data!) {
+      e.isSelected = false;
+    }
+    Initializer.shopSlotModel.data![index].isSelected = true;
+    Initializer.selectedShopSlotId = Initializer.shopSlotModel.data![index].sId;
+    notifyListeners();
+    // Initializer.myQBloc.getShopsSlots(
+    //     Initializer.shopViewModel.services![index].sId, Initializer.selectedSlotedServiceDate);
   }
 }
 

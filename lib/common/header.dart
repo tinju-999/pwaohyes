@@ -11,8 +11,13 @@ import 'package:pwaohyes/utils/screensize.dart';
 
 class Header extends StatelessWidget {
   final dynamic route;
+  final bool? removeBadge;
   final GlobalKey<ScaffoldState>? scaffoldKey;
-  const Header({super.key, this.route, required this.scaffoldKey});
+  const Header(
+      {super.key,
+      this.route,
+      required this.scaffoldKey,
+      required this.removeBadge});
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +25,15 @@ class Header extends StatelessWidget {
       buildWhen: (previous, current) =>
           current is LoggoutSuccess || current is OTPVerified,
       builder: (context, state) => ScreenSize(
-        mobileView: MobileViewHeader(scaffoldKey: scaffoldKey),
+        mobileView: MobileViewHeader(
+          scaffoldKey: scaffoldKey,
+          removeBadge: removeBadge,
+        ),
         webView: const WebViewHeader(),
-        tabView: MobileViewHeader(scaffoldKey: scaffoldKey),
+        tabView: MobileViewHeader(
+          scaffoldKey: scaffoldKey,
+          removeBadge: removeBadge,
+        ),
       ),
     );
   }
@@ -41,11 +52,14 @@ class WebViewHeader extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(
-            logo,
-            fit: BoxFit.contain,
-            width: 160,
-            height: 120,
+          InkWell(
+            onTap: () => Helper.pushNamed(services),
+            child: Image.asset(
+              logo,
+              fit: BoxFit.contain,
+              width: 160,
+              height: 120,
+            ),
           ),
           Row(
             children: [
@@ -118,7 +132,9 @@ class WebViewHeader extends StatelessWidget {
 
 class MobileViewHeader extends StatelessWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
-  const MobileViewHeader({super.key, required this.scaffoldKey});
+  final bool? removeBadge;
+  const MobileViewHeader(
+      {super.key, required this.scaffoldKey, required this.removeBadge});
 
   @override
   Widget build(BuildContext context) {
@@ -130,12 +146,23 @@ class MobileViewHeader extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(
-            logo,
-            fit: BoxFit.contain,
-            width: 100,
-            height: 80,
-          ),
+          !removeBadge!
+              ? InkWell(
+                  onTap: () => Helper.pushNamed(services),
+                  child: Image.asset(
+                    logo,
+                    fit: BoxFit.contain,
+                    width: 100,
+                    height: 80,
+                  ),
+                )
+              : InkWell(
+                  onTap: () => Helper.showSuccessMobile(),
+                  child: const SizedBox(
+                    width: 100,
+                    height: 80,
+                  ),
+                ),
           Row(
             children: [
               Row(
@@ -170,7 +197,10 @@ class MobileViewHeader extends StatelessWidget {
                             Helper.pushReplacementNamed(authUser);
                           }
                         },
-                        child: const Text("Logout")),
+                        child: const Text(
+                          "Logout",
+                          overflow: TextOverflow.ellipsis,
+                        )),
                   Helper.allowWidth(20),
                   IconButton(
                       onPressed: () =>

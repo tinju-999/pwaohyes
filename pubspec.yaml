@@ -47,10 +47,13 @@ dependencies:
   http: ^1.2.2
   intl: ^0.19.0
   latlng: ^2.0.7
+  lottie: ^3.1.2
   page_transition: ^2.1.0
   permission_handler: ^11.3.1
   provider: ^6.1.2
+  pwa_install: ^0.0.5
   shared_preferences: ^2.2.3
+  shimmer: ^3.0.0
   time_picker_spinner_pop_up: ^2.0.0
   url_launcher: ^6.3.0
   url_strategy: ^0.3.0
@@ -74,12 +77,16 @@ flutter:
   assets:
     - assets/loging.png
     - assets/logo.png
+    - assets/ohyeslogo.png
     - assets/icons/twitter.png
     - assets/icons/facebook.png
     - assets/icons/instagram.png
     - assets/images/bg.jpg
     - assets/images/bg2.jpeg
     - assets/images/slotbookingbanner.png
+    - assets/lottie/sucesslottie.json
+  
+  # ohyeslogo.png
 
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see

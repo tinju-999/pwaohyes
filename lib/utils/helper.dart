@@ -8,6 +8,8 @@ import 'package:pwaohyes/main.dart';
 import 'package:pwaohyes/model/bookingdatemodel.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/initializer.dart';
+import 'package:shimmer/shimmer.dart';
+import 'dart:js' as js;
 
 class Helper {
   static FocusNode? focusNode;
@@ -127,18 +129,24 @@ class Helper {
       DateFormat(format ?? "yyyy-MM-dd").format(dateTime ?? DateTime.now());
   static pushReplacement(dynamic route, [PageTransitionType? transitionType]) {
     return Navigator.pushReplacement(
-        context!,
-        PageTransition(
-            type: transitionType ?? PageTransitionType.fade,
-            isIos: true,
-            child: route,
-            duration: const Duration(microseconds: 600)));
+      context!,
+      PageTransition(
+        type: transitionType ?? PageTransitionType.fade,
+        isIos: true,
+        child: route,
+        duration: const Duration(microseconds: 600),
+      ),
+    );
   }
 
   static pushReplacementNamed(String routeName) =>
       Navigator.of(context!).pushReplacementNamed(routeName);
+
   static pushNamed(String routeName, [Map? arguments]) =>
-      Navigator.of(context!).pushNamed(routeName, arguments: arguments);
+      Navigator.of(context!).pushNamed(
+        routeName,
+        arguments: arguments,
+      );
 
   static pushAndRemoveUntil(dynamic namedRoute) {
     return Navigator.of(context!).pushAndRemoveUntil(
@@ -278,24 +286,25 @@ class Helper {
   }
 
   static String toTitleCase(String input) {
-  if (input.isEmpty) return input;
+    if (input.isEmpty) return input;
 
-  // Trim leading and trailing whitespaces
-  input = input.trim();
+    // Trim leading and trailing whitespaces
+    input = input.trim();
 
-  // Split the input into words using space as a delimiter
-  List<String> words = input.split(' ');
+    // Split the input into words using space as a delimiter
+    List<String> words = input.split(' ');
 
-  // Capitalize the first letter of each word
-  List<String> titleCaseWords = words.map((word) {
-    if (word.isEmpty) return word; // Handle any empty strings (e.g., multiple spaces)
-    return word[0].toUpperCase() + word.substring(1).toLowerCase();
-  }).toList();
+    // Capitalize the first letter of each word
+    List<String> titleCaseWords = words.map((word) {
+      if (word.isEmpty) {
+        return word; // Handle any empty strings (e.g., multiple spaces)
+      }
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    }).toList();
 
-  // Join the words back together
-  return titleCaseWords.join(' ');
-}
-
+    // Join the words back together
+    return titleCaseWords.join(' ');
+  }
 
   static String toSentenceCase(String input) {
     if (input.isEmpty) return input;
@@ -333,4 +342,214 @@ class Helper {
   //   }
   //   return deviceType;
   // }
+
+  static String timeConversion({required String? time24}) {
+    // Parse the input time string (24-hour format)
+    final DateTime parsedTime = DateFormat("HH:mm").parse(time24!);
+
+    // Format the parsed time into a 12-hour format with AM/PM
+    final String formattedTime = DateFormat("hh:mm a").format(parsedTime);
+
+    return formattedTime;
+  }
+
+  static Widget wrapperShimmer(
+          {required double? width, required double? height}) =>
+      Wrap(
+        spacing: 16.0,
+        runSpacing: 16.0,
+        children: List.generate(
+          9,
+          (index) => Shimmer.fromColors(
+            baseColor: Colors.grey[100]!,
+            highlightColor: Colors.grey[300]!,
+            child: Container(
+              width: width ?? Helper.width / 6,
+              height: height ?? 60,
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+            ),
+          ),
+        ),
+      );
+
+  static launchUrl(String url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+  static getApp() =>
+      js.context.callMethod('open', ['https://live.ohyesworld.com/get/app']);
+
+  static openMap({required double lat, lon}) => js.context
+      .callMethod('open', ['https://www.google.com/maps?q=$lat,$lon']);
+
+  static void showSuccessWeb() => showDialog(
+        context: context!,
+        builder: (context) => AlertDialog(
+            content: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.bottomCenter,
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(18.0),
+                    topRight: Radius.circular(18.0),
+                  )),
+              padding: const EdgeInsets.only(
+                  top: 32, bottom: 18, left: 14, right: 14),
+              width: Helper.width / 4,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(CupertinoIcons.checkmark_seal_fill,
+                      color: Colors.green, size: 60),
+                  Helper.allowHeight(5),
+                  const Text(
+                    "Service Booked Successfully",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.green,
+                    ),
+                  ),
+                  Helper.allowHeight(10),
+                  SizedBox(
+                    width: Helper.width / 1.2,
+                    child: const Text(
+                      "Track your bookings, schedule new services, and explore convenient household services near you with the Oh Yes app.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.blueGrey,
+                      ),
+                    ),
+                  ),
+                  Helper.allowHeight(10),
+                  Container(
+                    color: white,
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 14, horizontal: 32),
+                    width: Helper.width / 2,
+                    child: MaterialButton(
+                      onPressed: () => Helper.getApp(),
+                      elevation: 5.0,
+                      color: primaryColor,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 18, horizontal: 14),
+                      child:
+                          const Text("Use App", style: TextStyle(color: white)),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: -80,
+              child: Container(
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: white,
+                ),
+                child: IconButton(
+                  onPressed: () => Helper.pop,
+                  icon: const Icon(CupertinoIcons.clear, color: black),
+                ),
+              ),
+            ),
+          ],
+        )),
+      );
+
+  static showSuccessMobile() => showDialog(
+        context: context!,
+        builder: (context) => AlertDialog(
+            content: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.bottomCenter,
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(18.0),
+                    topRight: Radius.circular(18.0),
+                  )),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(CupertinoIcons.checkmark_seal_fill,
+                      color: Colors.green, size: 55),
+                  Helper.allowHeight(10),
+                  const Text(
+                    "Service Booked Successfully",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.green,
+                    ),
+                  ),
+                  Helper.allowHeight(10),
+                  SizedBox(
+                    width: Helper.width / 1.2,
+                    child: const Text(
+                      "Track your bookings, schedule new services, and explore convenient household services near you with the Oh Yes app.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.blueGrey,
+                      ),
+                    ),
+                  ),
+                  Helper.allowHeight(10),
+                  Container(
+                    color: white,
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 14, horizontal: 32),
+                    width: Helper.width / 2,
+                    child: MaterialButton(
+                      onPressed: () => Helper.getApp(),
+                      elevation: 5.0,
+                      color: primaryColor,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 14),
+                      child:
+                          const Text("Use App", style: TextStyle(color: white)),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: -80,
+              child: Container(
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: white,
+                ),
+                child: IconButton(
+                  onPressed: () => Helper.pop,
+                  icon: const Icon(
+                    CupertinoIcons.clear,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )),
+      );
+
+  static bool isMobile() {
+    double screenWidth = MediaQuery.of(context!).size.width;
+    return screenWidth < 600; // Define your screen size threshold
+  }
 }

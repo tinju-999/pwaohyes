@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:pwaohyes/apiservice/serverhelper.dart';
-import 'package:pwaohyes/bookingaddress/bookingaddressweb.dart';
 import 'package:pwaohyes/model/citiesmodel.dart';
 import 'package:pwaohyes/model/otpverifiedmodel.dart';
 import 'package:pwaohyes/model/usermodel.dart';
@@ -45,30 +44,35 @@ class AuthBloc extends Cubit<AuthState> {
         "device_token": 'xxx',
         "device_type": 'web',
       });
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      var data = jsonDecode(response.body);
+      Helper.showLog(data['error_code']);
+      if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         Helper.showLog('auth data $data');
         Initializer.otpVerifiedModel = OtpVerifiedModel.fromJson(data);
         await Preferences.setToken(
             Initializer.otpVerifiedModel.data!.accessToken!);
-       
+        await Preferences.setPhone(phone);
+
         //7034444303
         await Preferences.setVerifiedData(
             jsonEncode(Initializer.otpVerifiedModel.toJson()));
-        Helper.pushReplacement(const BookingAddressWeb());
+        // Helper.pushReplacement(const BookingAddressWeb());
         Helper.showSnack(data['message']);
+
         Initializer.userModel = UserModel(
+            phone: phone,
             token: Initializer.otpVerifiedModel.data!.accessToken!,
             isLoggedIn: true,
             refreshToken: Initializer.otpVerifiedModel.data!.refreshToken!);
         emit(OTPVerified());
       } else {
         Helper.showLog(jsonDecode(response.body)['msg']);
-        Helper.showLog(response.reasonPhrase);
+        Helper.showSnack(data['message']);
         Initializer.userModel =
             UserModel(token: "", isLoggedIn: false, refreshToken: "");
         emit(OTPNotVerified());
-      } 
+      }
     } catch (e) {
       Initializer.userModel =
           UserModel(token: "", isLoggedIn: false, refreshToken: "");
@@ -98,15 +102,15 @@ class AuthBloc extends Cubit<AuthState> {
 
   Future<void> fetchCities() async {
     try {
-    emit(FetchingCitiesData());
-    Response response = await ServerHelper.get('cities');
-    if (response.statusCode == 200 || response.statusCode == 204) {
-      var data = jsonDecode(response.body);
-      Initializer.citiesModel = CitiesModel.fromJson(data);
-      emit(CitiesDataFetched());
-    } else {
-      emit(CitiesDataNotFetched());
-    }
+      emit(FetchingCitiesData());
+      Response response = await ServerHelper.get('cities');
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        var data = jsonDecode(response.body);
+        Initializer.citiesModel = CitiesModel.fromJson(data);
+        emit(CitiesDataFetched());
+      } else {
+        emit(CitiesDataNotFetched());
+      }
     } catch (e) {
       Helper.showLog("Exception on fetching cities $e");
       emit(FetchingCitiesDataError());

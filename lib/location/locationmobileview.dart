@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,7 +33,9 @@ class _LocationMobileViewState extends State<LocationMobileView> {
       key: scaffoldKey,
       body: ListView(
         children: [
-          Header(scaffoldKey: scaffoldKey),
+          Header(
+                removeBadge: false,
+            scaffoldKey: scaffoldKey),
           Helper.allowHeight(10),
           BlocBuilder<AuthBloc, AuthState>(
               buildWhen: (previous, current) =>
@@ -74,96 +75,71 @@ class LocationMobileContentView extends StatelessWidget {
       child: Column(
         children: [
           const Text(
-            "Choose From Popular Cities",
-            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-          const Text(
-            "Select a city for provide out cutting edge service to you",
+            "Select Your City",
             style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.blueGrey),
+                fontSize: 24, fontWeight: FontWeight.bold, height: 1.2),
             textAlign: TextAlign.center,
           ),
-          Helper.allowHeight(30),
-          Row(
-            children: [
-              Expanded(
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 30.0,
-                  runSpacing: 14.0,
-                  children: List.generate(
-                      data!.length,
-                      (index) => InkWell(
-                            onTap: () async {
-                              Initializer.selectedAdddress =
-                                  SelectedAddressModel(
-                                      locationName: data![index].name,
-                                      loadingState: LoadingState.success,
-                                      cityId: data![index].sId,
-                                      latLng: LatLng(
-                                          double.parse(data![index].lat!),
-                                          double.parse(data![index].lng!)));
-                              await Preferences.setLocation(jsonEncode(
-                                  Initializer.selectedAdddress!.toJson()));
-                              Helper.pushReplacementNamed(services);
-                            },
+          Helper.allowHeight(10),
+          SizedBox(
+            width: Helper.width / 1.4,
+            child: const Text(
+              "Select a city to receive our top-notch service",
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                height: 1.2,
+                color: Colors.blueGrey,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Helper.allowHeight(20),
+          Wrap(
+            alignment: WrapAlignment.center,
+            runSpacing: 8.0,
+            children: List.generate(
+                data!.length,
+                (index) => InkWell(
+                      onTap: () async {
+                        Initializer.selectedAdddress = SelectedAddressModel(
+                            locationName: data![index].name,
+                            loadingState: LoadingState.success,
+                            cityId: data![index].sId,
+                            latLng: LatLng(double.parse(data![index].lat!),
+                                double.parse(data![index].lng!)));
+                        await Preferences.setLocation(
+                            jsonEncode(Initializer.selectedAdddress!.toJson()));
+                        Helper.pushReplacementNamed(services);
+                      },
 
-                            // Helper.push(BookingWeb(
-                            //     catId: Initializer.subCatModel.data!
-                            //         .services![index].sId)),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                    clipBehavior: Clip.hardEdge,
-                                    constraints: const BoxConstraints(
-                                      maxHeight: 90,
-                                      maxWidth: 90,
-                                    ),
-                                    padding: const EdgeInsets.all(26.0),
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        color: white,
-                                        border:
-                                            Border.all(color: primaryColor)),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      child: CachedNetworkImage(
-                                          imageUrl: data![index].icon!,
-                                          width: 140,
-                                          height: 140,
-                                          fit: BoxFit.cover,
-                                          errorWidget: (context, url, error) {
-                                            return const Icon(
-                                              Icons.error,
-                                              color: black,
-                                            );
-                                          }),
-                                    )),
-                                Helper.allowHeight(15),
-                                SizedBox(
-                                  // width: 120,
-                                  child: Text(
-                                    data![index].name!,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: quicksand,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                      // Helper.push(BookingWeb(
+                      //     catId: Initializer.subCatModel.data!
+                      //         .services![index].sId)),
+                      child: Container(
+                          width: Helper.width,
+                          clipBehavior: Clip.hardEdge,
+                          constraints: const BoxConstraints(
+                            maxHeight: 60,
+                          ),
+                          padding: const EdgeInsets.all(18.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              color: white,
+                              border: Border.all(color: primaryColor)),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Text(
+                              data![index].name!,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: quicksand,
+                              ),
                             ),
                           )),
-                ),
-              ),
-            ],
+                    )),
           ),
         ],
       ),

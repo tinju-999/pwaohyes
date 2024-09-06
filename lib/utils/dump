@@ -11,4 +11,42 @@
                                           //       saturdayColor: primaryColor,
                                           //     ),
                                           //   ),
-                                          // )
+                                          // )'
+
+  // if (shopViewModel.data!.location!.isNotEmpty)
+  //               Helper.allowHeight(10),
+  //             if (shopViewModel.data!.location!.isNotEmpty)
+  //               InkWell(
+  //                 onTap: () => Helper.openMap(
+  //                     lat: shopViewModel.data!.location!.last,
+  //                     lon: shopViewModel.data!.location!.first),
+  //                 child: Container(
+  //                   width: Helper.width,
+  //                   padding:
+  //                       const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+  //                   decoration: BoxDecoration(
+  //                     color: Colors.transparent,
+  //                     border: Border.all(color: primaryColor),
+  //                     borderRadius: BorderRadius.circular(4.0),
+  //                   ),
+  //                   child: Row(
+  //                     mainAxisAlignment: MainAxisAlignment.center,
+  //                     children: [
+  //                       const Text(
+  //                         "Shop Location",
+  //                         style: TextStyle(
+  //                             color: primaryColor,
+  //                             fontSize: 12,
+  //                             fontWeight: FontWeight.bold),
+  //                       ),
+  //                       Helper.allowWidth(5.0),
+  //                       const Icon(
+  //                         CupertinoIcons.map,
+  //                         color: primaryColor,
+  //                         size: 20,
+  //                       )
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+            

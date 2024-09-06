@@ -1,32 +1,32 @@
 {
-    "name": "pwaohyes",
-    "short_name": "pwaohyes",
-    "start_url": ".",
+    "name": "MyQPad Booking",
+    "short_name": "MyQPad Booking",
+    "start_url": "/",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Find. Book. Relax – We Handle the Rest",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
         {
-            "src": "icons/Icon-192.png",
+            "src": "assets/ohyeslogo.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "icons/Icon-512.png",
+            "src": "assets/ohyeslogo.png",
             "sizes": "512x512",
             "type": "image/png"
         },
         {
-            "src": "icons/Icon-maskable-192.png",
+            "src": "assets/ohyeslogo.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "maskable"
         },
         {
-            "src": "icons/Icon-maskable-512.png",
+            "src": "assets/ohyeslogo.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"

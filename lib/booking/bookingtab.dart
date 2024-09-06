@@ -24,6 +24,7 @@ class _BookingTabState extends State<BookingTab> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Header(
+                  removeBadge: false,
               route: const BookingTab(),
               scaffoldKey: scaffoldKey,
             ),

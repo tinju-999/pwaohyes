@@ -83,6 +83,13 @@ class MyQBloc extends Cubit<MyQState> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         Initializer.shopViewModel =
             ShopViewModel.fromJson(jsonDecode(response.body));
+        if (Initializer.shopViewModel.services!.isNotEmpty) {
+          Initializer.shopViewModel.services!.first.isSelected = true;
+          Initializer.selectedShopServiceId =
+              Initializer.shopViewModel.services!.first.sId;
+          Initializer.myQBloc.getShopsSlots(Initializer.selectedShopServiceId,
+              Initializer.seletedShopSlotDate);
+        }
         emit(OneShopFetched());
       } else {
         emit(OneShopNotFetched());
@@ -96,23 +103,34 @@ class MyQBloc extends Cubit<MyQState> {
   Future<void> getShopsSlots(
       String? sId, DateTime? selectedSlotedServiceDate) async {
     try {
+      // Initializer.selectedShopServiceId = null;
+      Initializer.selectedShopSlotId = null;
       emit(GettingSlotShop());
-      Response response =
-          await ServerHelper.getMyQPost('/booking/get/slots/user', {
-        "service_id": sId,
-        "date": selectedSlotedServiceDate.toString(),
-      });
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        Initializer.shopSlotModel =
-            ShopSlotModel.fromJson(jsonDecode(response.body));
-        if (Initializer.shopSlotModel.data!.isNotEmpty) {
-          emit(SlotShopFetched(data: Initializer.shopSlotModel.data!));
+      await Future.delayed(const Duration(milliseconds: 800)).then((_) async {
+        Response response =
+            await ServerHelper.getMyQPost('/booking/get/slots/user', {
+          "service_id": sId,
+          "date": selectedSlotedServiceDate.toString(),
+        });
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          Initializer.shopSlotModel =
+              ShopSlotModel.fromJson(jsonDecode(response.body));
+          if (Initializer.shopSlotModel.data!.isNotEmpty) {
+            // Initializer.shopSlotModel.data!.first.isSelected = true;
+            // Initializer.selectedShopSlotId = Initializer.shopSlotModel.data!.first.sId;
+            Initializer.shopSlotModel.data!.removeWhere((e) => !e.isAvailable!);
+            if (Initializer.shopSlotModel.data!.isNotEmpty) {
+              emit(SlotShopFetched(data: Initializer.shopSlotModel.data!));
+            } else {
+              emit(SlotShopNotFound());
+            }
+          } else {
+            emit(SlotShopNotFound());
+          }
         } else {
-          emit(SlotShopNotFound());
+          emit(SlotShopNotFetched());
         }
-      } else {
-        emit(SlotShopNotFetched());
-      }
+      });
     } catch (e) {
       Helper.showLog("Exception on getting myqshops $e");
       emit(GettingSlotShopError());

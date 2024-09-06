@@ -2,17 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:pwaohyes/booking/bookingmobile.dart';
 import 'package:pwaohyes/booking/bookingweb.dart';
 import 'package:pwaohyes/booking/bookingtab.dart';
+import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/screensize.dart';
 
-class BookingHome extends StatelessWidget {
+class BookingHome extends StatefulWidget {
   final String? catId, title;
-  const BookingHome({super.key, required this.catId, this.title});
+  const BookingHome({super.key, this.catId, this.title});
+
+  @override
+  State<BookingHome> createState() => _BookingHomeState();
+}
+
+class _BookingHomeState extends State<BookingHome> {
+  @override
+  void initState() {
+    Initializer.serviceBloc.getServiceDetail(widget.catId);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ScreenSize(
-      mobileView: const BookingMobile(),
-      webView: BookingWeb(catId: catId),
+      mobileView: BookingMobile(catId: widget.catId, title: widget.title),
+      webView: BookingWeb(catId: widget.catId, title: widget.title),
       tabView: const BookingTab(),
     );
   }

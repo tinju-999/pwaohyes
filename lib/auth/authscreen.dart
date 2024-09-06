@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -31,7 +32,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: ScreenSize(
-      mobileView:  const MobileAuthView(),
+      mobileView: const MobileAuthView(),
       // mobileAuthView(context),
       webView: const WebAuth(),
       tabView: tabView(context),
@@ -85,7 +86,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 //         fontSize: 16,
                                 //         color: primaryColor,
                                 //       ),
-                                //     ), 
+                                //     ),
                                 //   ),
                               ],
                             ),
@@ -282,7 +283,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     ? const SizedBox(
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator(color: white))
+                        child: CupertinoActivityIndicator(color: white))
                     : const Text("Get OTP", style: TextStyle(color: white)),
               ),
             ),

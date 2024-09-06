@@ -6,12 +6,17 @@ import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/bloc/locationbloc.dart';
 import 'package:pwaohyes/bloc/myqbloc.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
+import 'package:pwaohyes/booking/bookinghome.dart';
+import 'package:pwaohyes/booking/bookingweb.dart';
+import 'package:pwaohyes/bookingaddress/bookingaddressweb.dart';
 import 'package:pwaohyes/location/locationpermissionview.dart';
 import 'package:pwaohyes/model/selectedaddressmodel.dart';
 import 'package:pwaohyes/model/usermodel.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/service/servicehome.dart';
 import 'package:pwaohyes/slotbooking/shopview/shopview.dart';
+import 'package:pwaohyes/slotbooking/slotbookingview.dart';
+import 'package:pwaohyes/subservice/subservicehome.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/preferences.dart';
@@ -26,8 +31,16 @@ import 'package:url_strategy/url_strategy.dart';
 // }
 
 Future<void> main() async {
+  // PWAInstall().setup(installCallback: () {
+  //   debugPrint('APP INSTALLED!');
+  // });
+
   WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
+
+  // if (PWAInstall().installPromptEnabled) {
+  //   Helper.showLog("Install prompt enabled");
+  // }
 
   // Create a JavaScript object with properties
   // var jsObject = JsObject.jsify({'key': 'value'});
@@ -54,8 +67,12 @@ Future<void> main() async {
         SelectedAddressModel.fromJson(jsonDecode(location));
   }
   if (token.isNotEmpty) {
-    Initializer.userModel =
-        UserModel(isLoggedIn: true, token: token, refreshToken: refreshToken);
+    var phone = await Preferences.getPhone();
+    Initializer.userModel = UserModel(
+        isLoggedIn: true,
+        token: token,
+        refreshToken: refreshToken,
+        phone: phone);
   } else {
     Initializer.userModel =
         UserModel(isLoggedIn: false, token: "", refreshToken: "");
@@ -103,7 +120,6 @@ class MyApp extends StatelessWidget {
 
               // },
               initialRoute: locationView,
-              // slotBookingShop,
               routes: routes,
               onGenerateRoute: (settings) {
                 Uri uri = Uri.parse(settings.name!);
@@ -111,9 +127,45 @@ class MyApp extends StatelessWidget {
                     uri.pathSegments.first == 'slotBookingShop') {
                   final id = uri.queryParameters['id'];
                   return MaterialPageRoute(
-                    builder: (context) => SlotShopView(id: id),
-                  );
-                }
+                      builder: (context) => SlotShopView(id: id),
+                      settings: RouteSettings(name: settings.name));
+                } else if (uri.pathSegments.first == 'booking') {
+                  final catId = uri.queryParameters['catId'];
+                  final title = uri.queryParameters['title'];
+                  return MaterialPageRoute(
+                      builder: (context) =>
+                          BookingHome(catId: catId, title: title),
+                      settings: RouteSettings(name: settings.name));
+                } else if (uri.pathSegments.first == 'subServices') {
+                  final subServiceId = uri.queryParameters['subServiceId'];
+                  return MaterialPageRoute(
+                      builder: (context) =>
+                          SubServiceHome(subServiceId: subServiceId),
+                      settings: RouteSettings(name: settings.name));
+                } else if (uri.pathSegments.first == 'serviceLocation') {
+                  return MaterialPageRoute(
+                      builder: (context) => const LocationPermissionView(
+                            route: null,
+                          ),
+                      settings: RouteSettings(name: settings.name));
+                } else if (uri.pathSegments.first == 'ohyesservices') {
+                  return MaterialPageRoute(
+                      builder: (context) => const ServiceHome(),
+                      settings: RouteSettings(name: settings.name));
+                } else if (uri.pathSegments.first == 'servicebooking') {
+                  return MaterialPageRoute(
+                      builder: (context) => const BookingWeb(),
+                      settings: RouteSettings(name: settings.name));
+                } else if (uri.pathSegments.first == 'confirmBooking') {
+                  return MaterialPageRoute(
+                      builder: (context) => const BookingAddressWeb(),
+                      settings: RouteSettings(name: settings.name));
+                } else if (uri.pathSegments.first == 'slotBooking') {
+                  return MaterialPageRoute(
+                      builder: (context) => const SlotBookingView(),
+                      settings: RouteSettings(name: settings.name));
+                } 
+                //SubServiceHome
                 return null;
               },
               home: Builder(
@@ -123,16 +175,10 @@ class MyApp extends StatelessWidget {
                   Initializer.authBloc = context.read<AuthBloc>();
                   Initializer.locationBloc = context.read<LocationBloc>();
                   Initializer.myQBloc = context.read<MyQBloc>();
-                  return
-                      // const SlotShopView();
-
-                      // const ServiceHome();
-                      // const BookingAddressWeb();
-
-                      Initializer.selectedAdddress!.loadingState ==
-                              LoadingState.success
-                          ? const ServiceHome()
-                          : const LocationPermissionView(route: null);
+                  return Initializer.selectedAdddress!.loadingState ==
+                          LoadingState.success
+                      ? const ServiceHome()
+                      : const LocationPermissionView(route: null);
                 },
               )),
         ),

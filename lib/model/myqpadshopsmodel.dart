@@ -1,9 +1,9 @@
 class MyqpadShopsModel {
   bool? status;
-  int? statusCode;
+  num? statusCode;
   List<MyQShopsData>? data;
-  int? count;
-  int? pages;
+  num? count;
+  num? pages;
   Pagination? pagination;
   String? message;
 
@@ -54,24 +54,24 @@ class MyQShopsData {
   String? sId;
   List<double>? location;
   bool? isVerified;
-  int? averageRating;
-  int? totalRating;
-  int? noOfCustomers;
-  int? documentsUploaded;
+  num? averageRating;
+  num? totalRating;
+  num? noOfCustomers;
+  num? documentsUploaded;
   List<Null>? images;
   String? onlineStatus;
   String? status;
-  int? phoneNo;
+  num? phoneNo;
   UserId? userId;
   BusinessCategory? businessCategory;
   String? createDate;
   String? updateDate;
-  int? iV;
+  num? iV;
   String? addressLine1;
   String? addressLine2;
   String? businessName;
   String? cityName;
-  int? pincode;
+  num? pincode;
   String? uniqueCode;
   String? businessBoard;
   String? vistingCard;
@@ -79,7 +79,7 @@ class MyQShopsData {
   OhyesData? ohyesData;
   String? businessCategoryName;
   List<String>? serviceCategoryName;
-  int? distance;
+  num? distance;
 
   MyQShopsData(
       {this.sId,
@@ -202,7 +202,7 @@ class UserId {
   String? phoneNo;
   bool? isPasswordChanged;
   bool? isVerified;
-  int? level;
+  num? level;
   bool? verificationStatus;
   OhyesData? ohyesData;
   List<Null>? location;
@@ -210,7 +210,7 @@ class UserId {
   String? status;
   String? createDate;
   String? updateDate;
-  int? iV;
+  num? iV;
   String? emailId;
   String? userName;
 
@@ -336,7 +336,7 @@ class BusinessCategory {
   String? uniqueCode;
   String? createDate;
   String? updateDate;
-  int? iV;
+  num? iV;
   String? logo;
 
   BusinessCategory(
@@ -387,9 +387,9 @@ class BusinessCategory {
 }
 
 class Pagination {
-  int? totalLength;
-  int? pageNo;
-  int? limit;
+  num? totalLength;
+  num? pageNo;
+  num? limit;
 
   Pagination({this.totalLength, this.pageNo, this.limit});
 

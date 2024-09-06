@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -86,7 +87,7 @@ class _AuthWebRegisterViewState extends State<AuthWebRegisterView> {
                             ? const SizedBox(
                                 width: 20,
                                 height: 20,
-                                child: CircularProgressIndicator(color: white))
+                                child: CupertinoActivityIndicator(color: white))
                             : const Text("Verify OTP",
                                 style: TextStyle(color: white)),
                       ),
@@ -187,7 +188,7 @@ class _AuthWebRegisterViewState extends State<AuthWebRegisterView> {
                             ? const SizedBox(
                                 width: 20,
                                 height: 20,
-                                child: CircularProgressIndicator(color: white))
+                                child: CupertinoActivityIndicator(color: white))
                             : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,

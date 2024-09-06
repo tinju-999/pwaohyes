@@ -32,7 +32,9 @@ class _BookingAddressWebState extends State<BookingAddressWeb> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Header(route: const BookingAddressWeb(), scaffoldKey: scaffoldKey),
+            Header(
+                  removeBadge: false,
+              route: const BookingAddressWeb(), scaffoldKey: scaffoldKey),
             Helper.allowHeight(10),
             Selector<ProviderClass, bool>(
               selector: (p0, p1) => p1.isAddAddressVisible!,

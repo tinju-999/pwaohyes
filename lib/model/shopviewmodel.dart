@@ -1,6 +1,6 @@
 class ShopViewModel {
   bool? status;
-  int? statusCode;
+  num? statusCode;
   ShopViewModelData? data;
   // List<Null>? users;
   List<Services>? services;
@@ -57,24 +57,24 @@ class ShopViewModelData {
   String? sId;
   List<double>? location;
   bool? isVerified;
-  int? averageRating;
-  int? totalRating;
-  int? noOfCustomers;
-  int? documentsUploaded;
+  num? averageRating;
+  num? totalRating;
+  num? noOfCustomers;
+  num? documentsUploaded;
   List<Null>? images;
   String? onlineStatus;
   String? status;
-  int? phoneNo;
+  num? phoneNo;
   UserId? userId;
   BusinessCategory? businessCategory;
   String? createDate;
   String? updateDate;
-  int? iV;
+  num? iV;
   String? addressLine1;
   String? addressLine2;
   String? businessName;
   String? cityName;
-  int? pincode;
+  num? pincode;
   String? uniqueCode;
   String? businessBoard;
   String? vistingCard;
@@ -239,7 +239,7 @@ class UserId {
   String? sId;
   String? userType;
   String? phoneNo;
-  int? level;
+  num? level;
   String? emailId;
   String? userName;
 
@@ -294,14 +294,14 @@ class BusinessCategory {
 class Services {
   List<Null>? isDaywise;
   String? sId;
-  int? amount;
+  num? amount;
   bool? isSelected;
-  int? discountAmount;
-  int? taxPercentage;
+  num? discountAmount;
+  num? taxPercentage;
   List<String>? availableDays;
   bool? serviceShowToCustomers;
-  int? averageRating;
-  int? totalRating;
+  num? averageRating;
+  num? totalRating;
   String? slotType;
   String? status;
   String? userId;
@@ -311,7 +311,7 @@ class Services {
   String? description;
   String? createDate;
   String? updateDate;
-  int? iV;
+  num? iV;
 
   Services(
       {this.isDaywise,
@@ -397,7 +397,7 @@ class Services {
 class ServiceCategoryId {
   String? sId;
   String? isUpdated;
-  int? sortingOrder;
+  num? sortingOrder;
   bool? visibleToPartnerOnly;
   String? status;
   String? businessCategory;
@@ -405,7 +405,7 @@ class ServiceCategoryId {
   String? description;
   String? createDate;
   String? updateDate;
-  int? iV;
+  num? iV;
   String? photo;
 
   ServiceCategoryId(

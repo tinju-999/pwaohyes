@@ -6,8 +6,10 @@ import 'package:pwaohyes/apiservice/serverhelper.dart';
 import 'package:pwaohyes/model/servicedetailedmodel.dart';
 import 'package:pwaohyes/model/servicemodel.dart';
 import 'package:pwaohyes/model/subcatmodel.dart';
+import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
+import 'package:pwaohyes/utils/routes.dart';
 
 class ServiceBloc extends Cubit<ServiceState> {
   ServiceBloc() : super(ServiceState());
@@ -51,7 +53,9 @@ class ServiceBloc extends Cubit<ServiceState> {
               .first
               .categoryItems!
               .toList();
+
           emit(ServicesFetched());
+          Initializer.myQBloc.getMyQCats();
         } else {
           Helper.showSnack(response.reasonPhrase);
           emit(ServicesNotFetched());
@@ -112,9 +116,55 @@ class ServiceBloc extends Cubit<ServiceState> {
       emit(ServiceDetailNotFetched());
     }
   }
+
+  void bookService(Map map) async {
+    try {
+      emit(BookingService());
+      Helper.showLoader();
+      Response response =
+          await ServerHelper.getMyQPostSpecial('/booking/add/user/web', map);
+      if (response.statusCode == 200 && jsonDecode(response.body)['status']) {
+        Helper.pop();
+        if (Initializer.selectedAdddress!.loadingState ==
+            LoadingState.success) {
+          Helper.pushReplacementNamed(services);
+        } else {
+          Helper.pushReplacementNamed(locationView);
+        }
+        if (Helper.isMobile()) {
+          Helper.showSuccessMobile();
+        } else {
+          Helper.showSuccessWeb();
+        }
+
+        emit(ServiceBooked());
+      } else {
+        Helper.pop();
+        Helper.showLog("Unable to book the service ${response.reasonPhrase}");
+        Helper.showSnack(response.reasonPhrase);
+        emit(ServiceNotBooked());
+      }
+    } on Exception catch (e) {
+      Helper.pop();
+      Helper.showLog("Exception on booking service $e");
+      emit(ServiceBookingError());
+    }
+  }
 }
 
 class ServiceState {}
+
+//___________________________________________
+
+class BookingService extends ServiceState {}
+
+class ServiceBooked extends ServiceState {}
+
+class ServiceNotBooked extends ServiceState {}
+
+class ServiceBookingError extends ServiceState {}
+
+//___________________________________________
 
 class AddingAddress extends ServiceState {}
 
@@ -125,6 +175,7 @@ class AddressNotAdded extends ServiceState {}
 class AddressAddingFailed extends ServiceState {}
 
 //___________________________________________
+
 class GettingServiceDetail extends ServiceState {}
 
 class ServiceDetailFetched extends ServiceState {}

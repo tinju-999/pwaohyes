@@ -36,7 +36,8 @@ class ShopSlotModel {
 
 class ShopSlotModelData {
   String? sId;
-  int? noOfSlots;
+  num? noOfSlots;
+  bool? isSelected;
   String? status;
   String? partnerId;
   String? serviceId;
@@ -46,7 +47,7 @@ class ShopSlotModelData {
   String? slotEndTime;
   String? createDate;
   String? updateDate;
-  int? iV;
+  num? iV;
   bool? isAvailable;
 
   ShopSlotModelData(
@@ -54,6 +55,7 @@ class ShopSlotModelData {
       this.noOfSlots,
       this.status,
       this.partnerId,
+      this.isSelected,
       this.serviceId,
       this.businessCategory,
       this.serviceCategoryId,
@@ -76,6 +78,7 @@ class ShopSlotModelData {
     slotEndTime = json['slot_end_time'];
     createDate = json['create_date'];
     updateDate = json['update_date'];
+    isSelected = false;
     iV = json['__v'];
     isAvailable = json['is_available'];
   }
@@ -102,13 +105,13 @@ class ShopSlotModelData {
 class ServiceInfo {
   List<Null>? isDaywise;
   String? sId;
-  int? amount;
-  int? discountAmount;
-  int? taxPercentage;
+  num? amount;
+  num? discountAmount;
+  num? taxPercentage;
   List<String>? availableDays;
   bool? serviceShowToCustomers;
-  int? averageRating;
-  int? totalRating;
+  num? averageRating;
+  num? totalRating;
   String? slotType;
   String? status;
   String? userId;
@@ -118,7 +121,7 @@ class ServiceInfo {
   String? description;
   String? createDate;
   String? updateDate;
-  int? iV;
+  num? iV;
 
   ServiceInfo(
       {this.isDaywise,
@@ -202,7 +205,7 @@ class ServiceInfo {
 class ServiceCategoryId {
   String? sId;
   String? isUpdated;
-  int? sortingOrder;
+  num? sortingOrder;
   bool? visibleToPartnerOnly;
   String? status;
   String? businessCategory;
@@ -210,7 +213,7 @@ class ServiceCategoryId {
   String? description;
   String? createDate;
   String? updateDate;
-  int? iV;
+  num? iV;
   String? photo;
 
   ServiceCategoryId(

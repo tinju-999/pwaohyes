@@ -23,7 +23,9 @@ class _BookingAddressTabState extends State<BookingAddressTab> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Header(route: const BookingAddressTab(), scaffoldKey: scaffoldKey),
+            Header(
+                  removeBadge: false,
+              route: const BookingAddressTab(), scaffoldKey: scaffoldKey),
             Helper.allowHeight(20),
             const BookingAddressTabPage(),
             Helper.allowHeight(20),

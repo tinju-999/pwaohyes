@@ -21,6 +21,7 @@ class ServiceHomeTabView extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             Header(
+                  removeBadge: false,
                 route: ServiceHomeTabView(providerClass: providerClass),
                 scaffoldKey: scaffoldKey),
             Helper.allowHeight(20),
