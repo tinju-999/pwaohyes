@@ -34,7 +34,10 @@ class _LocationWebViewState extends State<LocationWebView> {
       endDrawer: const CustomDrawer(),
       body: ListView(
         children: [
-          Header(scaffoldKey: scaffoldKey,    removeBadge: false,),
+          Header(
+            scaffoldKey: scaffoldKey,
+            removeBadge: false,
+          ),
           Helper.allowHeight(10),
           BlocBuilder<AuthBloc, AuthState>(
               buildWhen: (previous, current) =>
@@ -107,7 +110,7 @@ class LocationWebContentView extends StatelessWidget {
                                           double.parse(data![index].lng!)));
                               await Preferences.setLocation(jsonEncode(
                                   Initializer.selectedAdddress!.toJson()));
-                              Helper.pushReplacementNamed(allServices);
+                              Helper.pushReplacementNamed(allservices);
                             },
 
                             // Helper.push(BookingWeb(

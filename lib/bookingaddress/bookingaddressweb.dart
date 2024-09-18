@@ -33,8 +33,9 @@ class _BookingAddressWebState extends State<BookingAddressWeb> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Header(
-                  removeBadge: false,
-              route: const BookingAddressWeb(), scaffoldKey: scaffoldKey),
+                removeBadge: false,
+                route: const BookingAddressWeb(),
+                scaffoldKey: scaffoldKey),
             Helper.allowHeight(10),
             Selector<ProviderClass, bool>(
               selector: (p0, p1) => p1.isAddAddressVisible!,
@@ -68,158 +69,151 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
       color: white,
-      child: Column(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Align(alignment: Alignment.centerLeft, child: BackButton()),
-          // Helper.allowHeight(15),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 8,
-                child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 18, horizontal: 36),
-                    clipBehavior: Clip.hardEdge,
-                    height: Helper.height / 1.3,
-                    decoration: BoxDecoration(
-                      // color: primaryColor,
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                    child: Column(
+          Expanded(
+            flex: 8,
+            child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 18, horizontal: 36),
+                clipBehavior: Clip.hardEdge,
+                height: Helper.height / 1.3,
+                decoration: BoxDecoration(
+                  // color: primaryColor,
+                  borderRadius: BorderRadius.circular(18.0),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Text(
-                                  "Schedule & Confirm Booking",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 28),
-                                ),
-                              ],
-                            ),
-                            // Helper.allowHeight(5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Text(
-                                  "Lights Service & Repair",
-                                  style: TextStyle(fontSize: 16, color: grey),
-                                ),
-                              ],
+                            Text(
+                              "Schedule & Confirm Booking",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 28),
                             ),
                           ],
                         ),
-                        Helper.allowHeight(15),
-                        mainView(context),
-                      ],
-                    )),
-              ),
-              Helper.allowWidth(10),
-              Expanded(
-                flex: 6,
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(8.0)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 28, vertical: 26),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            // onTap: () async => await launchUrl(
-                            //     Uri.parse('https://ohyesworld.com/')),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              decoration: BoxDecoration(
-                                  color: white,
-                                  border: Border.all(color: primaryColor),
-                                  borderRadius: BorderRadius.circular(
-                                    8.0,
-                                  )),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.discount_rounded,
-                                    color: primaryColor,
-                                    size: 16,
-                                  ),
-                                  Helper.allowWidth(10),
-                                  const Text(
-                                    "Coupon & Promo code",
-                                    style: TextStyle(
-                                        fontSize: 12, color: primaryColor),
-                                  )
-                                ],
-                              ),
+                        // Helper.allowHeight(5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Text(
+                              "Lights Service & Repair",
+                              style: TextStyle(fontSize: 16, color: grey),
                             ),
-                          ),
-                          Helper.allowHeight(10),
-                          const Text(
-                            "Payment Summary",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 22),
-                          ),
-                          Helper.allowHeight(10),
-                          amountView("Total Amount", "- Rs 199"),
-                          amountView("Membership Offer", "- Rs 99"),
-                          amountView("Coupon & Promo Code", "Rs 39"),
-                          amountView("Platform Fee", "Rs 39"),
-                          Helper.allowHeight(20),
-                          const Divider(),
-                          amountView("Total", "Rs 901"),
-                          Helper.allowHeight(30),
-                          const Text(
-                            "You have Saved ₹ 298 on this bill",
-                            style: TextStyle(color: primaryColor),
-                          )
-                        ],
-                      ),
+                          ],
+                        ),
+                      ],
                     ),
-                    Helper.allowHeight(10),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(8.0)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 28, vertical: 26),
-                      child: const Text(
-                          "Note If you cancelled within 1 hour of placing your service a 100% refund will be issued. No refund for cancellation made after 1 hour."),
-                    )
+                    Helper.allowHeight(15),
+                    mainView(context),
                   ],
+                )),
+          ),
+          Helper.allowWidth(10),
+          Expanded(
+            flex: 6,
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8.0)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 28, vertical: 26),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        // onTap: () async => await launchUrl(
+                        //     Uri.parse('https://ohyesworld.com/')),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                              color: white,
+                              border: Border.all(color: primaryColor),
+                              borderRadius: BorderRadius.circular(
+                                8.0,
+                              )),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.discount_rounded,
+                                color: primaryColor,
+                                size: 16,
+                              ),
+                              Helper.allowWidth(10),
+                              const Text(
+                                "Coupon & Promo code",
+                                style: TextStyle(
+                                    fontSize: 12, color: primaryColor),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      Helper.allowHeight(10),
+                      const Text(
+                        "Payment Summary",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 22),
+                      ),
+                      Helper.allowHeight(10),
+                      amountView("Total Amount", "- Rs 199"),
+                      amountView("Membership Offer", "- Rs 99"),
+                      amountView("Coupon & Promo Code", "Rs 39"),
+                      amountView("Platform Fee", "Rs 39"),
+                      Helper.allowHeight(20),
+                      const Divider(),
+                      amountView("Total", "Rs 901"),
+                      Helper.allowHeight(30),
+                      const Text(
+                        "You have Saved ₹ 298 on this bill",
+                        style: TextStyle(color: primaryColor),
+                      )
+                    ],
+                  ),
                 ),
-                // Container(
-                //     clipBehavior: Clip.hardEdge,
-                //     decoration: BoxDecoration(
-                //       color: primaryColor,
-                //       borderRadius: BorderRadius.circular(18.0),
-                //     ),
-                //     child: Image.asset(
-                //       'assets/images/bg2.jpeg',
-                //       fit: BoxFit.fitHeight,
-                //     )),
-              ),
-            ],
+                Helper.allowHeight(10),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8.0)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 28, vertical: 26),
+                  child: const Text(
+                      "Note If you cancelled within 1 hour of placing your service a 100% refund will be issued. No refund for cancellation made after 1 hour."),
+                )
+              ],
+            ),
+            // Container(
+            //     clipBehavior: Clip.hardEdge,
+            //     decoration: BoxDecoration(
+            //       color: primaryColor,
+            //       borderRadius: BorderRadius.circular(18.0),
+            //     ),
+            //     child: Image.asset(
+            //       'assets/images/bg2.jpeg',
+            //       fit: BoxFit.fitHeight,
+            //     )),
           ),
         ],
       ),

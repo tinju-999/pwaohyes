@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
+import 'package:pwaohyes/provider/locationprovider.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
@@ -24,6 +26,13 @@ class _AddAddressPageWebState extends State<AddAddressPageWeb> {
   final houseController = TextEditingController();
   final landmarkController = TextEditingController();
   final contactController = TextEditingController();
+
+  @override
+  void initState() {
+    Initializer.locationProvider.getLocation();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -59,28 +68,30 @@ class _AddAddressPageWebState extends State<AddAddressPageWeb> {
                     ],
                   ),
                   Helper.allowHeight(30),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(
-                        Icons.location_on,
-                        color: Colors.black,
-                      ),
-                      Helper.allowWidth(20),
-                      const Expanded(
-                        child: Text(
-                          "Karukutty, Angamali - 686512",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Helper.allowHeight(30),
+                  // Row(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     const Icon(
+                  //       Icons.location_on,
+                  //       color: Colors.black,
+                  //     ),
+                  //     Helper.allowWidth(20),
+                  //     Expanded(
+                  //       child: Consumer<LocationProvider>(
+                  //         builder: (context, value, child) => Text(
+                  //           Initializer.selectedAdddress2!.locationName ?? "",
+                  //           style: const TextStyle(
+                  //             fontSize: 16,
+                  //             fontWeight: FontWeight.w500,
+                  //           ),
+                  //           maxLines: 2,
+                  //           overflow: TextOverflow.ellipsis,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // Helper.allowHeight(30),
                   TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) {
@@ -224,7 +235,7 @@ class _AddAddressPageWebState extends State<AddAddressPageWeb> {
                           current is AddressNotAdded,
                       listener: (context, state) {
                         if (state is AddressAdded) {
-                          Helper.pushReplacementNamed(confirmBooking);
+                          Helper.pushReplacementNamed(confirmbooking);
                         }
                       },
                       builder: (context, state) => MaterialButton(
@@ -244,9 +255,9 @@ class _AddAddressPageWebState extends State<AddAddressPageWeb> {
                                 "contact_number": contactController.text,
                                 "city": '',
                               };
-                              Initializer.serviceBloc.addAddress(data);
+                              Initializer.serviceBloc.addaddress(data);
                             } else {
-                              Helper.pushReplacementNamed(authUser);
+                              Helper.pushReplacementNamed(authuser);
                             }
 
                             // Initializer.providerClass
@@ -274,18 +285,26 @@ class _AddAddressPageWebState extends State<AddAddressPageWeb> {
             Expanded(
               flex: 6,
               child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(8.0)),
-                  height: Helper.height / 1.5,
-                  child: Container()
-                  // GoogleMap(
-                  //   mapType: MapType.hybrid,
-                  //   onMapCreated: (controller) {},
-                  //   initialCameraPosition:
-                  //       const CameraPosition(target: LatLng(10.1926, 76.3869)),
-                  // ),
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(8.0)),
+                height: Helper.height / 1.5,
+                child: Consumer<LocationProvider>(
+                  builder: (context, value, child) => GoogleMap(
+                    zoomControlsEnabled: true,
+                    myLocationButtonEnabled: true,
+                    myLocationEnabled: true,
+                    mapType: MapType.normal,
+                    onMapCreated: (controller) {},
+                    initialCameraPosition: CameraPosition(
+                        target: Initializer.selectedAdddress2!.latLng!,
+                        zoom: 16,
+                        bearing: 6.0,
+                        tilt: 6.0),
                   ),
+                ),
+              ),
             )
           ],
         ),

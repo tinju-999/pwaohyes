@@ -21,8 +21,7 @@ class SlotBookingWebView extends StatelessWidget {
     return Scaffold(
       body: ListView(
         children: [
-          const Header(
-                removeBadge: false,scaffoldKey: null),
+          const Header(removeBadge: false, scaffoldKey: null),
           Helper.allowHeight(10),
           BlocConsumer<MyQBloc, MyQState>(
               buildWhen: (previous, current) =>
@@ -74,7 +73,7 @@ class SlotBookingWebContent extends StatelessWidget {
         //       autoPlayInterval: const Duration(seconds: 3),
         //       enlargeStrategy: CenterPageEnlargeStrategy.scale),
         // ),
-        Helper.allowHeight(40),
+        Helper.allowHeight(20),
         titleAndSearchView(),
         Helper.allowHeight(40),
         Center(
@@ -184,7 +183,7 @@ class SlotBookingWebContent extends StatelessWidget {
                 Helper.showLog(
                     "Shop Id : ${Initializer.myqpadShopsModel.data![index].sId}");
                 Navigator.pushNamed(context,
-                    '/slotBookingShop?id=${Initializer.myqpadShopsModel.data![index].sId}');
+                    '/slotbookingshop?id=${Initializer.myqpadShopsModel.data![index].sId}');
               },
               child: Container(
                 clipBehavior: Clip.hardEdge,

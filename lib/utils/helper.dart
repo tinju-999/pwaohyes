@@ -1,9 +1,13 @@
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/main.dart';
 import 'package:pwaohyes/model/bookingdatemodel.dart';
 import 'package:pwaohyes/utils/constants.dart';
@@ -69,6 +73,156 @@ class Helper {
     ScaffoldMessenger.of(context!).hideCurrentSnackBar();
     ScaffoldMessenger.of(context!).showSnackBar(
         SnackBar(duration: Duration(seconds: seconds), content: Text(text!)));
+  }
+
+  static void showAuthDialogue({required BuildContext context}) {
+    final formKey = GlobalKey<FormState>();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Form(
+          key: formKey,
+          child: BlocBuilder<AuthBloc, AuthState>(
+            buildWhen: (previous, current) =>
+                current is VerifyingOTP ||
+                current is OTPVerified ||
+                current is OTPNotVerified ||
+                current is VerifyingOTPError ||
+                current is RequestingOTP ||
+                current is OTPRequested ||
+                current is OTPNotRequested ||
+                current is OTPNotRequested,
+            builder: (context, state) => Container(
+              decoration: const BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(18.0),
+                    topRight: Radius.circular(18.0),
+                  )),
+              padding: const EdgeInsets.only(
+                  top: 32, bottom: 18, left: 14, right: 14),
+              width: Helper.width / 3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "Verify Now",
+                    style: TextStyle(fontSize: 28),
+                  ),
+                  Helper.allowHeight(5),
+                  const Text(
+                    "Please Enter Your Mobile Number To Verify",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: grey,
+                    ),
+                  ),
+                  Helper.allowHeight(10),
+                  TextFormField(
+                      autofocus: true,
+                      controller: Initializer.phoneController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter mobile number";
+                        } else {
+                          return null;
+                        }
+                      },
+                      maxLength: 10,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      buildCounter: (context,
+                              {required currentLength,
+                              required isFocused,
+                              required maxLength}) =>
+                          Helper.shrink(),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 14, horizontal: 14),
+                        hintText: "Mobile Number",
+                        hintStyle: const TextStyle(fontSize: 13, color: grey),
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(color: grey),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      )),
+                  if (state is OTPRequested) Helper.allowHeight(10),
+                  if (state is OTPRequested ||
+                      Initializer.otpController.text.isNotEmpty)
+                    TextFormField(
+                        autofocus: true,
+                        controller: Initializer.otpController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter a valid OTP";
+                          } else {
+                            return null;
+                          }
+                        },
+                        maxLength: 4,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        buildCounter: (context,
+                                {required currentLength,
+                                required isFocused,
+                                required maxLength}) =>
+                            Helper.shrink(),
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 14, horizontal: 14),
+                          hintText: "OTP",
+                          hintStyle: const TextStyle(fontSize: 13, color: grey),
+                          border: OutlineInputBorder(
+                            borderSide: const BorderSide(color: grey),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        )),
+                  Helper.allowHeight(10),
+                  SizedBox(
+                    width: Helper.width,
+                    child: MaterialButton(
+                      onPressed: () {
+                        if (state is! RequestingOTP || state is! VerifyingOTP) {
+                          if (state is OTPRequested) {
+                            if (formKey.currentState!.validate()) {
+                              Initializer.authBloc.verifyOtp(
+                                  Initializer.otpController.text,
+                                  Initializer.phoneController.text);
+                            }
+                          } else {
+                            if (formKey.currentState!.validate()) {
+                              Initializer.authBloc.verifyPhone(
+                                  Initializer.phoneController.text);
+                            }
+                          }
+                        }
+                      },
+                      elevation: 5.0,
+                      color: primaryColor,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 18, horizontal: 6),
+                      child: state is RequestingOTP || state is VerifyingOTP
+                          ? const Center(
+                              child: CupertinoActivityIndicator(
+                                  color: Colors.white))
+                          : state is OTPRequested
+                              ? const Text("Verify OTP",
+                                  style: TextStyle(color: white, fontSize: 16))
+                              : const Text("Send OTP",
+                                  style: TextStyle(color: white, fontSize: 16)),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   // static Future<void> hapticSuccess() async =>

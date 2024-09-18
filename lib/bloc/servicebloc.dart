@@ -14,7 +14,7 @@ import 'package:pwaohyes/utils/routes.dart';
 class ServiceBloc extends Cubit<ServiceState> {
   ServiceBloc() : super(ServiceState());
 
-  addAddress(Map data) async {
+  addaddress(Map data) async {
     try {
       emit(AddingAddress());
       Response response = await ServerHelper.post('user/address', data);
@@ -127,7 +127,7 @@ class ServiceBloc extends Cubit<ServiceState> {
         Helper.pop();
         if (Initializer.selectedAdddress!.loadingState ==
             LoadingState.success) {
-          Helper.pushReplacementNamed(allServices);
+          Helper.pushReplacementNamed(allservices);
         } else {
           Helper.pushReplacementNamed(locationView);
         }

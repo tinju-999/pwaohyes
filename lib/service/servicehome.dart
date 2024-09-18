@@ -22,7 +22,6 @@ class _ServiceHomeState extends State<ServiceHome> {
     super.initState();
     providerClass = context.read<ProviderClass>();
     Initializer.serviceBloc.getServices();
-    
   }
 
   @override

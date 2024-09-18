@@ -1,4 +1,5 @@
-
+import 'package:flutter/cupertino.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/bloc/locationbloc.dart';
 import 'package:pwaohyes/bloc/myqbloc.dart';
@@ -15,6 +16,7 @@ import 'package:pwaohyes/model/shopslotmodel.dart';
 import 'package:pwaohyes/model/shopviewmodel.dart';
 import 'package:pwaohyes/model/subcatmodel.dart';
 import 'package:pwaohyes/model/usermodel.dart';
+import 'package:pwaohyes/provider/locationprovider.dart';
 import 'package:pwaohyes/provider/provider.dart';
 
 class Initializer {
@@ -23,10 +25,16 @@ class Initializer {
   static String? selectedShopServiceId;
   static String? selectedShopSlotId;
 
+  static final TextEditingController phoneController = TextEditingController();
+  static final TextEditingController otpController = TextEditingController();
+
+  static LocationProvider locationProvider = LocationProvider();
+
   void resetAll() {
     selectedMyQCategory = "";
     citiesModel = CitiesModel(data: []);
     otpVerifiedModel = OtpVerifiedModel();
+    locationProvider = LocationProvider();
   }
 
   //models
@@ -129,7 +137,7 @@ class Initializer {
     "Cleaning And Pest",
     "Interior",
   ];
-  static List<String> subServices = [
+  static List<String> subservices = [
     "Sub Service",
     "Sub Service",
     "Sub Service",
@@ -149,12 +157,13 @@ class Initializer {
 
   static SelectedAddressModel? selectedAdddress =
       SelectedAddressModel(loadingState: LoadingState.initial, latLng: null);
+  static SelectedAddressModel? selectedAdddress2 = SelectedAddressModel(
+      loadingState: LoadingState.initial,
+      latLng: const LatLng(10.216069936633316, 76.37739596497103));
 
   static LocationBloc locationBloc = LocationBloc();
 
   static MyQBloc myQBloc = MyQBloc();
-
-
 }
 
 class AddresstypeModel {

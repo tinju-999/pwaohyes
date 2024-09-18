@@ -27,7 +27,7 @@ class SubServiceWebView extends StatelessWidget {
             current is SubServicesNotFetched,
         builder: (context, state) => state is FetchingSubServices
             ? const Center(child: CupertinoActivityIndicator())
-            : state is SubServicesFetched || Initializer.subServices.isNotEmpty
+            : state is SubServicesFetched || Initializer.subservices.isNotEmpty
                 ? SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
@@ -58,7 +58,7 @@ class SubServicePageWeb extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 18),
         color: white,
         width: Helper.width,
-        child: subServices(context)
+        child: subservices(context)
         // Row(
         //   mainAxisAlignment: MainAxisAlignment.center,
         //   crossAxisAlignment: CrossAxisAlignment.center,
@@ -100,7 +100,7 @@ class SubServicePageWeb extends StatelessWidget {
         //         child: Selector<ProviderClass, bool>(
         //           selector: (p0, p1) => p1.showSubServices!,
         //           builder: (context, value, child) =>
-        //               value ? subServices(context) : services(context),
+        //               value ? subservices(context) : services(context),
         //         ),
         //       ),
         //     ),
@@ -110,7 +110,7 @@ class SubServicePageWeb extends StatelessWidget {
         );
   }
 
-  Widget subServices(BuildContext context) => Column(
+  Widget subservices(BuildContext context) => Column(
         key: const ValueKey('ohYesServices'),
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -158,13 +158,15 @@ class SubServicePageWeb extends StatelessWidget {
                                           maxHeight: 120,
                                           maxWidth: 120,
                                         ),
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.all(12.0),
                                         decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            color: white,
-                                            border: Border.all(
-                                                color: primaryColor)),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          color: white,
+                                          border: Border.all(
+                                            color: grey,
+                                          ),
+                                        ),
                                         child: Initializer.subCatModel.data!
                                                     .services![index].image !=
                                                 null
@@ -214,7 +216,7 @@ class SubServicePageWeb extends StatelessWidget {
             child: MaterialButton(
               onPressed: () => Initializer.selectedAdddress!.loadingState ==
                       LoadingState.success
-                  ? Helper.pushReplacementNamed(allServices)
+                  ? Helper.pushReplacementNamed(allservices)
                   : Helper.pushReplacementNamed(locationView),
               elevation: 0.0,
               color: primaryColor,
@@ -237,7 +239,7 @@ class SubServicePageWeb extends StatelessWidget {
         ],
       );
 
-  // subServices(BuildContext context) => showDialog(
+  // subservices(BuildContext context) => showDialog(
   //       barrierColor: Colors.white70,
   //       context: context,
   //       builder: (context) => AlertDialog(
@@ -480,7 +482,7 @@ class SubServicePageWeb extends StatelessWidget {
                     (index) => InkWell(
                           onTap: () {
                             Navigator.pushNamed(context,
-                                '/subServices?subServiceId=${Initializer.serviceCategory[index].sId!}');
+                                '/subservices?subServiceId=${Initializer.serviceCategory[index].sId!}');
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -559,7 +561,7 @@ class SubServicePageWeb extends StatelessWidget {
           ),
           Helper.allowHeight(40),
           InkWell(
-            onTap: () => Helper.pushNamed(slotBooking),
+            onTap: () => Helper.pushNamed(slotbooking),
             child: Container(
               clipBehavior: Clip.hardEdge,
               constraints: BoxConstraints(maxHeight: Helper.height / 2.5),

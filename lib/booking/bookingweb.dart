@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/common/footer.dart';
 import 'package:pwaohyes/common/header.dart';
@@ -10,6 +11,7 @@ import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
+import 'package:pwaohyes/utils/routes.dart';
 
 class BookingWeb extends StatefulWidget {
   final String? catId, title;
@@ -35,7 +37,7 @@ class _BookingWebState extends State<BookingWeb> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Header(
-                  removeBadge: false,
+              removeBadge: false,
               route: BookingWeb(catId: widget.catId),
               scaffoldKey: scaffoldKey,
             ),
@@ -82,9 +84,9 @@ class _BookingWebPageState extends State<BookingWebPage> {
                           Expanded(
                             flex: 3,
                             child: Container(
-                              height: Helper.height / 2,
+                              height: Helper.height / 3,
                               constraints:
-                                  BoxConstraints(maxHeight: Helper.height / 2),
+                                  BoxConstraints(maxHeight: Helper.height / 3),
                               clipBehavior: Clip.hardEdge,
                               decoration: BoxDecoration(
                                 // color: primaryColor,
@@ -187,17 +189,53 @@ class _BookingWebPageState extends State<BookingWebPage> {
                                             ),
                                           ],
                                         ),
-                                        SizedBox(
-                                          width: Helper.width / 6,
-                                          child: MaterialButton(
-                                            onPressed: () => Helper.getApp(),
-                                            // Helper.push(const BookingAddress()),
-                                            elevation: 5.0,
-                                            color: primaryColor,
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 18, horizontal: 14),
-                                            child: const Text("Use App",
-                                                style: TextStyle(color: white)),
+                                        BlocListener<AuthBloc, AuthState>(
+                                          listenWhen: (previous, current) =>
+                                              current is OTPNotVerified ||
+                                              current is OTPVerified ||
+                                              current is VerifyingOTPError,
+                                          listener: (context, state) {
+                                            if (state is OTPNotVerified ||
+                                                state is VerifyingOTPError) {
+                                              Initializer.phoneController
+                                                  .clear();
+                                              Initializer.otpController.clear();
+                                              Helper.pop();
+                                            }
+                                            if (state is OTPVerified) {
+                                              Helper.pop();
+                                              Initializer.phoneController
+                                                  .clear();
+                                              Initializer.otpController.clear();
+                                              Helper.pushNamed(
+                                                  "/bookingaddress?service=${Initializer.serviceDetailedModel.data!.service!.title!}&id=${Initializer.serviceDetailedModel.data!.service!.sId}");
+                                            }
+                                          },
+                                          child: SizedBox(
+                                            width: Helper.width / 6,
+                                            child: MaterialButton(
+                                              onPressed: () => continueBooking(
+                                                  context: context,
+                                                  serviceName: Initializer
+                                                      .serviceDetailedModel
+                                                      .data!
+                                                      .service!
+                                                      .title!,
+                                                  serviceId: Initializer
+                                                      .serviceDetailedModel
+                                                      .data!
+                                                      .service!
+                                                      .sId),
+                                              elevation: 5.0,
+                                              color: primaryColor,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 18,
+                                                      horizontal: 14),
+                                              child: const Text("Book Now",
+                                                  style:
+                                                      TextStyle(color: white)),
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -482,4 +520,13 @@ class _BookingWebPageState extends State<BookingWebPage> {
           Helper.allowHeight(30),
         ],
       );
+
+  continueBooking(
+      {required BuildContext context, required String serviceName, serviceId}) {
+    if (!Initializer.userModel.isLoggedIn!) {
+      Helper.showAuthDialogue(context: context);
+    } else {
+      Helper.pushNamed("/bookingaddress?service=$serviceName&id=$serviceId");
+    }
+  }
 }

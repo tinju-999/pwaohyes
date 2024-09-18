@@ -33,9 +33,7 @@ class _LocationMobileViewState extends State<LocationMobileView> {
       key: scaffoldKey,
       body: ListView(
         children: [
-          Header(
-                removeBadge: false,
-            scaffoldKey: scaffoldKey),
+          Header(removeBadge: false, scaffoldKey: scaffoldKey),
           Helper.allowHeight(10),
           BlocBuilder<AuthBloc, AuthState>(
               buildWhen: (previous, current) =>
@@ -110,7 +108,7 @@ class LocationMobileContentView extends StatelessWidget {
                                 double.parse(data![index].lng!)));
                         await Preferences.setLocation(
                             jsonEncode(Initializer.selectedAdddress!.toJson()));
-                        Helper.pushReplacementNamed(allServices);
+                        Helper.pushReplacementNamed(allservices);
                       },
 
                       // Helper.push(BookingWeb(

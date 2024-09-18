@@ -8,10 +8,12 @@ import 'package:pwaohyes/bloc/myqbloc.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/booking/bookinghome.dart';
 import 'package:pwaohyes/booking/bookingweb.dart';
+import 'package:pwaohyes/bookingaddress/bookingaddresshome.dart';
 import 'package:pwaohyes/bookingaddress/bookingaddressweb.dart';
 import 'package:pwaohyes/location/locationpermissionview.dart';
 import 'package:pwaohyes/model/selectedaddressmodel.dart';
 import 'package:pwaohyes/model/usermodel.dart';
+import 'package:pwaohyes/provider/locationprovider.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/service/servicehome.dart';
 import 'package:pwaohyes/slotbooking/shopview/shopview.dart';
@@ -93,6 +95,8 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider<ProviderClass>(
               create: (context) => ProviderClass()),
+          ChangeNotifierProvider<LocationProvider>(
+              create: (context) => LocationProvider()),
         ],
         child: MultiBlocProvider(
           providers: [
@@ -124,7 +128,7 @@ class MyApp extends StatelessWidget {
               onGenerateRoute: (settings) {
                 Uri uri = Uri.parse(settings.name!);
                 if (uri.pathSegments.isNotEmpty &&
-                    uri.pathSegments.first == 'slotBookingShop') {
+                    uri.pathSegments.first == 'slotbookingshop') {
                   final id = uri.queryParameters['id'];
                   return MaterialPageRoute(
                       builder: (context) => SlotShopView(id: id),
@@ -136,19 +140,18 @@ class MyApp extends StatelessWidget {
                       builder: (context) =>
                           BookingHome(catId: catId, title: title),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'subServices') {
+                } else if (uri.pathSegments.first == 'subservices') {
                   final subServiceId = uri.queryParameters['subServiceId'];
                   return MaterialPageRoute(
                       builder: (context) =>
                           SubServiceHome(subServiceId: subServiceId),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'serviceLocation') {
+                } else if (uri.pathSegments.first == 'chooselocation') {
                   return MaterialPageRoute(
-                      builder: (context) => const LocationPermissionView(
-                            route: null,
-                          ),
+                      builder: (context) =>
+                          const LocationPermissionView(route: null),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'allServices') {
+                } else if (uri.pathSegments.first == 'allservices') {
                   return MaterialPageRoute(
                       builder: (context) => const ServiceHome(),
                       settings: RouteSettings(name: settings.name));
@@ -156,13 +159,20 @@ class MyApp extends StatelessWidget {
                   return MaterialPageRoute(
                       builder: (context) => const BookingWeb(),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'confirmBooking') {
+                } else if (uri.pathSegments.first == 'confirmbooking') {
                   return MaterialPageRoute(
                       builder: (context) => const BookingAddressWeb(),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'slotBooking') {
+                } else if (uri.pathSegments.first == 'slotbooking') {
                   return MaterialPageRoute(
                       builder: (context) => const SlotBookingView(),
+                      settings: RouteSettings(name: settings.name));
+                } else if (uri.pathSegments.first == 'bookingaddress') {
+                  final service = uri.queryParameters['service'];
+                  final id = uri.queryParameters['id'];
+                  return MaterialPageRoute(
+                      builder: (context) =>
+                          BookingAddress(service: service, id: id),
                       settings: RouteSettings(name: settings.name));
                 }
                 //SubServiceHome
@@ -170,11 +180,11 @@ class MyApp extends StatelessWidget {
                         LoadingState.success
                     ? MaterialPageRoute(
                         builder: (context) => const ServiceHome(),
-                        settings: const RouteSettings(name: "allServices"))
+                        settings: const RouteSettings(name: "allservices"))
                     : MaterialPageRoute(
                         builder: (context) =>
                             const LocationPermissionView(route: null),
-                        settings: const RouteSettings(name: 'serviceLocation'));
+                        settings: const RouteSettings(name: 'chooselocation'));
               },
               home: Builder(
                 builder: (context) {
@@ -183,6 +193,8 @@ class MyApp extends StatelessWidget {
                   Initializer.authBloc = context.read<AuthBloc>();
                   Initializer.locationBloc = context.read<LocationBloc>();
                   Initializer.myQBloc = context.read<MyQBloc>();
+                  Initializer.locationProvider =
+                      context.read<LocationProvider>();
                   return Initializer.selectedAdddress!.loadingState ==
                           LoadingState.success
                       ? const ServiceHome()

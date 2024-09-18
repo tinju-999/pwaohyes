@@ -53,7 +53,7 @@ class WebViewHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           InkWell(
-            onTap: () => Helper.pushNamed(allServices),
+            onTap: () => Helper.pushNamed(allservices),
             child: Image.asset(
               logo,
               fit: BoxFit.contain,
@@ -115,7 +115,7 @@ class WebViewHeader extends StatelessWidget {
                           if (Initializer.userModel.isLoggedIn!) {
                             Initializer.authBloc.doLogout();
                           } else {
-                            Helper.pushReplacementNamed(authUser);
+                            Helper.pushReplacementNamed(authuser);
                           }
                         },
                         child: const Text("Logout")),
@@ -148,7 +148,7 @@ class MobileViewHeader extends StatelessWidget {
         children: [
           !removeBadge!
               ? InkWell(
-                  onTap: () => Helper.pushNamed(allServices),
+                  onTap: () => Helper.pushNamed(allservices),
                   child: Image.asset(
                     logo,
                     fit: BoxFit.contain,
@@ -194,7 +194,7 @@ class MobileViewHeader extends StatelessWidget {
                           if (Initializer.userModel.isLoggedIn!) {
                             Initializer.authBloc.doLogout();
                           } else {
-                            Helper.pushReplacementNamed(authUser);
+                            Helper.pushReplacementNamed(authuser);
                           }
                         },
                         child: const Text(

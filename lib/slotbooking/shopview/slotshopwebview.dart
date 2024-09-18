@@ -23,9 +23,7 @@ class SlotBookingShopWebView extends StatelessWidget {
     return Scaffold(
       body: ListView(
         children: [
-          const Header(
-                removeBadge: false,
-            scaffoldKey: null),
+          const Header(removeBadge: false, scaffoldKey: null),
           Helper.allowHeight(10),
           BlocConsumer<MyQBloc, MyQState>(
             buildWhen: (previous, current) =>
@@ -55,9 +53,6 @@ class SlotShopWebContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final TextEditingController phoneController = TextEditingController();
-    final TextEditingController otpController = TextEditingController();
     return Container(
         width: Helper.width,
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 200),
@@ -67,64 +62,86 @@ class SlotShopWebContent extends StatelessWidget {
           children: [
             shopTitle(shopViewModel, context),
             Helper.allowHeight(20),
-            bookingButton(
-                shopViewModel, formKey, phoneController, otpController),
+            bookingButton(shopViewModel),
           ],
         ));
   }
 
-  Widget bookingButton(
-          ShopViewModel? shopViewModel,
-          GlobalKey<FormState> formKey,
-          TextEditingController phoneController,
-          TextEditingController otpController) =>
-      BlocBuilder<MyQBloc, MyQState>(
-        buildWhen: (previous, current) =>
-            current is SlotShopFetched ||
-            current is SlotShopNotFound ||
-            current is SlotShopNotFetched ||
-            current is GettingSlotShopError,
-        builder: (context, state) => state is SlotShopFetched
-            ? SizedBox(
-                width: Helper.width / 4,
-                child: MaterialButton(
-                  onPressed: () {
-                    if (Initializer.selectedShopServiceId != null) {
-                      if (Initializer.selectedShopSlotId != null) {
-                        if (!Initializer.userModel.isLoggedIn!) {
-                          showAuthDialogue(
-                              context, formKey, phoneController, otpController);
+  Widget bookingButton(ShopViewModel? shopViewModel) =>
+      BlocListener<AuthBloc, AuthState>(
+        listenWhen: (previous, current) =>
+            current is OTPNotVerified ||
+            current is OTPVerified ||
+            current is VerifyingOTPError,
+        listener: (context, state) {
+          if (state is OTPNotVerified || state is VerifyingOTPError) {
+            Initializer.phoneController.clear();
+            Initializer.otpController.clear();
+            Helper.pop();
+          }
+          if (state is OTPVerified) {
+            Helper.pop();
+            Initializer.serviceBloc.bookService({
+              "name": Initializer.phoneController.text,
+              "phone": Initializer.phoneController.text,
+              "service_id": Initializer.selectedShopServiceId,
+              "slot_id": Initializer.selectedShopSlotId,
+              "number_of_slots": "1",
+              "booked_date": Initializer.seletedShopSlotDate.toString(),
+              "booking_amount":
+                  Initializer.shopSlotModel.serviceInfo!.amount.toString(),
+            });
+            Initializer.phoneController.clear();
+            Initializer.otpController.clear();
+          }
+        },
+        child: BlocBuilder<MyQBloc, MyQState>(
+          buildWhen: (previous, current) =>
+              current is SlotShopFetched ||
+              current is SlotShopNotFound ||
+              current is SlotShopNotFetched ||
+              current is GettingSlotShopError,
+          builder: (context, state) => state is SlotShopFetched
+              ? SizedBox(
+                  width: Helper.width / 4,
+                  child: MaterialButton(
+                    onPressed: () {
+                      if (Initializer.selectedShopServiceId != null) {
+                        if (Initializer.selectedShopSlotId != null) {
+                          if (!Initializer.userModel.isLoggedIn!) {
+                            Helper.showAuthDialogue(context: context);
+                          } else {
+                            Initializer.serviceBloc.bookService({
+                              "name": Initializer.userModel.phone,
+                              "phone": Initializer.userModel.phone!,
+                              "service_id": Initializer.selectedShopServiceId,
+                              "slot_id": Initializer.selectedShopSlotId,
+                              "number_of_slots": "1",
+                              "booked_date":
+                                  Initializer.seletedShopSlotDate.toString(),
+                              "booking_amount": Initializer
+                                  .shopSlotModel.serviceInfo!.amount
+                                  .toString(),
+                            });
+                          }
                         } else {
-                          Initializer.serviceBloc.bookService({
-                            "name": Initializer.userModel.phone,
-                            "phone": Initializer.userModel.phone!,
-                            "service_id": Initializer.selectedShopServiceId,
-                            "slot_id": Initializer.selectedShopSlotId,
-                            "number_of_slots": "1",
-                            "booked_date":
-                                Initializer.seletedShopSlotDate.toString(),
-                            "booking_amount": Initializer
-                                .shopSlotModel.serviceInfo!.amount
-                                .toString(),
-                          });
+                          Helper.showSnack("Please select a slot");
                         }
                       } else {
-                        Helper.showSnack("Please select a slot");
+                        Helper.showSnack("Please select a service");
                       }
-                    } else {
-                      Helper.showSnack("Please select a service");
-                    }
-                  },
-                  elevation: 5.0,
-                  color: primaryColor,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 22, horizontal: 120),
-                  child: Text(
-                      "\u{20B9} ${Initializer.shopSlotModel.serviceInfo!.amount}   Book Now",
-                      style: const TextStyle(color: white, fontFamily: "")),
-                ),
-              )
-            : Helper.shrink(),
+                    },
+                    elevation: 5.0,
+                    color: primaryColor,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 22, horizontal: 120),
+                    child: Text(
+                        "\u{20B9} ${Initializer.shopSlotModel.serviceInfo!.amount}   Book Now",
+                        style: const TextStyle(color: white, fontFamily: "")),
+                  ),
+                )
+              : Helper.shrink(),
+        ),
       );
 
   Widget shopTitle(ShopViewModel? shopViewModel, BuildContext context) =>
@@ -381,186 +398,6 @@ class SlotShopWebContent extends StatelessWidget {
             ),
             Helper.allowHeight(20),
           ],
-        ),
-      );
-
-  void showAuthDialogue(
-          BuildContext context, formKey, phoneController, otpController) =>
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          content: Form(
-            key: formKey,
-            child: BlocConsumer<AuthBloc, AuthState>(
-              listenWhen: (previous, current) =>
-                  current is OTPNotVerified ||
-                  current is OTPVerified ||
-                  current is VerifyingOTPError,
-              listener: (context, state) {
-                if (state is OTPNotVerified || state is VerifyingOTPError) {
-                  phoneController.clear();
-                  otpController.clear();
-                  Helper.pop();
-                }
-                if (state is OTPVerified) {
-                  Helper.pop();
-                  Initializer.serviceBloc.bookService({
-                    "name": phoneController.text,
-                    "phone": phoneController.text,
-                    "service_id": Initializer.selectedShopServiceId,
-                    "slot_id": Initializer.selectedShopSlotId,
-                    "number_of_slots": "1",
-                    "booked_date": Initializer.seletedShopSlotDate.toString(),
-                    "booking_amount": Initializer
-                        .shopSlotModel.serviceInfo!.amount
-                        .toString(),
-                  });
-                  phoneController.clear();
-                  otpController.clear();
-                }
-              },
-              buildWhen: (previous, current) =>
-                  current is VerifyingOTP ||
-                  current is OTPVerified ||
-                  current is OTPNotVerified ||
-                  current is VerifyingOTPError ||
-                  current is RequestingOTP ||
-                  current is OTPRequested ||
-                  current is OTPNotRequested ||
-                  current is OTPNotRequested,
-              builder: (context, state) => Container(
-                decoration: const BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(18.0),
-                      topRight: Radius.circular(18.0),
-                    )),
-                padding: const EdgeInsets.only(
-                    top: 32, bottom: 18, left: 14, right: 14),
-                width: Helper.width / 2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      "Verify Now",
-                      style: TextStyle(fontSize: 28),
-                    ),
-                    Helper.allowHeight(5),
-                    const Text(
-                      "Please Enter Your Mobile Number To Verify",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: grey,
-                      ),
-                    ),
-                    Helper.allowHeight(10),
-                    TextFormField(
-                        autofocus: true,
-                        controller: phoneController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Please enter mobile number";
-                          } else {
-                            return null;
-                          }
-                        },
-                        maxLength: 10,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        buildCounter: (context,
-                                {required currentLength,
-                                required isFocused,
-                                required maxLength}) =>
-                            Helper.shrink(),
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 14, horizontal: 14),
-                          hintText: "Mobile Number",
-                          hintStyle: const TextStyle(fontSize: 13, color: grey),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(color: grey),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        )),
-                    if (state is OTPRequested) Helper.allowHeight(10),
-                    if (state is OTPRequested || otpController.text.isNotEmpty)
-                      TextFormField(
-                          autofocus: true,
-                          controller: otpController,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Please enter a valid OTP";
-                            } else {
-                              return null;
-                            }
-                          },
-                          maxLength: 4,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          buildCounter: (context,
-                                  {required currentLength,
-                                  required isFocused,
-                                  required maxLength}) =>
-                              Helper.shrink(),
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 14, horizontal: 14),
-                            hintText: "OTP",
-                            hintStyle:
-                                const TextStyle(fontSize: 13, color: grey),
-                            border: OutlineInputBorder(
-                              borderSide: const BorderSide(color: grey),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          )),
-                    Helper.allowHeight(10),
-                    SizedBox(
-                      width: Helper.width,
-                      child: MaterialButton(
-                        onPressed: () {
-                          if (state is! RequestingOTP ||
-                              state is! VerifyingOTP) {
-                            if (state is OTPRequested) {
-                              if (formKey.currentState!.validate()) {
-                                Initializer.authBloc.verifyOtp(
-                                    otpController.text, phoneController.text);
-                              }
-                            } else {
-                              if (formKey.currentState!.validate()) {
-                                Initializer.authBloc
-                                    .verifyPhone(phoneController.text);
-                              }
-                            }
-                          }
-                        },
-                        elevation: 5.0,
-                        color: primaryColor,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 18, horizontal: 6),
-                        child: state is RequestingOTP || state is VerifyingOTP
-                            ? const Center(
-                                child: CupertinoActivityIndicator(
-                                    color: Colors.white))
-                            : state is OTPRequested
-                                ? const Text("Verify OTP",
-                                    style:
-                                        TextStyle(color: white, fontSize: 16))
-                                : const Text("Send OTP",
-                                    style:
-                                        TextStyle(color: white, fontSize: 16)),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
         ),
       );
 }

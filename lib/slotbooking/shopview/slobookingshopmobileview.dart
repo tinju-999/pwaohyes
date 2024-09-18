@@ -468,40 +468,47 @@ class SlotShopWebContent extends StatelessWidget {
                     ),
                     Helper.allowHeight(10),
                     TextFormField(
-                        autofocus: true,
-                        controller: phoneController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Please enter mobile number";
-                          } else {
-                            return null;
-                          }
-                        },
-                        maxLength: 10,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        buildCounter: (context,
-                                {required currentLength,
-                                required isFocused,
-                                required maxLength}) =>
-                            Helper.shrink(),
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 14, horizontal: 14),
-                          hintText: "Mobile Number",
-                          hintStyle: const TextStyle(fontSize: 13, color: grey),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(color: grey),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        )),
+                      autofocus: true,
+                      controller: phoneController,
+                      onFieldSubmitted: (_) {
+                        Initializer.authBloc.verifyPhone(phoneController.text);
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter mobile number";
+                        } else {
+                          return null;
+                        }
+                      },
+                      maxLength: 10,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      buildCounter: (context,
+                              {required currentLength,
+                              required isFocused,
+                              required maxLength}) =>
+                          Helper.shrink(),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 14, horizontal: 14),
+                        hintText: "Mobile Number",
+                        hintStyle: const TextStyle(fontSize: 13, color: grey),
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(color: grey),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
                     if (state is OTPRequested) Helper.allowHeight(10),
                     if (state is OTPRequested || otpController.text.isNotEmpty)
                       TextFormField(
                           autofocus: true,
                           controller: otpController,
+                          onEditingComplete: () {
+                            Initializer.authBloc.verifyOtp(
+                                otpController.text, phoneController.text);
+                          },
                           validator: (value) {
                             if (value!.isEmpty) {
                               return "Please enter a valid OTP";
@@ -510,6 +517,7 @@ class SlotShopWebContent extends StatelessWidget {
                             }
                           },
                           maxLength: 4,
+                          textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly

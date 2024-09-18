@@ -46,7 +46,7 @@ class Preferences {
     prefs.setString("phone", phone);
   }
 
-   static Future<String> getPhone() async {
+  static Future<String> getPhone() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("phone") ?? "";
   }

@@ -35,12 +35,35 @@ class ServiceHomeWebView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Header(
-                              removeBadge: false,
+                            removeBadge: false,
                             route: ServiceHomeWebView(
                                 providerClass: providerClass),
                             scaffoldKey: scaffoldKey),
+                        if (Initializer.serviceCategory.isNotEmpty)
+                          Helper.allowHeight(10),
+                        if (Initializer.serviceCategory.isNotEmpty)
+                          ServicePageWeb(providerClass: providerClass),
                         Helper.allowHeight(10),
-                        ServicePageWeb(providerClass: providerClass),
+                        if (Initializer.selectedAdddress!.cityId !=
+                            "663a875e79785516bb955401")
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 36, horizontal: 18),
+                            color: white,
+                            child: BlocConsumer<MyQBloc, MyQState>(
+                                buildWhen: (previous, current) =>
+                                    current is GettingMyQCats ||
+                                    current is MyQCatsFetched ||
+                                    current is MyQCatsNotFetched ||
+                                    current is GettingMyQCatsError,
+                                listener: (context, state) {},
+                                builder: (context, state) => state
+                                        is GettingMyQCats
+                                    ? const Center(
+                                        child: CupertinoActivityIndicator())
+                                    : SlotBookingWebContent(
+                                        data: Initializer.myqpadCategoryModel)),
+                          ),
                         Helper.allowHeight(10),
                         const Footer(),
                       ],
@@ -59,6 +82,7 @@ class ServicePageWeb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        width: Helper.width,
         padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 18),
         color: white,
         child: services(context));
@@ -97,7 +121,7 @@ class ServicePageWeb extends StatelessWidget {
                     (index) => InkWell(
                           onTap: () {
                             Navigator.pushNamed(context,
-                                '/subServices?subServiceId=${Initializer.serviceCategory[index].sId!}');
+                                '/subservices?subServiceId=${Initializer.serviceCategory[index].sId!}');
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -109,7 +133,7 @@ class ServicePageWeb extends StatelessWidget {
                                   // width: 120,
                                   // height: 120,
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8.0),
+                                      borderRadius: BorderRadius.circular(12.0),
                                       color: white,
                                       border: Border.all(color: primaryColor)),
                                   child: CachedNetworkImage(
@@ -117,8 +141,8 @@ class ServicePageWeb extends StatelessWidget {
                                         .serviceCategory[index].image!,
                                     fit: BoxFit.contain,
                                     filterQuality: FilterQuality.high,
-                                    width: 60,
-                                    height: 60,
+                                    width: 55,
+                                    height: 55,
                                     errorWidget: (context, url, error) =>
                                         const Icon(Icons.error),
                                   )),
@@ -140,19 +164,6 @@ class ServicePageWeb extends StatelessWidget {
               ),
             ),
           ),
-          if (Initializer.selectedAdddress!.cityId !=
-              "663a875e79785516bb955401")
-            BlocConsumer<MyQBloc, MyQState>(
-                buildWhen: (previous, current) =>
-                    current is GettingMyQCats ||
-                    current is MyQCatsFetched ||
-                    current is MyQCatsNotFetched ||
-                    current is GettingMyQCatsError,
-                listener: (context, state) {},
-                builder: (context, state) => state is GettingMyQCats
-                    ? const Center(child: CupertinoActivityIndicator())
-                    : SlotBookingWebContent(
-                        data: Initializer.myqpadCategoryModel)),
 
           // bookMySlotView(context),
         ],
@@ -188,7 +199,7 @@ class ServicePageWeb extends StatelessWidget {
           ),
           Helper.allowHeight(40),
           InkWell(
-            onTap: () => Helper.pushNamed(slotBooking),
+            onTap: () => Helper.pushNamed(slotbooking),
             child: Container(
               clipBehavior: Clip.hardEdge,
               constraints: BoxConstraints(maxHeight: Helper.height / 2.5),

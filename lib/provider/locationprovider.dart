@@ -1,20 +1,20 @@
 import 'dart:convert';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/cupertino.dart';
+// import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:nominatim_geocoding/nominatim_geocoding.dart';
 import 'package:pwaohyes/model/selectedaddressmodel.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/preferences.dart';
 
-class LocationBloc extends Cubit<LocationState> {
-  LocationBloc() : super(LocationState());
-
+class LocationProvider extends ChangeNotifier {
   getLocation() async {
     try {
-      emit(GettingLocation());
-      Initializer.selectedAdddress = SelectedAddressModel();
+      Initializer.selectedAdddress2 = SelectedAddressModel(
+          latLng: const LatLng(10.216069936633316, 76.37739596497103));
       bool isGranted = await seekLocationPermission();
       if (!isGranted) {
         Helper.showCustomDialog(
@@ -26,31 +26,27 @@ class LocationBloc extends Cubit<LocationState> {
               Helper.pop();
             },
             actionTwoText: "Ok");
-
-        emit(LocationNotFetched());
       } else {
         await Geolocator.getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.medium)
+                desiredAccuracy: LocationAccuracy.low)
             .then((position) async {
-          // var address = await Geocoder.local.findAddressesFromCoordinates(
-          //     Coordinates(position.latitude, position.longitude));
-          Initializer.selectedAdddress = SelectedAddressModel(
-            // locationName:
-            //     "${address.first.locality}, ${address.first.subLocality}, ${address.first.postalCode}",
+          // Address address = await geoCode.reverseGeocoding(
+          //     latitude: position.latitude, longitude: position.longitude);
+
+          Initializer.selectedAdddress2 = SelectedAddressModel(
             loadingState: LoadingState.success,
             latLng: LatLng(
               position.latitude,
               position.longitude,
             ),
           );
-          await Preferences.setLocation(
-              jsonEncode(Initializer.selectedAdddress!.toJson()));
-          emit(LocationFetched());
+          // await Preferences.setLocation(
+          //     jsonEncode(Initializer.selectedAdddress2!.toJson()));
         });
+        notifyListeners();
       }
     } catch (e) {
       Helper.showLog("Location fetching error $e");
-      emit(LocationFetchingError());
     }
   }
 
@@ -104,13 +100,3 @@ class LocationBloc extends Cubit<LocationState> {
     // return completer.future;
   }
 }
-
-class LocationState {}
-
-class GettingLocation extends LocationState {}
-
-class LocationFetched extends LocationState {}
-
-class LocationNotFetched extends LocationState {}
-
-class LocationFetchingError extends LocationState {}

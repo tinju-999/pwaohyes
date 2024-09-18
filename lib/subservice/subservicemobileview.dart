@@ -26,7 +26,7 @@ class SubServiceMobileView extends StatelessWidget {
             current is SubServicesNotFetched,
         builder: (context, state) => state is FetchingSubServices
             ? const Center(child: CupertinoActivityIndicator())
-            : state is SubServicesFetched || Initializer.subServices.isNotEmpty
+            : state is SubServicesFetched || Initializer.subservices.isNotEmpty
                 ? SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
@@ -57,10 +57,10 @@ class SubServicePageWeb extends StatelessWidget {
         width: Helper.width,
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 4),
         color: white,
-        child: subServices(context));
+        child: subservices(context));
   }
 
-  Widget subServices(BuildContext context) => Column(
+  Widget subservices(BuildContext context) => Column(
         key: const ValueKey('ohYesServices'),
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -171,7 +171,7 @@ class SubServicePageWeb extends StatelessWidget {
             child: MaterialButton(
               onPressed: () => Initializer.selectedAdddress!.loadingState ==
                       LoadingState.success
-                  ? Helper.pushReplacementNamed(allServices)
+                  ? Helper.pushReplacementNamed(allservices)
                   : Helper.pushReplacementNamed(locationView),
               elevation: 0.0,
               color: primaryColor,
@@ -197,7 +197,7 @@ class SubServicePageWeb extends StatelessWidget {
         ],
       );
 
-  // subServices(BuildContext context) => showDialog(
+  // subservices(BuildContext context) => showDialog(
   //       barrierColor: Colors.white70,
   //       context: context,
   //       builder: (context) => AlertDialog(
@@ -437,7 +437,7 @@ class SubServicePageWeb extends StatelessWidget {
           ),
           Helper.allowHeight(40),
           InkWell(
-            onTap: () => Helper.pushNamed(slotBooking),
+            onTap: () => Helper.pushNamed(slotbooking),
             child: Container(
               clipBehavior: Clip.hardEdge,
               constraints: BoxConstraints(maxHeight: Helper.height / 2.5),
