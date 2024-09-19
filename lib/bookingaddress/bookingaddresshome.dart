@@ -19,7 +19,7 @@ class BookingAddress extends StatefulWidget {
 class _BookingAddressState extends State<BookingAddress> {
   @override
   void initState() {
-    checkAndRedirect();
+    // checkAndRedirect();
     super.initState();
   }
 

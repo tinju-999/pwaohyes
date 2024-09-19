@@ -399,7 +399,6 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                                                       adjustedTime);
                                             } else {
                                               showInvalidTime(
-                                                  context,
                                                   "Oops! Time Out of Bounds",
                                                   "Please choose a time between 8:00 AM and 8:00 PM to proceed with your booking");
                                             }
@@ -624,7 +623,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
         ),
       );
 
-  void showInvalidTime(BuildContext context, String title, String content) =>
+  void showInvalidTime(String title, String content) =>
       showCupertinoDialog(
           barrierDismissible: true,
           context: context,

@@ -124,8 +124,8 @@ class LocationWebContentView extends StatelessWidget {
                                 Container(
                                     clipBehavior: Clip.hardEdge,
                                     constraints: const BoxConstraints(
-                                      maxHeight: 120,
-                                      maxWidth: 120,
+                                      maxHeight: 110,
+                                      maxWidth: 110,
                                     ),
                                     padding: const EdgeInsets.all(26.0),
                                     decoration: BoxDecoration(

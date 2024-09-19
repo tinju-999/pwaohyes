@@ -1,14 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-// import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:nominatim_geocoding/nominatim_geocoding.dart';
 import 'package:pwaohyes/model/selectedaddressmodel.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
-import 'package:pwaohyes/utils/preferences.dart';
 
 class LocationProvider extends ChangeNotifier {
   getLocation() async {

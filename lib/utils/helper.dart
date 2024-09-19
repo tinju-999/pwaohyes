@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -307,11 +306,10 @@ class Helper {
         MaterialPageRoute(builder: (context) => namedRoute), (route) => false);
   }
 
-  static pushReplacementWithDelay(BuildContext context, dynamic route,
-      [delay]) {
+  static pushReplacementWithDelay(dynamic route, [delay]) {
     return Future.delayed(Duration(seconds: delay ?? 3), () async {
       Navigator.pushReplacement(
-          context,
+          key!.currentContext!,
           PageTransition(
             type: PageTransitionType.fade,
             isIos: true,
