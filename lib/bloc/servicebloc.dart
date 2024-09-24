@@ -17,10 +17,12 @@ class ServiceBloc extends Cubit<ServiceState> {
   addaddress(Map data) async {
     try {
       emit(AddingAddress());
-      Response response = await ServerHelper.post('user/address', data);
+      Response response =
+          await ServerHelper.post('user/address', data,);
+      var decodedData = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         Helper.showLog(response.reasonPhrase);
-        Helper.showSnack(response.reasonPhrase);
+        Helper.showSnack(decodedData['message']);
         emit(AddressAdded());
       } else {
         Helper.showSnack(response.reasonPhrase);

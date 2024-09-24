@@ -7,4 +7,4 @@ enum ApiEnvironment {
   final String baseUrl;
 }
 
-const apiEnvironment = ApiEnvironment.prod;
+const apiEnvironment = ApiEnvironment.dev;

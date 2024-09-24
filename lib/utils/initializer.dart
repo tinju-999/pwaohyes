@@ -10,31 +10,40 @@ import 'package:pwaohyes/model/myqpadcatmodel.dart';
 import 'package:pwaohyes/model/myqpadshopsmodel.dart';
 import 'package:pwaohyes/model/otpverifiedmodel.dart';
 import 'package:pwaohyes/model/selectedaddressmodel.dart';
+import 'package:pwaohyes/model/selectedservicedetailedmodel.dart';
 import 'package:pwaohyes/model/servicedetailedmodel.dart';
 import 'package:pwaohyes/model/servicemodel.dart';
 import 'package:pwaohyes/model/shopslotmodel.dart';
 import 'package:pwaohyes/model/shopviewmodel.dart';
 import 'package:pwaohyes/model/subcatmodel.dart';
+import 'package:pwaohyes/model/useralladdressmodel.dart';
 import 'package:pwaohyes/model/usermodel.dart';
 import 'package:pwaohyes/provider/locationprovider.dart';
 import 'package:pwaohyes/provider/provider.dart';
 
 class Initializer {
   static DateTime? seletedShopSlotDate = now;
-  static String? selectedShopId = "";
+  static String? selectedShopId = "",
+      selectedServiceId = "",
+      selectedServiceAmount = "0";
   static String? selectedShopServiceId;
   static String? selectedShopSlotId;
 
-  static final TextEditingController phoneController = TextEditingController();
-  static final TextEditingController otpController = TextEditingController();
+  static TextEditingController phoneController =
+      TextEditingController(text: "8129322316");
+  static TextEditingController otpController =
+      TextEditingController(text: "3703");
 
   static LocationProvider locationProvider = LocationProvider();
+  static SelectedServiceDetailsModel selectedServiceDetailsModel =
+      SelectedServiceDetailsModel();
 
   void resetAll() {
     selectedMyQCategory = "";
     citiesModel = CitiesModel(data: []);
     otpVerifiedModel = OtpVerifiedModel();
     locationProvider = LocationProvider();
+    serviceDetailedModel = ServiceDetailedModel();
   }
 
   //models
@@ -48,6 +57,7 @@ class Initializer {
   static MyqpadCategoryModel myqpadCategoryModel = MyqpadCategoryModel();
   static String? selectedMyQCategory = "", selectedMyQCategoryName = "";
   static MyqpadShopsModel myqpadShopsModel = MyqpadShopsModel();
+  static UserAllAddressModel userAllAddressModel = UserAllAddressModel();
   static List<CategoryItems> serviceCategory = <CategoryItems>[];
   static List<String> carouselItems = [
     "https://scholarlykitchen.sspnet.org/wp-content/uploads/2017/12/iStock-629383254.jpg",

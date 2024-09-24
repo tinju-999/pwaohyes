@@ -13,6 +13,14 @@ import 'package:pwaohyes/utils/initializer.dart';
 enum LoadingState { initial, loading, success, failed, error }
 
 class ProviderClass extends ChangeNotifier {
+  bool _agreed = false;
+  bool get agreed => _agreed;
+  setAgreement(bool? value) {
+    _agreed = value!;
+    notifyListeners();
+  }
+
+  //--------------------------------
   DateTime? _serviceTime = Initializer.now;
   DateTime get serviceTime => _serviceTime!;
   Timer? _timer;
@@ -26,13 +34,13 @@ class ProviderClass extends ChangeNotifier {
   String _selectedServiceId = '';
   String get selectedServiceId => _selectedServiceId;
 
-  String _amount = '';
-  String get amount => _amount;
+  String _selectedServiceAmount = '';
+  String get selectedServiceAmount => _selectedServiceAmount;
 
   SelectedAddressModel _selectedAddressModel = SelectedAddressModel();
   SelectedAddressModel get selectedAddressModel => _selectedAddressModel;
 
-  //_amount
+  //_selectedServiceAmount
 
   bool _isAddAddressVisible = false;
   bool? get isAddAddressVisible => _isAddAddressVisible;
@@ -76,14 +84,14 @@ class ProviderClass extends ChangeNotifier {
 
   chooseService(String id, int index) {
     _selectedServiceId = id;
-    _amount = Initializer.serviceDetailedModel.data!.serviceTypes![index].price
+    _selectedServiceAmount = Initializer.serviceDetailedModel.data!.serviceTypes![index].price
         .toString();
     notifyListeners();
   }
 
   setServiceIdAndPrice(ServiceTypes first) {
     _selectedServiceId = first.sId!;
-    _amount = first.price.toString();
+    _selectedServiceAmount = first.price.toString();
     notifyListeners();
   }
 
@@ -417,8 +425,8 @@ class ProviderClass extends ChangeNotifier {
     Initializer.selectedShopServiceId =
         Initializer.shopViewModel.services![index].sId;
     notifyListeners();
-    Initializer.myQBloc.getShopsSlots(Initializer.selectedShopServiceId,
-        Initializer.seletedShopSlotDate);
+    Initializer.myQBloc.getShopsSlots(
+        Initializer.selectedShopServiceId, Initializer.seletedShopSlotDate);
   }
 
   void changeShopServiceSlot(int index) {

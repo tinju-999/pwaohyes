@@ -10,7 +10,6 @@ import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
-import 'package:pwaohyes/utils/routes.dart';
 
 class BookingWeb extends StatefulWidget {
   final String? catId, title;
@@ -163,7 +162,8 @@ class _BookingWebPageState extends State<BookingWebPage> {
                                             ),
                                             // Helper.allowHeight(5),
                                             Selector<ProviderClass, String>(
-                                              selector: (p0, p1) => p1.amount,
+                                              selector: (p0, p1) =>
+                                                  p1.selectedServiceAmount,
                                               builder:
                                                   (context, value, child) =>
                                                       value == "0"
@@ -191,12 +191,24 @@ class _BookingWebPageState extends State<BookingWebPage> {
                                         SizedBox(
                                           width: Helper.width / 6,
                                           child: MaterialButton(
-                                            onPressed: () =>
-                                                // Helper.getApp(),
-                                                Helper.pushNamed(
-                                                    bookingaddress),
-                                            // Helper.push(
-                                            //     const BookingAddress()),
+                                            onPressed: () => continueBooking(
+                                                context: context,
+                                                serviceName: Initializer
+                                                    .serviceDetailedModel
+                                                    .data!
+                                                    .service!
+                                                    .title!,
+                                                serviceId: Initializer
+                                                    .providerClass!
+                                                    .selectedServiceId,
+                                                amount: Initializer
+                                                    .providerClass!
+                                                    .selectedServiceAmount),
+                                            //     // Helper.getApp(),
+                                            //     Helper.pushNamed(
+                                            //         bookingaddress),
+                                            // // Helper.push(
+                                            // //     const BookingAddress()),
                                             elevation: 5.0,
                                             color: primaryColor,
                                             padding: const EdgeInsets.symmetric(
@@ -489,7 +501,10 @@ class _BookingWebPageState extends State<BookingWebPage> {
       );
 
   continueBooking(
-      {required BuildContext context, required String serviceName, serviceId}) {
+      {required BuildContext context,
+      required String serviceName,
+      serviceId,
+      amount}) {
     if (!Initializer.userModel.isLoggedIn!) {
       Helper.showAuthDialogue(context: context);
     } else {

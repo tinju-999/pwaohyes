@@ -21,8 +21,9 @@ class AuthBloc extends Cubit<AuthState> {
     try {
       emit(RequestingOTP());
       String mobileNumber = "+91$phoneController";
-      Response response =
-          await ServerHelper.post('auth', {"mobileNumber": mobileNumber});
+      Response response = await ServerHelper.post(
+        'auth',
+        {"mobileNumber": mobileNumber},      );
       if (response.statusCode == 200 || response.statusCode == 201) {
         emit(OTPRequested(phone: phoneController));
       } else {
@@ -38,12 +39,14 @@ class AuthBloc extends Cubit<AuthState> {
   verifyOtp(String otp, String phone) async {
     try {
       emit(VerifyingOTP());
-      Response response = await ServerHelper.post('verify', {
-        "mobileNumber": '+91$phone',
-        "otp": otp,
-        "device_token": 'xxx',
-        "device_type": 'web',
-      });
+      Response response = await ServerHelper.post(
+          'verify',
+          {
+            "mobileNumber": '+91$phone',
+            "otp": otp,
+            "device_token": 'xxx',
+            "device_type": 'web',
+          },);
       var data = jsonDecode(response.body);
       Helper.showLog(data['error_code']);
       if (response.statusCode == 200 && data['message'] != "Invalid OTP") {
@@ -52,6 +55,8 @@ class AuthBloc extends Cubit<AuthState> {
         Initializer.otpVerifiedModel = OtpVerifiedModel.fromJson(data);
         await Preferences.setToken(
             Initializer.otpVerifiedModel.data!.accessToken!);
+        await Preferences.setRefreshToken(
+            Initializer.otpVerifiedModel.data!.refreshToken!);
         await Preferences.setPhone(phone);
 
         //7034444303
@@ -85,7 +90,7 @@ class AuthBloc extends Cubit<AuthState> {
     try {
       emit(LoggingOut());
       Response response = await ServerHelper.post(
-          'logout', {"device_token": "", "device_type": 'web'});
+          'logout', {"device_token": "", "device_type": 'web'},);
       if (response.statusCode == 200 || response.statusCode == 204) {
         // var data = jsonDecode(response.body);
         await Preferences.clearAll();

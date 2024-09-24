@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
+import 'package:pwaohyes/bloc/bookingbloc.dart';
 import 'package:pwaohyes/bloc/locationbloc.dart';
 import 'package:pwaohyes/bloc/myqbloc.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
@@ -103,6 +104,7 @@ class MyApp extends StatelessWidget {
             BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
             BlocProvider<LocationBloc>(create: (context) => LocationBloc()),
             BlocProvider<MyQBloc>(create: (context) => MyQBloc()),
+            BlocProvider<BookingBloc>(create: (context) => BookingBloc()),
             //MyQBloc
           ],
           child: MaterialApp(

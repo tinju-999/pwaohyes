@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:pwaohyes/bloc/bookingbloc.dart';
 import 'package:pwaohyes/bookingaddress/bookingaddaddresswebpart2.dart';
 import 'package:pwaohyes/common/footer.dart';
 import 'package:pwaohyes/common/header.dart';
@@ -11,7 +13,8 @@ import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 
 class BookingAddressWeb extends StatefulWidget {
-  const BookingAddressWeb({super.key});
+  final String? serviceTitle;
+  const BookingAddressWeb({super.key, this.serviceTitle});
 
   @override
   State<BookingAddressWeb> createState() => _BookingAddressWebState();
@@ -28,32 +31,51 @@ class _BookingAddressWebState extends State<BookingAddressWeb> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Header(
-                removeBadge: false,
-                route: const BookingAddressWeb(),
-                scaffoldKey: scaffoldKey),
-            Helper.allowHeight(10),
-            Selector<ProviderClass, bool>(
-              selector: (p0, p1) => p1.isAddAddressVisible!,
-              builder: (context, value, child) => value
-                  ? const AddAddressPageWeb()
-                  : const BookingAddressWebPage(),
-            ),
-            Helper.allowHeight(10),
-            const Footer(),
-          ],
-        ),
+      body: BlocConsumer<BookingBloc, BookingState>(
+        buildWhen: (previous, current) =>
+            current is SelectedServiceDetailsFetched ||
+            current is GettingSelectedServiceDetails ||
+            current is SelectedServiceDetailsNotFetched ||
+            current is GettingSelectedServiceDetailsError,
+        listener: (context, state) => {},
+        builder: (context, state) => state is SelectedServiceDetailsFetched
+            ? SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Header(
+                        removeBadge: false,
+                        route: BookingAddressWeb(
+                            serviceTitle: widget.serviceTitle),
+                        scaffoldKey: scaffoldKey),
+                    Helper.allowHeight(10),
+                    Selector<ProviderClass, bool>(
+                      selector: (p0, p1) => p1.isAddAddressVisible!,
+                      builder: (context, value, child) => value
+                          ? const AddAddressPageWeb()
+                          : BookingAddressWebPage(
+                              serviceTitle: widget.serviceTitle),
+                    ),
+                    Helper.allowHeight(10),
+                    const Footer(),
+                  ],
+                ),
+              )
+            : state is GettingSelectedServiceDetailsError
+                ? const Center(
+                    child: Text(
+                      "Error loading content",
+                    ),
+                  )
+                : Helper.shrink(),
       ),
     );
   }
 }
 
 class BookingAddressWebPage extends StatefulWidget {
-  const BookingAddressWebPage({super.key});
+  final String? serviceTitle;
+  const BookingAddressWebPage({super.key, required this.serviceTitle});
 
   @override
   State<BookingAddressWebPage> createState() => _BookingAddressWebPageState();
@@ -61,6 +83,7 @@ class BookingAddressWebPage extends StatefulWidget {
 
 class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
   final yourScrollController = ScrollController();
+  var descriptionController = TextEditingController();
   final _now = DateTime.now();
 
   get onDateTimeChanged => null;
@@ -88,12 +111,12 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    const Column(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisSize: MainAxisSize.max,
@@ -112,15 +135,15 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Text(
-                              "Lights Service & Repair",
-                              style: TextStyle(fontSize: 16, color: grey),
+                              widget.serviceTitle!,
+                              style: const TextStyle(fontSize: 16, color: grey),
                             ),
                           ],
                         ),
                       ],
                     ),
                     Helper.allowHeight(15),
-                    mainView(context),
+                    mainView(context, descriptionController),
                   ],
                 )),
           ),
@@ -177,18 +200,19 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                             fontWeight: FontWeight.w600, fontSize: 22),
                       ),
                       Helper.allowHeight(10),
-                      amountView("Total Amount", "- Rs 199"),
-                      amountView("Membership Offer", "- Rs 99"),
-                      amountView("Coupon & Promo Code", "Rs 39"),
-                      amountView("Platform Fee", "Rs 39"),
+                      amountView("Total Amount", getPrice("Free")),
+                      amountView("Membership Offer", getPrice("Rs. 0")),
+                      amountView("Coupon & Promo Code", getPrice("Rs. 0")),
+                      amountView("Platform Fee", getPrice("Rs. 0")),
                       Helper.allowHeight(20),
                       const Divider(),
-                      amountView("Total", "Rs 901"),
-                      Helper.allowHeight(30),
-                      const Text(
-                        "You have Saved ₹ 298 on this bill",
-                        style: TextStyle(color: primaryColor),
-                      )
+                      amountView("Total", getPrice("Free")),
+                      // Helper.allowHeight(30),
+
+                      // const Text(
+                      //   "You have Saved ₹ 298 on this bill",
+                      //   style: TextStyle(color: primaryColor),
+                      // )
                     ],
                   ),
                 ),
@@ -220,7 +244,9 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
     );
   }
 
-  Widget mainView(BuildContext context) => Expanded(
+  Widget mainView(
+          BuildContext context, TextEditingController descriptionController) =>
+      Expanded(
         child: Scrollbar(
           interactive: true,
           controller: yourScrollController,
@@ -460,106 +486,97 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   SizedBox(width: Helper.width / 4, child: const Divider()),
                   Helper.allowHeight(10),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 120),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        InkWell(
-                          onTap: () => Initializer.providerClass
-                              ?.addAddressVisibility(true),
-                          child: addressCustomfield(
-                            context,
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                const Icon(CupertinoIcons.add,
-                                    color: primaryColor),
-                                Helper.allowWidth(15),
-                                const Text(
-                                  'ADD A NEW ADDRESS',
-                                  style: TextStyle(
-                                    color: primaryColor,
-                                  ),
-                                )
-                              ],
-                            ),
+                  if (Initializer.selectedServiceDetailsModel.data!.address !=
+                      null)
+                    addressCustomfield(
+                      context,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(Initializer.selectedServiceDetailsModel.data!
+                                  .address!.name!),
+                              Text(
+                                  "${Initializer.selectedServiceDetailsModel.data!.address!.addressLine1!}, ${Initializer.selectedServiceDetailsModel.data!.address!.city!}"),
+                              Text(Initializer.selectedServiceDetailsModel.data!
+                                  .address!.contactNumber!),
+                              //                       "address": {
+                              //   "name": "Ajomon George ",
+                              //   "is_selected": true,
+                              //   "title": "Work",
+                              //   "landmark": "angamaly ",
+                              //   "address_line_1": "122",
+                              //   "city": "Karayamparambu, Karukutty, Kerala, India, 683572",
+                              //   "contact_number": "9744833812",
+                              //   "latitude": 10.215235781055455,
+                              //   "longitude": 76.37865364551544,
+                              //   "_id": "66c6c58f22ce49d2ed939625"
+                              // },
+                            ],
+                          ),
+                          const Icon(Icons.check_circle, color: Colors.green)
+                        ],
+                      ),
+                    ),
+                  if (Initializer.selectedServiceDetailsModel.data!.address !=
+                      null)
+                    Helper.allowHeight(15),
+                  if (Initializer.selectedServiceDetailsModel.data!.address !=
+                      null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 120),
+                      child: InkWell(
+                        onTap: () => showAllAddressView(),
+                        child: addressCustomfield(
+                          context,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(CupertinoIcons.arrow_right,
+                                  color: primaryColor),
+                              Helper.allowWidth(15),
+                              const Text(
+                                'CHANGE ADDRESS',
+                                style: TextStyle(
+                                  color: primaryColor,
+                                ),
+                              )
+                            ],
                           ),
                         ),
-                        Helper.allowHeight(15.0),
-                        // addressCustomfield(
-                        //   context,
-                        //   Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     mainAxisSize: MainAxisSize.min,
-                        //     children: [
-                        //       Row(
-                        //         mainAxisAlignment:
-                        //             MainAxisAlignment.spaceBetween,
-                        //         crossAxisAlignment: CrossAxisAlignment.center,
-                        //         mainAxisSize: MainAxisSize.max,
-                        //         children: [
-                        //           Container(
-                        //             padding: const EdgeInsets.symmetric(
-                        //                 vertical: 4, horizontal: 14),
-                        //             decoration: BoxDecoration(
-                        //                 color: Colors.grey[200],
-                        //                 borderRadius:
-                        //                     BorderRadius.circular(4.0)),
-                        //             child: const Text(
-                        //               "Home",
-                        //               style: TextStyle(fontSize: 10),
-                        //             ),
-                        //           ),
-                        //           PopupMenuButton(
-                        //             padding: EdgeInsets.zero,
-                        //             iconSize: 18,
-                        //             itemBuilder: (context) =>
-                        //                 <PopupMenuEntry<String>>[
-                        //               const PopupMenuItem<String>(
-                        //                 value: 'Option 1',
-                        //                 child: Text('Edit'),
-                        //               ),
-                        //               const PopupMenuItem<String>(
-                        //                 value: 'Option 2',
-                        //                 child: Text('Delete'),
-                        //               ),
-                        //             ],
-                        //           )
-                        //         ],
-                        //       ),
-                        //       // Helper.allowHeight(5.0),
-                        //       Row(
-                        //         mainAxisAlignment: MainAxisAlignment.start,
-                        //         crossAxisAlignment: CrossAxisAlignment.center,
-                        //         mainAxisSize: MainAxisSize.min,
-                        //         children: [
-                        //           const Text("Aju Alex"),
-                        //           Helper.allowWidth(10.0),
-                        //           const Text("8129322316")
-                        //         ],
-                        //       ),
-                        //       Helper.allowHeight(0.5),
-                        //       const Text(
-                        //           "Amal Jyothi College of Engineering, Koovappally, Kottayam, Kerala - 686518"),
-                        //       //
-                        //     ],
-                        //   ),
-                        // ),
-                        // Helper.allowHeight(10.0),
-
-                        // Flexible(
-                        //   child: Text(
-                        //     "Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam eu nibh elementum, accumsan ona neque ac, aliquet nunc. In eu ipsum fringilla, accumsan purus vel, pellentesque risus. Vivamus vehicula nl purus at eros interdum, in dignissim nullaInterdum et malesuada fames ac ante ipsum primis in faucibus. Etiam eu nibh elementum, accumsan ona neque.",
-                        //     textAlign: TextAlign.justify,
-                        //     style: TextStyle(fontSize: 14),
-                        //   ),
-                        // ),
-                      ],
+                      ),
+                    ),
+                  Helper.allowHeight(15),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 120),
+                    child: InkWell(
+                      onTap: () =>
+                          Initializer.providerClass?.addAddressVisibility(true),
+                      child: addressCustomfield(
+                        context,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(CupertinoIcons.add, color: primaryColor),
+                            Helper.allowWidth(15),
+                            const Text(
+                              'ADD A NEW ADDRESS',
+                              style: TextStyle(
+                                color: primaryColor,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -579,6 +596,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                       padding: const EdgeInsets.only(right: 120),
                       child: TextFormField(
                         maxLines: 6,
+                        controller: descriptionController,
                         maxLength: 500,
                         decoration: InputDecoration(
                           hintText: "Add description about work...",
@@ -592,10 +610,14 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
               // Helper.allowHeight(10),
               Row(
                 children: [
-                  Checkbox(
-                    value: true,
-                    onChanged: (_) {},
-                    activeColor: primaryColor,
+                  Selector<ProviderClass, bool>(
+                    selector: (p0, p1) => p1.agreed,
+                    builder: (context, value, child) => Checkbox(
+                      value: value,
+                      onChanged: (value) =>
+                          Initializer.providerClass?.setAgreement(value),
+                      activeColor: primaryColor,
+                    ),
                   ),
                   Helper.allowWidth(15),
                   const Text("Agree the terms and conditions"),
@@ -607,7 +629,16 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                 child: SizedBox(
                   width: Helper.width / 4,
                   child: MaterialButton(
-                    onPressed: () => {},
+                    onPressed: () {
+                      if (Initializer.providerClass!.agreed) {
+                        context.read<BookingBloc>().add(ConfirmBooking(
+                              serviceId: Initializer.selectedServiceId,
+                              description: descriptionController.text,
+                            ));
+                      } else {
+                        Helper.showSnack("Please agree terms and conditions ");
+                      }
+                    },
                     elevation: 5.0,
                     color: primaryColor,
                     padding: const EdgeInsets.symmetric(
@@ -623,23 +654,22 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
         ),
       );
 
-  void showInvalidTime(String title, String content) =>
-      showCupertinoDialog(
-          barrierDismissible: true,
-          context: context,
-          builder: (context) => CupertinoAlertDialog(
-                title: Text(title),
-                content: Text(content),
-                actions: [
-                  CupertinoButton(
-                    child: const Text(
-                      "Ok",
-                      style: TextStyle(color: primaryColor),
-                    ),
-                    onPressed: () => Helper.pop(),
-                  )
-                ],
-              ));
+  void showInvalidTime(String title, String content) => showCupertinoDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+            title: Text(title),
+            content: Text(content),
+            actions: [
+              CupertinoButton(
+                child: const Text(
+                  "Ok",
+                  style: TextStyle(color: primaryColor),
+                ),
+                onPressed: () => Helper.pop(),
+              )
+            ],
+          ));
 
   TimeOfDay adjustTime(DateTime currentTime, TimeOfDay selectedTime) {
     int minute = selectedTime.minute;
@@ -683,8 +713,9 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
   }
 
   Widget addressCustomfield(BuildContext context, Widget child) => Container(
+        width: Helper.width / 1.5,
+        constraints: BoxConstraints(maxWidth: Helper.width / 3),
         decoration: BoxDecoration(
-            // color: black,
             border: Border.all(color: Colors.grey.withOpacity(0.4))),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
         child: child,
@@ -768,6 +799,85 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                   ],
                 ))
           ],
+        ),
+      );
+
+  String getPrice(String content) {
+    if (int.tryParse(Initializer.providerClass!.selectedServiceAmount) != 0) {
+      return Initializer.providerClass!.selectedServiceAmount;
+    } else {
+      return content;
+    }
+  }
+
+  showAllAddressView() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Change Address"),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: TextButton(
+                  onPressed: () {}, child: const Text("Add New Address")),
+            )
+          ],
+          content: BlocBuilder<BookingBloc, BookingState>(
+            buildWhen: (previous, current) =>
+                current is GettingUserAddress ||
+                current is UserAddressFetched ||
+                current is UserAddressNotFetched ||
+                current is GettingUserAddressError,
+            builder: (context, state) => state is GettingUserAddress
+                ? const Center(child: CupertinoActivityIndicator())
+                : state is UserAddressFetched ||
+                        Initializer.userAllAddressModel.data!.isNotEmpty
+                    ? Container(
+                        width: Helper.width / 4,
+                        color: white,
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          itemCount:
+                              Initializer.userAllAddressModel.data!.length,
+                          separatorBuilder: (context, index) => const Divider(),
+                          itemBuilder: (context, index) => Row(
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.check_circle,
+                                color: Initializer.userAllAddressModel
+                                        .data![index].isSelected!
+                                    ? Colors.green
+                                    : Colors.grey,
+                              ),
+                              Helper.allowWidth(15),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(Initializer
+                                      .userAllAddressModel.data![index].name!),
+                                  Text(
+                                      "${Initializer.userAllAddressModel.data![index].addressLine1!}, ${Initializer.userAllAddressModel.data![index].city!}"),
+                                  Text(Initializer.userAllAddressModel
+                                      .data![index].contactNumber!),
+                                ],
+                              ),
+                              const Spacer(),
+                              InkWell(
+                                  onTap: () => context.read<BookingBloc>().add(DeleteAddress(id: Initializer.userAllAddressModel.data![index].sId)),
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.grey,
+                                  )),
+                              Helper.allowWidth(20)
+                            ],
+                          ),
+                        ))
+                    : const Text("Error Loading User Addresses"),
+          ),
         ),
       );
 }

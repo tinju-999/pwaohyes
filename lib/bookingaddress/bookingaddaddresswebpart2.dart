@@ -235,7 +235,8 @@ class _AddAddressPageWebState extends State<AddAddressPageWeb> {
                           current is AddressNotAdded,
                       listener: (context, state) {
                         if (state is AddressAdded) {
-                          Helper.pushReplacementNamed(confirmbooking);
+                          // Helper.pushReplacementNamed(confirmbooking);
+                          Initializer.providerClass?.addAddressVisibility(true);
                         }
                       },
                       builder: (context, state) => MaterialButton(
@@ -248,8 +249,12 @@ class _AddAddressPageWebState extends State<AddAddressPageWeb> {
                                     .first
                                     .title,
                                 "landmark": landmarkController.text,
-                                "latitude": '',
-                                "longitude": '',
+                                "latitude": Initializer
+                                    .selectedAdddress2!.latLng!.latitude
+                                    .toString(),
+                                "longitude": Initializer
+                                    .selectedAdddress2!.latLng!.longitude
+                                    .toString(),
                                 "name": nameController.text,
                                 "address_line_1": houseController.text,
                                 "contact_number": contactController.text,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwaohyes/bloc/bookingbloc.dart';
 import 'package:pwaohyes/bookingaddress/bookingaddressmobile.dart';
 import 'package:pwaohyes/bookingaddress/bookingaddresstab.dart';
 import 'package:pwaohyes/bookingaddress/bookingaddressweb.dart';
@@ -9,8 +11,8 @@ import 'package:pwaohyes/utils/routes.dart';
 import 'package:pwaohyes/utils/screensize.dart';
 
 class BookingAddress extends StatefulWidget {
-  final String? service, id;
-  const BookingAddress({super.key, this.service, this.id});
+  final String? service, id, serviceAmount;
+  const BookingAddress({super.key, this.service, this.id, this.serviceAmount});
 
   @override
   State<BookingAddress> createState() => _BookingAddressState();
@@ -19,16 +21,22 @@ class BookingAddress extends StatefulWidget {
 class _BookingAddressState extends State<BookingAddress> {
   @override
   void initState() {
-    // checkAndRedirect();
+    Initializer.selectedServiceId = widget.id;
+    Initializer.selectedServiceAmount = widget.serviceAmount;
+    checkAndRedirect();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return const ScreenSize(
-      mobileView: BookingAddressMobile(),
-      webView: BookingAddressWeb(),
-      tabView: BookingAddressTab(),
+    return BlocBuilder<BookingBloc, BookingState>(
+      builder: (context, state) => ScreenSize(
+        mobileView: const BookingAddressMobile(),
+        webView: BookingAddressWeb(
+          serviceTitle: widget.service,
+        ),
+        tabView: const BookingAddressTab(),
+      ),
     );
   }
 
@@ -42,6 +50,10 @@ class _BookingAddressState extends State<BookingAddress> {
           } else {
             Helper.pushReplacementNamed(locationView);
           }
+        } else {
+          context
+              .read<BookingBloc>()
+              .add(GetSelectedServiceDetails(id: widget.id));
         }
       } else {
         Helper.showSnack("Service details is empty, redirecting...");

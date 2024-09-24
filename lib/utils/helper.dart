@@ -704,4 +704,12 @@ class Helper {
     double screenWidth = MediaQuery.of(context!).size.width;
     return screenWidth < 600; // Define your screen size threshold
   }
+
+  static timeOfDayTo24HourString(DateTime time) {
+    var now = DateTime.now();
+    final formater = DateFormat.Hm();
+    return formater.format(
+      DateTime(now.year, now.month, now.day, time.hour, time.minute),
+    );
+  }
 }

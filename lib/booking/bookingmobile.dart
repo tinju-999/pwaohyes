@@ -122,7 +122,7 @@ class BookingMobilePage extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Selector<ProviderClass, String>(
-                                      selector: (p0, p1) => p1.amount,
+                                      selector: (p0, p1) => p1.selectedServiceAmount,
                                       builder: (context, value, child) =>
                                           value == "0"
                                               ? const Text(
