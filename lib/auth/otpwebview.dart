@@ -27,7 +27,7 @@ class OtpWebView extends StatelessWidget {
             ),
           ),
           const Text(
-            "Please enter the verification code send to your\nnumber +8129322316",
+            "Please enter the verification code send to your\nnumber",
             style: TextStyle(
               fontSize: 14,
               color: grey,

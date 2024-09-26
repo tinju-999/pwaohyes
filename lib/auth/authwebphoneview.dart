@@ -30,7 +30,7 @@ class AuthWebPhoneView extends StatelessWidget {
             ),
           ),
           const Text(
-            "Please enter your mobile number here",
+            "Enter your mobile number for verification",
             style: TextStyle(
               fontSize: 14,
               color: grey,
@@ -64,7 +64,7 @@ class AuthWebPhoneView extends StatelessWidget {
                   current is OTPRequestingError,
               builder: (context, state) => MaterialButton(
                 onPressed: () => state is! RequestingOTP
-                    ? authBloc!.verifyPhone("")
+                    ? context.read<AuthBloc>().add(VerifyPhone(phone: ''))
                     : Helper.showToast(msg: "Please wait"),
                 elevation: 0.0,
                 color: primaryColor,

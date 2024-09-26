@@ -1,11 +1,17 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:pwaohyes/apiservice/ip.dart';
+import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/preferences.dart';
+import 'package:pwaohyes/utils/routes.dart';
 
 class ServerHelper {
   static String myQPadUrl = "https://api.myqpad.com";
@@ -31,6 +37,9 @@ class ServerHelper {
       await Preferences.setToken(data['data']['access_token']);
       Initializer.userModel.token = data['data']['access_token'];
     } else {
+      BuildContext context = Helper.key!.currentContext!;
+      context.read<AuthBloc>().add(DoLogout());
+      Helper.pushReplacementNamed(allservices);
       Helper.showLog("----------> CALLING REFRESH TOKEN ERROR <----------");
     }
     return response;
@@ -52,6 +61,7 @@ class ServerHelper {
             },
             body: data)
         .timeout(const Duration(seconds: 20));
+    Helper.showLog(response.body);
     if (response.statusCode == 401) {
       Response refreshTokenResponse = await ServerHelper().refreshToken();
       if (refreshTokenResponse.statusCode == 200) {
@@ -145,9 +155,7 @@ class ServerHelper {
         .timeout(const Duration(seconds: 20));
   }
 
-  static delete(
-    String url,
-  ) async {
+  static delete(String url) async {
     try {
       Helper.showLog(apiEnvironment.baseUrl + url);
       Helper.showLog('Token: Bearer ${Initializer.userModel.token ?? ""}');
@@ -159,6 +167,46 @@ class ServerHelper {
         'Authorization': 'Bearer ${Initializer.userModel.token ?? ""}',
         'Refreshtoken': 'Bearer ${Initializer.userModel.refreshToken ?? ""}',
       });
+      if (getResponse.statusCode == 401) {
+        Helper.showLog("----------> NOT AUTHENTICATED <----------");
+        Response refreshTokenResponse = await ServerHelper().refreshToken();
+        if (refreshTokenResponse.statusCode == 200) {
+          return await http
+              .delete(Uri.parse(apiEnvironment.baseUrl + url), headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Bearer ${Initializer.userModel.token ?? ""}',
+            'Refreshtoken':
+                'Bearer ${Initializer.userModel.refreshToken ?? ""}',
+          });
+        } else {
+          return refreshTokenResponse;
+        }
+      } else {
+        Helper.showLog("----------> AUTHENTICATED <----------");
+        return getResponse;
+      }
+    } on Exception catch (e) {
+      // Helper.showToast(msg: e.toString());
+      Helper.showLog(e.toString());
+      throw Exception();
+    }
+  }
+
+  static put(String url, Map<String, bool> map) async {
+    try {
+      Helper.showLog(apiEnvironment.baseUrl + url);
+      Helper.showLog('Token: Bearer ${Initializer.userModel.token ?? ""}');
+      Helper.showLog(
+          'Refresh token: Bearer ${Initializer.userModel.refreshToken ?? ""}');
+      Response getResponse = await http.put(
+        Uri.parse(apiEnvironment.baseUrl + url),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Bearer ${Initializer.userModel.token ?? ""}',
+          'Refreshtoken': 'Bearer ${Initializer.userModel.refreshToken ?? ""}',
+        },
+        body: jsonEncode(map),
+      );
       if (getResponse.statusCode == 401) {
         Helper.showLog("----------> NOT AUTHENTICATED <----------");
         Response refreshTokenResponse = await ServerHelper().refreshToken();

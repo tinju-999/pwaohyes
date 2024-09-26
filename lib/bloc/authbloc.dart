@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,44 +10,28 @@ import 'package:pwaohyes/model/usermodel.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/preferences.dart';
+import 'package:pwaohyes/utils/routes.dart';
 
-class AuthBloc extends Cubit<AuthState> {
-  AuthBloc() : super(AuthState());
-
-  void getOtp() {
-    emit(GettingOtp());
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  AuthBloc() : super(AuthState()) {
+    on<VerifyOtp>(verifyOtp);
+    on<VerifyPhone>(verifyPhone);
+    on<DoLogout>(doLogout);
+    on<FetchCities>(fetchCities);
   }
 
-  verifyPhone(String phoneController) async {
-    try {
-      emit(RequestingOTP());
-      String mobileNumber = "+91$phoneController";
-      Response response = await ServerHelper.post(
-        'auth',
-        {"mobileNumber": mobileNumber},      );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        emit(OTPRequested(phone: phoneController));
-      } else {
-        Helper.showLog(jsonDecode(response.body)['msg']);
-        Helper.showSnack(response.reasonPhrase);
-        emit(OTPNotRequested());
-      }
-    } catch (e) {
-      emit(OTPNotRequested());
-    }
-  }
-
-  verifyOtp(String otp, String phone) async {
+  Future<void> verifyOtp(VerifyOtp event, Emitter<AuthState> emit) async {
     try {
       emit(VerifyingOTP());
       Response response = await ServerHelper.post(
-          'verify',
-          {
-            "mobileNumber": '+91$phone',
-            "otp": otp,
-            "device_token": 'xxx',
-            "device_type": 'web',
-          },);
+        'verify',
+        {
+          "mobileNumber": '+91${event.phone}',
+          "otp": event.otp!,
+          "device_token": 'xxx',
+          "device_type": 'web',
+        },
+      );
       var data = jsonDecode(response.body);
       Helper.showLog(data['error_code']);
       if (response.statusCode == 200 && data['message'] != "Invalid OTP") {
@@ -57,7 +42,7 @@ class AuthBloc extends Cubit<AuthState> {
             Initializer.otpVerifiedModel.data!.accessToken!);
         await Preferences.setRefreshToken(
             Initializer.otpVerifiedModel.data!.refreshToken!);
-        await Preferences.setPhone(phone);
+        await Preferences.setPhone(event.phone!);
 
         //7034444303
         await Preferences.setVerifiedData(
@@ -66,7 +51,7 @@ class AuthBloc extends Cubit<AuthState> {
         // Helper.showSnack(data['message']);
 
         Initializer.userModel = UserModel(
-            phone: phone,
+            phone: event.phone,
             token: Initializer.otpVerifiedModel.data!.accessToken!,
             isLoggedIn: true,
             refreshToken: Initializer.otpVerifiedModel.data!.refreshToken!);
@@ -86,17 +71,45 @@ class AuthBloc extends Cubit<AuthState> {
     }
   }
 
-  doLogout() async {
+  Future<void> verifyPhone(VerifyPhone event, Emitter<AuthState> emit) async {
+    try {
+      emit(RequestingOTP());
+      String mobileNumber = "+91${event.phone}";
+      Response response = await ServerHelper.post(
+        'auth',
+        {"mobileNumber": mobileNumber},
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        emit(OTPRequested(phone: event.phone));
+      } else {
+        Helper.showLog(jsonDecode(response.body)['msg']);
+        Helper.showSnack(response.reasonPhrase);
+        emit(OTPNotRequested());
+      }
+    } catch (e) {
+      emit(OTPNotRequested());
+    }
+  }
+
+  Future<void> doLogout(DoLogout event, Emitter<AuthState> emit) async {
     try {
       emit(LoggingOut());
       Response response = await ServerHelper.post(
-          'logout', {"device_token": "", "device_type": 'web'},);
+        'logout',
+        {"device_token": "", "device_type": 'web'},
+      );
+      // var data = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 204) {
         // var data = jsonDecode(response.body);
         await Preferences.clearAll();
         Initializer.userModel = UserModel(isLoggedIn: false);
+        Helper.pushAndRemoveNamedUntil(locationView);
+        Helper.showSnack("Session Expired.");
         emit(LoggoutSuccess());
       } else {
+        Helper.showSnack("Something went wrong -- ${response.reasonPhrase}");
+        await Preferences.clearAll();
+        Helper.pushAndRemoveNamedUntil(locationView);
         emit(LoggoutFailed());
       }
     } catch (e) {
@@ -105,7 +118,7 @@ class AuthBloc extends Cubit<AuthState> {
     }
   }
 
-  Future<void> fetchCities() async {
+  Future<void> fetchCities(FetchCities event, Emitter<AuthState> emit) async {
     try {
       emit(FetchingCitiesData());
       Response response = await ServerHelper.get('cities');
@@ -126,6 +139,22 @@ class AuthBloc extends Cubit<AuthState> {
 class AuthState {}
 
 class AuthEvent {}
+
+class VerifyOtp extends AuthEvent {
+  final String? phone, otp;
+  VerifyOtp({required this.otp, required this.phone});
+}
+
+class VerifyPhone extends AuthEvent {
+  final String? phone;
+  VerifyPhone({required this.phone});
+}
+
+class DoLogout extends AuthEvent {}
+
+class FetchCities extends AuthEvent {}
+
+//VerifyPhone
 
 class FetchingCitiesData extends AuthState {}
 

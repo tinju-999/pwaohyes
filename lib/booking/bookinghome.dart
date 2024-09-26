@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/booking/bookingmobile.dart';
 import 'package:pwaohyes/booking/bookingweb.dart';
 import 'package:pwaohyes/booking/bookingtab.dart';
-import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/screensize.dart';
 
 class BookingHome extends StatefulWidget {
@@ -16,7 +17,7 @@ class BookingHome extends StatefulWidget {
 class _BookingHomeState extends State<BookingHome> {
   @override
   void initState() {
-    Initializer.serviceBloc.getServiceDetail(widget.catId);
+    context.read<ServiceBloc>().add(GetSubServicesDetail(catId: widget.catId!));
     super.initState();
   }
 

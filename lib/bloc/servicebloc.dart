@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,18 +12,27 @@ import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/routes.dart';
 
-class ServiceBloc extends Cubit<ServiceState> {
-  ServiceBloc() : super(ServiceState());
+class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
+  ServiceBloc() : super(ServiceState()) {
+    on<AddAddress>(addAddress);
+    on<GetServices>(getServices);
+    on<GetSubServices>(getSubServices);
+    on<GetSubServicesDetail>(getServiceDetail);
+    on<BookService>(bookService);
+  }
 
-  addaddress(Map data) async {
+  Future<void> addAddress(AddAddress event, Emitter<ServiceState> emit) async {
     try {
       emit(AddingAddress());
-      Response response =
-          await ServerHelper.post('user/address', data,);
+      Response response = await ServerHelper.post(
+        'user/address',
+        event.data,
+      );
       var decodedData = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         Helper.showLog(response.reasonPhrase);
         Helper.showSnack(decodedData['message']);
+        Initializer.providerClass?.addAddressVisibility(false);
         emit(AddressAdded());
       } else {
         Helper.showSnack(response.reasonPhrase);
@@ -36,7 +46,8 @@ class ServiceBloc extends Cubit<ServiceState> {
     }
   }
 
-  getServices() async {
+  Future<void> getServices(
+      GetServices event, Emitter<ServiceState> emit) async {
     try {
       emit(FetchingServices());
       Helper.showLog(Initializer.selectedAdddress!.latLng.toString());
@@ -73,33 +84,35 @@ class ServiceBloc extends Cubit<ServiceState> {
     }
   }
 
-  getSubServices(String id) async {
-    // try {
-    emit(FetchingSubServices());
-    Response response =
-        await ServerHelper.get('services/by_category/without_location/$id');
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      Initializer.subCatModel = SubCatModel.fromJson(data);
-      if (Initializer.subCatModel.errorCode == 0) {
-        emit(SubServicesFetched());
+  Future<void> getSubServices(
+      GetSubServices event, Emitter<ServiceState> emit) async {
+    try {
+      emit(FetchingSubServices());
+      Response response = await ServerHelper.get(
+          'services/by_category/without_location/${event.id}');
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        Initializer.subCatModel = SubCatModel.fromJson(data);
+        if (Initializer.subCatModel.errorCode == 0) {
+          emit(SubServicesFetched());
+        } else {
+          emit(SubServicesNotFetched());
+        }
       } else {
         emit(SubServicesNotFetched());
       }
-    } else {
+    } catch (e) {
+      Helper.showLog("Exception on sub-services $e");
       emit(SubServicesNotFetched());
     }
-    // } catch (e) {
-    //   Helper.showLog("Exception on sub-services $e");
-    //   emit(SubServicesNotFetched());
-    // }
   }
 
-  Future<void> getServiceDetail(String? catId) async {
+  Future<void> getServiceDetail(
+      GetSubServicesDetail event, Emitter<ServiceState> emit) async {
     try {
       emit(GettingServiceDetail());
       Response response =
-          await ServerHelper.get('services/by-guest-user/$catId');
+          await ServerHelper.get('services/by-guest-user/${event.catId}');
       if (response.statusCode == 200) {
         Initializer.serviceDetailedModel =
             ServiceDetailedModel.fromJson(jsonDecode(response.body));
@@ -119,12 +132,13 @@ class ServiceBloc extends Cubit<ServiceState> {
     }
   }
 
-  void bookService(Map map) async {
+  Future<void> bookService(
+      BookService event, Emitter<ServiceState> emit) async {
     try {
       emit(BookingService());
       Helper.showLoader();
       Response response =
-          await ServerHelper.getMyQPostSpecial('/booking/add/user/web', map);
+          await ServerHelper.getMyQPostSpecial('/booking/add/user/web', event.data);
       if (response.statusCode == 200 && jsonDecode(response.body)['status']) {
         Helper.pop();
         if (Initializer.selectedAdddress!.loadingState ==
@@ -155,6 +169,33 @@ class ServiceBloc extends Cubit<ServiceState> {
 }
 
 class ServiceState {}
+
+class ServiceEvent {}
+
+//___________________________________________
+class AddAddress extends ServiceEvent {
+  final Map data;
+  AddAddress({required this.data});
+}
+
+class BookService extends ServiceEvent {
+  final Map data;
+  BookService({required this.data});
+}
+
+class GetServices extends ServiceEvent {}
+
+class GetSubServices extends ServiceEvent {
+  final String id;
+  GetSubServices({required this.id});
+}
+
+class GetSubServicesDetail extends ServiceEvent {
+  final String catId;
+  GetSubServicesDetail({required this.catId});
+}
+
+//GetSubServicesDetail
 
 //___________________________________________
 

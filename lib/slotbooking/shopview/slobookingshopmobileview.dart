@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:pwaohyes/apiservice/serverhelper.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/bloc/myqbloc.dart';
+import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/common/header.dart';
 import 'package:pwaohyes/model/shopslotmodel.dart';
 import 'package:pwaohyes/model/shopviewmodel.dart';
@@ -59,8 +60,6 @@ class SlotShopWebContent extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
     final TextEditingController phoneController = TextEditingController();
     final TextEditingController otpController = TextEditingController();
-    // phoneController.text = "8129322316";
-    // otpController.text = '1234';
     return Align(
       alignment: Alignment.center,
       child: Container(
@@ -102,18 +101,19 @@ class SlotShopWebContent extends StatelessWidget {
                             showAuthView(context, formKey, phoneController,
                                 otpController);
                           } else {
-                            Initializer.serviceBloc.bookService({
-                              "name": Initializer.userModel.phone,
-                              "phone": Initializer.userModel.phone!,
-                              "service_id": Initializer.selectedShopServiceId,
-                              "slot_id": Initializer.selectedShopSlotId,
-                              "number_of_slots": "1",
-                              "booked_date":
-                                  Initializer.seletedShopSlotDate.toString(),
-                              "booking_amount": Initializer
-                                  .shopSlotModel.serviceInfo!.amount
-                                  .toString(),
-                            });
+                            context.read<ServiceBloc>().add(BookService(data: {
+                                  "name": Initializer.userModel.phone,
+                                  "phone": Initializer.userModel.phone!,
+                                  "service_id":
+                                      Initializer.selectedShopServiceId,
+                                  "slot_id": Initializer.selectedShopSlotId,
+                                  "number_of_slots": "1",
+                                  "booked_date": Initializer.seletedShopSlotDate
+                                      .toString(),
+                                  "booking_amount": Initializer
+                                      .shopSlotModel.serviceInfo!.amount
+                                      .toString(),
+                                }));
                           }
                         } else {
                           Helper.showSnack("Please select a slot");
@@ -416,17 +416,19 @@ class SlotShopWebContent extends StatelessWidget {
                 }
                 if (state is OTPVerified) {
                   Helper.pop();
-                  Initializer.serviceBloc.bookService({
-                    "name": phoneController.text,
-                    "phone": phoneController.text,
-                    "service_id": Initializer.selectedShopServiceId,
-                    "slot_id": Initializer.selectedShopSlotId,
-                    "number_of_slots": "1",
-                    "booked_date": Initializer.seletedShopSlotDate.toString(),
-                    "booking_amount": Initializer
-                        .shopSlotModel.serviceInfo!.amount
-                        .toString(),
-                  });
+                  context.read<ServiceBloc>().add(BookService(data: {
+                        "name": phoneController.text,
+                        "phone": phoneController.text,
+                        "service_id": Initializer.selectedShopServiceId,
+                        "slot_id": Initializer.selectedShopSlotId,
+                        "number_of_slots": "1",
+                        "booked_date":
+                            Initializer.seletedShopSlotDate.toString(),
+                        "booking_amount": Initializer
+                            .shopSlotModel.serviceInfo!.amount
+                            .toString(),
+                      }));
+
                   phoneController.clear();
                   otpController.clear();
                 }
@@ -470,9 +472,6 @@ class SlotShopWebContent extends StatelessWidget {
                     TextFormField(
                       autofocus: true,
                       controller: phoneController,
-                      onFieldSubmitted: (_) {
-                        Initializer.authBloc.verifyPhone(phoneController.text);
-                      },
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Please enter mobile number";
@@ -505,10 +504,6 @@ class SlotShopWebContent extends StatelessWidget {
                       TextFormField(
                           autofocus: true,
                           controller: otpController,
-                          onEditingComplete: () {
-                            Initializer.authBloc.verifyOtp(
-                                otpController.text, phoneController.text);
-                          },
                           validator: (value) {
                             if (value!.isEmpty) {
                               return "Please enter a valid OTP";
@@ -547,13 +542,14 @@ class SlotShopWebContent extends StatelessWidget {
                               state is! VerifyingOTP) {
                             if (state is OTPRequested) {
                               if (formKey.currentState!.validate()) {
-                                Initializer.authBloc.verifyOtp(
-                                    otpController.text, phoneController.text);
+                                context.read<AuthBloc>().add(VerifyOtp(
+                                    otp: otpController.text,
+                                    phone: phoneController.text));
                               }
                             } else {
                               if (formKey.currentState!.validate()) {
-                                Initializer.authBloc
-                                    .verifyPhone(phoneController.text);
+                                context.read<AuthBloc>().add(
+                                    VerifyPhone(phone: phoneController.text));
                               }
                             }
                           }

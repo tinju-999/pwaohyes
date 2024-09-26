@@ -3,10 +3,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:pwaohyes/bloc/bookingbloc.dart';
-import 'package:pwaohyes/bookingaddress/bookingaddaddresswebpart2.dart';
+import 'package:pwaohyes/bookingaddress/addaddresspagemobilenew.dart';
 import 'package:pwaohyes/common/footer.dart';
 import 'package:pwaohyes/common/header.dart';
 import 'package:pwaohyes/model/selectedservicedetailedmodel.dart';
@@ -15,15 +14,16 @@ import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 
-class BookingAddressWeb extends StatefulWidget {
+class BookingAddressMobileNew extends StatefulWidget {
   final String? serviceTitle;
-  const BookingAddressWeb({super.key, this.serviceTitle});
+  const BookingAddressMobileNew({super.key, this.serviceTitle});
 
   @override
-  State<BookingAddressWeb> createState() => _BookingAddressWebState();
+  State<BookingAddressMobileNew> createState() =>
+      _BookingAddressMobileNewState();
 }
 
-class _BookingAddressWebState extends State<BookingAddressWeb> {
+class _BookingAddressMobileNewState extends State<BookingAddressMobileNew> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
@@ -48,15 +48,15 @@ class _BookingAddressWebState extends State<BookingAddressWeb> {
                   children: [
                     Header(
                         removeBadge: false,
-                        route: BookingAddressWeb(
+                        route: BookingAddressMobileNew(
                             serviceTitle: widget.serviceTitle),
                         scaffoldKey: scaffoldKey),
                     Helper.allowHeight(10),
                     Selector<ProviderClass, bool>(
                       selector: (p0, p1) => p1.isAddAddressVisible!,
                       builder: (context, value, child) => value
-                          ? const AddAddressPageWeb()
-                          : BookingAddressWebPage(
+                          ? const AddAddressPageMobileNew()
+                          : BookingAddressMobileNewPage(
                               serviceTitle: widget.serviceTitle),
                     ),
                     Helper.allowHeight(10),
@@ -76,15 +76,17 @@ class _BookingAddressWebState extends State<BookingAddressWeb> {
   }
 }
 
-class BookingAddressWebPage extends StatefulWidget {
+class BookingAddressMobileNewPage extends StatefulWidget {
   final String? serviceTitle;
-  const BookingAddressWebPage({super.key, required this.serviceTitle});
+  const BookingAddressMobileNewPage({super.key, required this.serviceTitle});
 
   @override
-  State<BookingAddressWebPage> createState() => _BookingAddressWebPageState();
+  State<BookingAddressMobileNewPage> createState() =>
+      _BookingAddressMobileNewPageState();
 }
 
-class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
+class _BookingAddressMobileNewPageState
+    extends State<BookingAddressMobileNewPage> {
   final yourScrollController = ScrollController();
   var descriptionController = TextEditingController();
   final _now = DateTime.now();
@@ -93,157 +95,207 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
       color: white,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 8,
-            child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 18, horizontal: 36),
-                clipBehavior: Clip.hardEdge,
-                height: Helper.height / 1.3,
-                decoration: BoxDecoration(
-                  // color: primaryColor,
-                  borderRadius: BorderRadius.circular(18.0),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              "Schedule & Confirm Booking",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 28),
-                            ),
-                          ],
-                        ),
-                        // Helper.allowHeight(5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              widget.serviceTitle!,
-                              style: const TextStyle(fontSize: 16, color: grey),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Helper.allowHeight(15),
-                    mainView(context, descriptionController),
-                  ],
-                )),
+      child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+          clipBehavior: Clip.hardEdge,
+          height: Helper.height / 1.3,
+          decoration: BoxDecoration(
+            // color: primaryColor,
+            borderRadius: BorderRadius.circular(18.0),
           ),
-          Helper.allowWidth(10),
-          Expanded(
-            flex: 6,
-            child: Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(8.0)),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 28, vertical: 26),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
-                      InkWell(
-                        // onTap: () async => await launchUrl(
-                        //     Uri.parse('https://ohyesworld.com/')),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                              color: white,
-                              border: Border.all(color: primaryColor),
-                              borderRadius: BorderRadius.circular(
-                                8.0,
-                              )),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.discount_rounded,
-                                color: primaryColor,
-                                size: 16,
-                              ),
-                              Helper.allowWidth(10),
-                              const Text(
-                                "Coupon & Promo code",
-                                style: TextStyle(
-                                    fontSize: 12, color: primaryColor),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      Helper.allowHeight(10),
-                      const Text(
-                        "Payment Summary",
+                      Text(
+                        "Schedule & Confirm Booking",
                         style: TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 22),
                       ),
-                      Helper.allowHeight(10),
-                      amountView("Total Amount", getPrice("Free")),
-                      amountView("Membership Offer", "Rs. 0"),
-                      amountView("Coupon & Promo Code", "Rs. 0"),
-                      amountView("Platform Fee", "Rs. 0"),
-                      Helper.allowHeight(20),
-                      const Divider(),
-                      amountView("Total", getPrice("Free")),
-                      // Helper.allowHeight(30),
-
-                      // const Text(
-                      //   "You have Saved ₹ 298 on this bill",
-                      //   style: TextStyle(color: primaryColor),
-                      // )
                     ],
                   ),
-                ),
-                Helper.allowHeight(10),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(8.0)),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 28, vertical: 26),
-                  child: const Text(
-                      "Note If you cancelled within 1 hour of placing your service a 100% refund will be issued. No refund for cancellation made after 1 hour."),
-                )
-              ],
-            ),
-            // Container(
-            //     clipBehavior: Clip.hardEdge,
-            //     decoration: BoxDecoration(
-            //       color: primaryColor,
-            //       borderRadius: BorderRadius.circular(18.0),
-            //     ),
-            //     child: Image.asset(
-            //       'assets/images/bg2.jpeg',
-            //       fit: BoxFit.fitHeight,
-            //     )),
-          ),
-        ],
-      ),
+                  // Helper.allowHeight(5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        widget.serviceTitle!,
+                        style: const TextStyle(fontSize: 14, color: grey),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Helper.allowHeight(10),
+              mainView(context, descriptionController),
+            ],
+          )),
+
+      //  Row(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     Expanded(
+      //       flex: 8,
+      //       child: Container(
+      //           padding:
+      //               const EdgeInsets.symmetric(vertical: 18, horizontal: 36),
+      //           clipBehavior: Clip.hardEdge,
+      //           height: Helper.height / 1.3,
+      //           decoration: BoxDecoration(
+      //             // color: primaryColor,
+      //             borderRadius: BorderRadius.circular(18.0),
+      //           ),
+      //           child: Column(
+      //             mainAxisAlignment: MainAxisAlignment.start,
+      //             crossAxisAlignment: CrossAxisAlignment.start,
+      //             mainAxisSize: MainAxisSize.max,
+      //             children: [
+      //               Column(
+      //                 mainAxisAlignment: MainAxisAlignment.start,
+      //                 crossAxisAlignment: CrossAxisAlignment.start,
+      //                 mainAxisSize: MainAxisSize.min,
+      //                 children: [
+      //                   const Row(
+      //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //                     crossAxisAlignment: CrossAxisAlignment.center,
+      //                     mainAxisSize: MainAxisSize.max,
+      //                     children: [
+      //                       Text(
+      //                         "Schedule & Confirm Booking",
+      //                         style: TextStyle(
+      //                             fontWeight: FontWeight.w600, fontSize: 28),
+      //                       ),
+      //                     ],
+      //                   ),
+      //                   // Helper.allowHeight(5),
+      //                   Row(
+      //                     mainAxisAlignment: MainAxisAlignment.start,
+      //                     crossAxisAlignment: CrossAxisAlignment.center,
+      //                     mainAxisSize: MainAxisSize.max,
+      //                     children: [
+      //                       Text(
+      //                         widget.serviceTitle!,
+      //                         style: const TextStyle(fontSize: 16, color: grey),
+      //                       ),
+      //                     ],
+      //                   ),
+      //                 ],
+      //               ),
+      //               Helper.allowHeight(15),
+      //               mainView(context, descriptionController),
+      //             ],
+      //           )),
+      //     ),
+      //     Helper.allowWidth(10),
+      //     Expanded(
+      //       flex: 6,
+      //       child: Column(
+      //         children: [
+      //           Container(
+      //             decoration: BoxDecoration(
+      //                 color: Colors.grey[100],
+      //                 borderRadius: BorderRadius.circular(8.0)),
+      //             padding:
+      //                 const EdgeInsets.symmetric(horizontal: 28, vertical: 26),
+      //             child: Column(
+      //               crossAxisAlignment: CrossAxisAlignment.start,
+      //               children: [
+      //                 InkWell(
+      //                   // onTap: () async => await launchUrl(
+      //                   //     Uri.parse('https://ohyesworld.com/')),
+      //                   child: Container(
+      //                     padding: const EdgeInsets.symmetric(
+      //                         horizontal: 16, vertical: 8),
+      //                     decoration: BoxDecoration(
+      //                         color: white,
+      //                         border: Border.all(color: primaryColor),
+      //                         borderRadius: BorderRadius.circular(
+      //                           8.0,
+      //                         )),
+      //                     child: Row(
+      //                       mainAxisAlignment: MainAxisAlignment.start,
+      //                       crossAxisAlignment: CrossAxisAlignment.center,
+      //                       mainAxisSize: MainAxisSize.min,
+      //                       children: [
+      //                         const Icon(
+      //                           Icons.discount_rounded,
+      //                           color: primaryColor,
+      //                           size: 16,
+      //                         ),
+      //                         Helper.allowWidth(10),
+      //                         const Text(
+      //                           "Coupon & Promo code",
+      //                           style: TextStyle(
+      //                               fontSize: 12, color: primaryColor),
+      //                         )
+      //                       ],
+      //                     ),
+      //                   ),
+      //                 ),
+      //                 Helper.allowHeight(10),
+      //                 const Text(
+      //                   "Payment Summary",
+      //                   style: TextStyle(
+      //                       fontWeight: FontWeight.w600, fontSize: 22),
+      //                 ),
+      //                 Helper.allowHeight(10),
+      //                 amountView("Total Amount", getPrice("Free")),
+      //                 amountView("Membership Offer", "Rs. 0"),
+      //                 amountView("Coupon & Promo Code", "Rs. 0"),
+      //                 amountView("Platform Fee", "Rs. 0"),
+      //                 Helper.allowHeight(20),
+      //                 const Divider(),
+      //                 amountView("Total", getPrice("Free")),
+      //                 // Helper.allowHeight(30),
+
+      //                 // const Text(
+      //                 //   "You have Saved ₹ 298 on this bill",
+      //                 //   style: TextStyle(color: primaryColor),
+      //                 // )
+      //               ],
+      //             ),
+      //           ),
+      //           Helper.allowHeight(10),
+      //           Container(
+      //             decoration: BoxDecoration(
+      //                 color: Colors.grey[100],
+      //                 borderRadius: BorderRadius.circular(8.0)),
+      //             padding:
+      //                 const EdgeInsets.symmetric(horizontal: 28, vertical: 26),
+      //             child: const Text(
+      //                 "Note If you cancelled within 1 hour of placing your service a 100% refund will be issued. No refund for cancellation made after 1 hour."),
+      //           )
+      //         ],
+      //       ),
+      //       // Container(
+      //       //     clipBehavior: Clip.hardEdge,
+      //       //     decoration: BoxDecoration(
+      //       //       color: primaryColor,
+      //       //       borderRadius: BorderRadius.circular(18.0),
+      //       //     ),
+      //       //     child: Image.asset(
+      //       //       'assets/images/bg2.jpeg',
+      //       //       fit: BoxFit.fitHeight,
+      //       //     )),
+      //     ),
+
+      //   ],
+      // ),
     );
   }
 
@@ -266,7 +318,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                     const Text(
                       "Time & Date For Service",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                     ),
                     Text(
                       "Choose a day and time for the service your booking",
@@ -277,11 +329,11 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                     ),
                     Helper.allowHeight(10),
                     Container(
-                      margin: const EdgeInsets.only(left: 8, right: 18),
-                      width: Helper.width / 2.5,
+                      margin: const EdgeInsets.only(left: 4, right: 12),
+                      width: Helper.width,
                       child: Wrap(
-                        spacing: 8.0,
-                        runSpacing: 8.0,
+                        spacing: 4.0,
+                        runSpacing: 4.0,
                         children: List.generate(
                             Initializer.bookingDateSuggestions.length,
                             (index) => Row(
@@ -364,10 +416,10 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                     ),
                     Helper.allowHeight(10),
                     Container(
-                      margin: const EdgeInsets.only(left: 8, right: 18),
+                      margin: const EdgeInsets.only(left: 4, right: 12),
                       width: Helper.width / 1.5,
                       child: Wrap(
-                          spacing: 8.0,
+                          spacing: 4.0,
                           runSpacing: 8.0,
                           children: List.generate(
                             Initializer.bookingTimeSuggestions.length,
@@ -476,13 +528,12 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                     ),
                     if (Initializer.bookingDateSuggestions.first.isSelected! &&
                         Initializer.selectedServiceDetailsModel.data!
-                                .servicePartners !=
-                            null)
+                            .servicePartners!.isNotEmpty)
                       showTechnitionView()
                   ],
                 ),
               ),
-              Helper.allowHeight(30),
+              Helper.allowHeight(15),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -490,8 +541,8 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                 children: [
                   const Text("Service Address",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                  Helper.allowHeight(10),
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                  Helper.allowHeight(5),
                   if (Initializer.selectedServiceDetailsModel.data!.address !=
                       null)
                     addressCustomfield(
@@ -508,14 +559,14 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                               children: [
                                 Text(
                                   "${Initializer.selectedServiceDetailsModel.data!.address!.name!}  - ${Initializer.selectedServiceDetailsModel.data!.address!.contactNumber!}",
-                                  style: const TextStyle(fontSize: 14),
+                                  style: const TextStyle(fontSize: 12),
                                 ),
                                 Text(
                                   "${Initializer.selectedServiceDetailsModel.data!.address!.addressLine1!}, ${Initializer.selectedServiceDetailsModel.data!.address!.city!}",
                                   overflow: TextOverflow.visible,
                                   maxLines: 2,
                                   style: const TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w200,
                                   ),
                                 ),
@@ -523,7 +574,11 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                             ),
                           ),
                           Helper.allowWidth(15),
-                          const Icon(Icons.check_circle, color: Colors.green)
+                          const Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: 18,
+                          )
                         ],
                       ),
                     ),
@@ -541,9 +596,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                           const Text(
                             'CHANGE ADDRESS',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: primaryColor,
-                            ),
+                            style: TextStyle(color: primaryColor, fontSize: 14),
                           ),
                         ),
                       ),
@@ -559,9 +612,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                         const Text(
                           'ADD A NEW ADDRESS',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: primaryColor,
-                          ),
+                          style: TextStyle(color: primaryColor, fontSize: 14),
                         ),
                       ),
                     ),
@@ -576,16 +627,17 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                 children: [
                   const Text("Add Description",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                   Helper.allowHeight(10),
                   Padding(
-                      padding: const EdgeInsets.only(right: 120),
+                      padding: const EdgeInsets.only(right: 40),
                       child: TextFormField(
                         maxLines: 6,
                         controller: descriptionController,
                         maxLength: 500,
                         decoration: InputDecoration(
                           hintText: "Add description about work...",
+                          hintStyle: const TextStyle(fontSize: 14),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
@@ -605,23 +657,25 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                       activeColor: primaryColor,
                     ),
                   ),
-                  Helper.allowWidth(15),
+                  // Helper.allowWidth(10),
                   InkWell(
-                      onTap: () => Helper.openPage(
-                          'https://ohyesworld.com/terms-conditions/'),
-                      child: const Text(
-                        "Agree the terms and conditions",
-                        style: TextStyle(
-                            color: Colors.blueGrey,
-                            decoration: TextDecoration.underline),
-                      )),
+                    onTap: () => Helper.openPage(
+                        'https://ohyesworld.com/terms-conditions/'),
+                    child: const Text(
+                      "Agree the terms and conditions",
+                      style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 12,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
                 ],
               ),
               Helper.allowHeight(20),
               Align(
                 alignment: Alignment.centerLeft,
                 child: SizedBox(
-                  width: Helper.width / 4,
+                  width: Helper.width / 2,
                   child: MaterialButton(
                     onPressed: () {
                       if (Initializer
@@ -719,11 +773,10 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
   }
 
   Widget addressCustomfield(BuildContext context, Widget child) => Container(
-        width: Helper.width / 1.5,
-        constraints: BoxConstraints(maxWidth: Helper.width / 3),
+        width: Helper.width,
         decoration: BoxDecoration(
             border: Border.all(color: Colors.grey.withOpacity(0.4))),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         child: child,
       );
 
@@ -751,20 +804,20 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              flex: 5,
-              child: Container(
-                height: Helper.height / 1.5,
-                decoration: BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(8.0)),
-                child: GoogleMap(
-                  initialCameraPosition:
-                      const CameraPosition(target: LatLng(10.1926, 76.3869)),
-                  onMapCreated: (controller) {},
-                ),
-              ),
-            ),
+            // Expanded(
+            //   flex: 5,
+            //   child: Container(
+            //     height: Helper.height / 1.5,
+            //     decoration: BoxDecoration(
+            //         color: Colors.grey,
+            //         borderRadius: BorderRadius.circular(8.0)),
+            //     child: GoogleMap(
+            //       initialCameraPosition:
+            //           const CameraPosition(target: LatLng(10.1926, 76.3869)),
+            //       onMapCreated: (controller) {},
+            //     ),
+            //   ),
+            // ),
             Helper.allowWidth(20.0),
             Expanded(
                 flex: 5,
@@ -951,11 +1004,12 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
           ),
           Helper.allowHeight(10),
           Padding(
-            padding: const EdgeInsets.only(right: 120),
+            padding: const EdgeInsets.only(right: 14),
             child: Selector<ProviderClass, bool>(
               selector: (p0, p1) => p1.isServiceParnterSelected,
               builder: (context, value, child) => value &&
-                      Initializer.providerClass!.selectedServicePartner != ""
+                      Initializer
+                          .providerClass!.selectedServicePartner.isNotEmpty
                   ? partnerView(
                       partner: Initializer
                           .selectedServiceDetailsModel.data!.servicePartners!
@@ -974,9 +1028,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                         const Text(
                           'SELECT SERVICE PARTNER',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: primaryColor,
-                          ),
+                          style: TextStyle(color: primaryColor, fontSize: 14),
                         ),
                       ),
                     ),
@@ -1012,7 +1064,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
             content: Selector<ProviderClass, String>(
               selector: (p0, p1) => p1.selectedServicePartner,
               builder: (context, value, child) => Container(
-                  width: Helper.width / 4,
+                  width: Helper.width,
                   color: white,
                   child: ListView.separated(
                     shrinkWrap: true,
@@ -1043,7 +1095,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
           {required ServicePartners partner, required bool closing}) =>
       Container(
         width: Helper.width,
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8.0),
@@ -1066,9 +1118,7 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                   ? CachedNetworkImage(
                       imageUrl: partner.profilePicture!,
                       errorWidget: (context, url, error) =>
-                          const Icon(Icons.image_not_supported_rounded),
-                      fit: BoxFit.cover,
-                    )
+                          const Icon(Icons.image_not_supported_rounded))
                   : const Icon(Icons.image_not_supported_rounded),
             ),
             Helper.allowWidth(15),
@@ -1098,13 +1148,13 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                             child: const Icon(CupertinoIcons.clear))
                     ],
                   ),
-                  Helper.allowHeight(2.5),
+                  Helper.allowHeight(5),
                   Row(
                     children: [
                       Helper.checkAndGetPrice(partner),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 2, horizontal: 8),
+                            vertical: 4, horizontal: 12),
                         decoration: BoxDecoration(
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(22.0),
@@ -1123,9 +1173,8 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                             if (partner.rating! > 0) Helper.allowWidth(5),
                             if (partner.rating! > 0)
                               AnimatedRatingStars(
-                                  readOnly: true,
                                   initialRating: partner.rating!,
-                                  starSize: 4,
+                                  starSize: 3,
                                   onChanged: (_) {},
                                   filledColor: white,
                                   emptyColor: Colors.grey,
@@ -1142,17 +1191,18 @@ class _BookingAddressWebPageState extends State<BookingAddressWebPage> {
                   Text(
                     "${partner.paidBookingCount} Completed Services",
                     style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[600]),
+                      color: Colors.grey[600],
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   Helper.allowHeight(2.5),
                   Row(
                     children: [
                       const Icon(
-                        CupertinoIcons.location,
+                        CupertinoIcons.location_fill,
                         color: Colors.blue,
-                        size: 16,
+                        size: 14,
                       ),
                       Helper.allowWidth(5),
                       Helper.convertToKm(partner),
@@ -1173,7 +1223,7 @@ clickChip({
   required bool? needIcon,
 }) =>
     Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 22),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22.0),
           color: active! ? primaryColor : white,
@@ -1186,6 +1236,7 @@ clickChip({
           Text(
             title!,
             style: TextStyle(
+              fontSize: 12,
               color: active ? white : primaryColor,
               fontWeight: FontWeight.w300,
             ),

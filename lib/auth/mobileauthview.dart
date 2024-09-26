@@ -95,7 +95,7 @@ class BookingAuthMobile extends StatelessWidget {
                         width: Helper.width,
                         child: MaterialButton(
                           onPressed: () => state is! RequestingOTP
-                              ? Initializer.authBloc.verifyPhone("")
+                              ? context.read<AuthBloc>().add(VerifyPhone(phone:''))
                               : Helper.showToast(msg: "Please wait"),
                           elevation: 5.0,
                           color: primaryColor,

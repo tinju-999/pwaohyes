@@ -1,8 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwaohyes/bloc/bookingbloc.dart';
-import 'package:pwaohyes/bookingaddress/bookingaddressmobile.dart';
-import 'package:pwaohyes/bookingaddress/bookingaddresstab.dart';
+import 'package:pwaohyes/bookingaddress/bookingaddressmobilenew.dart';
 import 'package:pwaohyes/bookingaddress/bookingaddressweb.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/helper.dart';
@@ -22,7 +23,10 @@ class _BookingAddressState extends State<BookingAddress> {
   @override
   void initState() {
     Initializer.selectedServiceId = widget.id;
+    Helper.showLog(
+        "Initializer.selectedServiceId ${Initializer.selectedServiceId}");
     Initializer.selectedServiceAmount = widget.serviceAmount;
+    Initializer.providerClass!.checkSelectedPartner();
     checkAndRedirect();
     super.initState();
   }
@@ -31,11 +35,10 @@ class _BookingAddressState extends State<BookingAddress> {
   Widget build(BuildContext context) {
     return BlocBuilder<BookingBloc, BookingState>(
       builder: (context, state) => ScreenSize(
-        mobileView: const BookingAddressMobile(),
-        webView: BookingAddressWeb(
-          serviceTitle: widget.service,
-        ),
-        tabView: const BookingAddressTab(),
+        mobileView: BookingAddressMobileNew(serviceTitle: widget.service),
+        // const BookingAddressMobile(),
+        webView: BookingAddressWeb(serviceTitle: widget.service),
+        tabView: BookingAddressWeb(serviceTitle: widget.service),
       ),
     );
   }

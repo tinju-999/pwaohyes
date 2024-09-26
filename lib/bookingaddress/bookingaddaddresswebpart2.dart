@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:pwaohyes/bloc/bookingbloc.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/provider/locationprovider.dart';
 import 'package:pwaohyes/provider/provider.dart';
@@ -156,6 +157,8 @@ class _AddAddressPageWebState extends State<AddAddressPageWeb> {
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "This field is required";
+                      } else if (value.length != 10) {
+                        return "Please enter a valid mobile number";
                       } else {
                         return null;
                       }
@@ -236,7 +239,11 @@ class _AddAddressPageWebState extends State<AddAddressPageWeb> {
                       listener: (context, state) {
                         if (state is AddressAdded) {
                           // Helper.pushReplacementNamed(confirmbooking);
-                          Initializer.providerClass?.addAddressVisibility(true);
+                          Initializer.providerClass
+                              ?.addAddressVisibility(false);
+                          context.read<BookingBloc>().add(
+                              GetSelectedServiceDetails(
+                                  id: Initializer.selectedServiceId));
                         }
                       },
                       builder: (context, state) => MaterialButton(
@@ -260,7 +267,10 @@ class _AddAddressPageWebState extends State<AddAddressPageWeb> {
                                 "contact_number": contactController.text,
                                 "city": '',
                               };
-                              Initializer.serviceBloc.addaddress(data);
+
+                              context
+                                  .read<ServiceBloc>()
+                                  .add(AddAddress(data: data));
                             } else {
                               Helper.pushReplacementNamed(authuser);
                             }

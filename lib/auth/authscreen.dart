@@ -92,9 +92,15 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           ),
                           Helper.allowWidth(30),
-                          const Text("About Us"),
+                          InkWell(
+                              onTap: () => Helper.openPage(
+                                  'https://ohyesworld.com/about/'),
+                              child: const Text("About Us")),
                           Helper.allowWidth(20),
-                          const Text("Get Started"),
+                          InkWell(
+                              onTap: () => Helper.openPage(
+                                  'https://ohyesworld.com/app-download/'),
+                              child: const Text("Get Started")),
                           Helper.allowWidth(20),
                           const Text("Blog"),
                           Helper.allowWidth(20),
@@ -141,7 +147,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           ),
                           const Text(
-                            "Please enter your mobile number here",
+                            "Enter your mobile number for verification",
                             style: TextStyle(
                               fontSize: 12,
                               color: grey,
@@ -242,7 +248,7 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           ),
           const Text(
-            "Please enter your mobile number here",
+            "Enter your mobile number for verification",
             style: TextStyle(color: grey, fontSize: 16),
           ),
           Helper.allowHeight(10),
@@ -273,7 +279,7 @@ class _AuthScreenState extends State<AuthScreen> {
               width: Helper.width,
               child: MaterialButton(
                 onPressed: () => state is! RequestingOTP
-                    ? authBloc!.verifyPhone("")
+                    ? context.read<AuthBloc>().add(VerifyPhone(phone: ''))
                     : Helper.showToast(msg: "Please wait"),
                 elevation: 5.0,
                 color: primaryColor,
@@ -350,7 +356,7 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           ),
           const Text(
-            "Please enter the verification code send to your number +8129322316",
+            "Please enter the verification code send to your number",
             style: TextStyle(color: grey, fontSize: 14),
           ),
           Helper.allowHeight(10),

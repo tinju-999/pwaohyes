@@ -53,14 +53,10 @@ class Footer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 InkWell(
-                  onTap: () => Helper.showToast(msg: "Toast"),
+                  onTap: () => Helper.openPage('https://ohyesworld.com/about/'),
                   child: content("About Us"),
                 ),
                 Helper.allowWidth(25),
-                InkWell(
-                  onTap: () => Helper.showToast(msg: "Toast"),
-                  child: content("About Us"),
-                ),
               ],
             ),
             Helper.allowHeight(12.5),
@@ -164,9 +160,13 @@ class Footer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    content("About Us"),
+                    GestureDetector(
+                      onTap: () =>
+                          Helper.openPage('https://ohyesworld.com/about/'),
+                      child: content("About Us"),
+                    )
+
                     // Helper.allowHeight(2.5),
-                    content("About Us"),
                   ],
                 ),
               ),
@@ -284,14 +284,10 @@ class Footer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 InkWell(
-                  onTap: () => Helper.showToast(msg: "Toast"),
+                  onTap: () => Helper.openPage('https://ohyesworld.com/about/'),
                   child: content("About Us"),
                 ),
-                Helper.allowWidth(25),
-                InkWell(
-                  onTap: () => Helper.showToast(msg: "Toast"),
-                  child: content("About Us"),
-                ),
+                
               ],
             ),
             Helper.allowHeight(12.5),

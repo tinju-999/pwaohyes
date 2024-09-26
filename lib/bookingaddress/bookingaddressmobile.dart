@@ -27,7 +27,7 @@ class _BookingAddressMobileState extends State<BookingAddressMobile> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Header(
-                    removeBadge: false,
+                  removeBadge: false,
                   route: const BookingAddressMobile(),
                   scaffoldKey: scaffoldKey),
               Helper.allowHeight(10),

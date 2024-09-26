@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pwaohyes/utils/constants.dart';
+import 'package:pwaohyes/utils/helper.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -40,7 +41,8 @@ class CustomDrawer extends StatelessWidget {
               "Get Started",
               style: TextStyle(color: black),
             ),
-            onTap: () => {},
+            onTap: () =>
+                Helper.openPage('https://ohyesworld.com/app-download/'),
           ),
           ListTile(
             leading: const Icon(
@@ -51,7 +53,7 @@ class CustomDrawer extends StatelessWidget {
               "About Us",
               style: TextStyle(color: black),
             ),
-            onTap: () => {},
+            onTap: () => Helper.openPage('https://ohyesworld.com/about/'),
           )
         ],
       ),

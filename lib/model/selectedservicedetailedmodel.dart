@@ -248,6 +248,7 @@ class ServicePartners {
   String? profilePicture;
   String? description;
   bool? isArchived;
+  bool? isSelected;
   double? distance;
   // Null? currentDayAvailability;
   dynamic paidBookingCount;
@@ -263,6 +264,7 @@ class ServicePartners {
       this.lastLocationCoordinates,
       this.reviews,
       this.rating,
+      this.isSelected,
       this.otp,
       this.isOnline,
       this.lastStatusReported,
@@ -298,6 +300,7 @@ class ServicePartners {
   ServicePartners.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     phoneNumber = json['phone_number'];
+    isSelected = false;
     categories = json['categories'].cast<String>();
     // if (json['sub_categories'] != null) {
     // 	subCategories = <Null>[];

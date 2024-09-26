@@ -22,6 +22,7 @@ import 'package:pwaohyes/provider/locationprovider.dart';
 import 'package:pwaohyes/provider/provider.dart';
 
 class Initializer {
+  static GlobalKey<FormState> formKey = GlobalKey<FormState>();
   static DateTime? seletedShopSlotDate = now;
   static String? selectedShopId = "",
       selectedServiceId = "",
@@ -29,10 +30,13 @@ class Initializer {
   static String? selectedShopServiceId;
   static String? selectedShopSlotId;
 
-  static TextEditingController phoneController =
-      TextEditingController(text: "8129322316");
-  static TextEditingController otpController =
-      TextEditingController(text: "3703");
+  // static TextEditingController phoneController =
+  //     TextEditingController(text: "8129322316");
+  // static TextEditingController otpController =
+  //     TextEditingController(text: "5370");
+
+  static TextEditingController phoneController = TextEditingController();
+  static TextEditingController otpController = TextEditingController();
 
   static LocationProvider locationProvider = LocationProvider();
   static SelectedServiceDetailsModel selectedServiceDetailsModel =
@@ -113,6 +117,7 @@ class Initializer {
   static DateTime now = DateTime.now();
   static DateTime selectedServiceDate = now;
   static DateTime selectedServiceTime = now;
+  static String selectedTechnicianId = "";
   static List<BookingDateTimeModel> bookingTimeSuggestions = [];
   static List<BookingDateTimeModel> bookingDateSuggestions = [];
   static List<AddresstypeModel> addressTypes = [

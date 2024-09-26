@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/subservice/subservicemobileview.dart';
 import 'package:pwaohyes/subservice/subservicewebview.dart';
-import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/screensize.dart';
 
 class SubServiceHome extends StatefulWidget {
@@ -19,7 +20,7 @@ class _ServiceHomeState extends State<SubServiceHome> {
   @override
   initState() {
     super.initState();
-    Initializer.serviceBloc.getSubServices(widget.subServiceId!);
+    context.read<ServiceBloc>().add(GetSubServices(id: widget.subServiceId!));
   }
 
   @override

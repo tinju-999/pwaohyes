@@ -136,7 +136,7 @@ class SubServicePageWeb extends StatelessWidget {
                     child: CupertinoActivityIndicator(),
                   )
                 : state is SubServicesFetched ||
-                        Initializer.subCatModel.data!.services!.isNotEmpty
+                        Initializer.subCatModel.data!.services != null
                     ? Wrap(
                         alignment: WrapAlignment.center,
                         spacing: 26.0,

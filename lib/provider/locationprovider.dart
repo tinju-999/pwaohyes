@@ -23,9 +23,8 @@ class LocationProvider extends ChangeNotifier {
             },
             actionTwoText: "Ok");
       } else {
-        await Geolocator.getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.low)
-            .then((position) async {
+        //  desiredAccuracy: LocationAccuracy.low
+        await Geolocator.getCurrentPosition().then((position) async {
           // Address address = await geoCode.reverseGeocoding(
           //     latitude: position.latitude, longitude: position.longitude);
 

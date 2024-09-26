@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/location/locationmobileview.dart';
 import 'package:pwaohyes/location/locationwebview.dart';
-import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/screensize.dart';
 
 class LocationPermissionView extends StatefulWidget {
@@ -16,7 +17,8 @@ class LocationPermissionView extends StatefulWidget {
 class _LocationPermissionViewState extends State<LocationPermissionView> {
   @override
   void initState() {
-    Initializer.authBloc.fetchCities();
+    // Initializer.authBloc.fetchCities();
+      context.read<AuthBloc>().add(FetchCities());
     super.initState();
   }
 

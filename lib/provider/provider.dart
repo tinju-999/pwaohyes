@@ -13,6 +13,39 @@ import 'package:pwaohyes/utils/initializer.dart';
 enum LoadingState { initial, loading, success, failed, error }
 
 class ProviderClass extends ChangeNotifier {
+  bool _isServiceParnterSelected = false;
+  bool get isServiceParnterSelected => _isServiceParnterSelected;
+
+  confirmServicePartner(bool value) {
+    _isServiceParnterSelected = value;
+    if (!value) {
+      for (var e
+          in Initializer.selectedServiceDetailsModel.data!.servicePartners!) {
+        e.isSelected = false;
+      }
+      _selectedServicePartner = "";
+    }
+    notifyListeners();
+  }
+
+  String _selectedServicePartner = "";
+  String get selectedServicePartner => _selectedServicePartner;
+
+  changeServicePartner(String? sId) {
+    String newVal = "";
+    for (var e
+        in Initializer.selectedServiceDetailsModel.data!.servicePartners!) {
+      if (e.sId == sId) {
+        e.isSelected = true;
+        newVal = sId!;
+      } else {
+        e.isSelected = false;
+      }
+    }
+    _selectedServicePartner = newVal;
+    notifyListeners();
+  }
+
   bool _agreed = false;
   bool get agreed => _agreed;
   setAgreement(bool? value) {
@@ -84,7 +117,8 @@ class ProviderClass extends ChangeNotifier {
 
   chooseService(String id, int index) {
     _selectedServiceId = id;
-    _selectedServiceAmount = Initializer.serviceDetailedModel.data!.serviceTypes![index].price
+    _selectedServiceAmount = Initializer
+        .serviceDetailedModel.data!.serviceTypes![index].price
         .toString();
     notifyListeners();
   }
@@ -143,9 +177,10 @@ class ProviderClass extends ChangeNotifier {
       Initializer.bookingDateSuggestions[1].isSelected = true;
     } else {
       Initializer.bookingDateSuggestions[2].isSelected = true;
+      Initializer.bookingDateSuggestions[2].date = value;
     }
     Initializer.selectedServiceDate = value;
-    Helper.setTimings(Initializer.selectedServiceDate);
+    // Helper.setTimings(Initializer.selectedServiceDate);
     notifyListeners();
   }
 
@@ -164,9 +199,14 @@ class ProviderClass extends ChangeNotifier {
       Initializer.selectedServiceDate.month,
       Initializer.selectedServiceDate.day,
     );
-    if (!isToday(Initializer.selectedServiceDate)) {
-      // Helper.setTimings(now);
-    }
+    // if (isToday(Initializer.selectedServiceDate)) {
+    //   Helper.showLog("Selected today");
+    // }
+    // if (Initializer.bookingDateSuggestions.first.isSelected!) {
+    //   Helper.showLog("Selected today");
+    // } else {
+    //   Helper.showLog("Not Selected today");
+    // }
     notifyListeners();
   }
 
@@ -214,9 +254,8 @@ class ProviderClass extends ChangeNotifier {
       } else {
         // bool serviceEnabled = await location!.requestService();
         // if (serviceEnabled) {
-        await Geolocator.getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.medium)
-            .then((position) async {
+        // desiredAccuracy: LocationAccuracy.medium
+        await Geolocator.getCurrentPosition().then((position) async {
           // await getNearbyAddress(position).then((foundNearby) async {
           if (!kIsWeb) {
             _selectedAddressModel = SelectedAddressModel(
@@ -439,6 +478,8 @@ class ProviderClass extends ChangeNotifier {
     // Initializer.myQBloc.getShopsSlots(
     //     Initializer.shopViewModel.services![index].sId, Initializer.selectedSlotedServiceDate);
   }
+
+  void checkSelectedPartner() => _selectedServicePartner = "";
 }
 
 class CombinedData {

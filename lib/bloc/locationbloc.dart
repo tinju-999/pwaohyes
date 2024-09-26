@@ -29,9 +29,8 @@ class LocationBloc extends Cubit<LocationState> {
 
         emit(LocationNotFetched());
       } else {
-        await Geolocator.getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.medium)
-            .then((position) async {
+        //LocationAccuracy.medium
+        await Geolocator.getCurrentPosition().then((position) async {
           // var address = await Geocoder.local.findAddressesFromCoordinates(
           //     Coordinates(position.latitude, position.longitude));
           Initializer.selectedAdddress = SelectedAddressModel(

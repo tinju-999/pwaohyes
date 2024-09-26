@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/main.dart';
 import 'package:pwaohyes/model/bookingdatemodel.dart';
+import 'package:pwaohyes/model/selectedservicedetailedmodel.dart';
 import 'package:pwaohyes/utils/constants.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 import 'package:shimmer/shimmer.dart';
@@ -24,6 +26,13 @@ class Helper {
   static String? appVersion;
   static allowHeight(double height) {
     return SizedBox(height: height);
+  }
+
+  static bool isToday(DateTime date) {
+    DateTime now = DateTime.now();
+    return date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
   }
 
   static setDateAndTimings() {
@@ -54,7 +63,7 @@ class Helper {
   }
 
   static showLog(msg)
-      //{} // uncomment this for activate
+      //  {} // uncomment this for activate
       =>
       log('${(msg)} ');
 
@@ -188,14 +197,14 @@ class Helper {
                         if (state is! RequestingOTP || state is! VerifyingOTP) {
                           if (state is OTPRequested) {
                             if (formKey.currentState!.validate()) {
-                              Initializer.authBloc.verifyOtp(
-                                  Initializer.otpController.text,
-                                  Initializer.phoneController.text);
+                              context.read<AuthBloc>().add(VerifyOtp(
+                                  otp: Initializer.otpController.text,
+                                  phone: Initializer.phoneController.text));
                             }
                           } else {
                             if (formKey.currentState!.validate()) {
-                              Initializer.authBloc.verifyPhone(
-                                  Initializer.phoneController.text);
+                              context.read<AuthBloc>().add(VerifyPhone(
+                                  phone: Initializer.phoneController.text));
                             }
                           }
                         }
@@ -306,6 +315,11 @@ class Helper {
         MaterialPageRoute(builder: (context) => namedRoute), (route) => false);
   }
 
+  static pushAndRemoveNamedUntil(dynamic namedRoute) {
+    return Navigator.of(context!)
+        .pushNamedAndRemoveUntil(namedRoute, (Route<dynamic> route) => false);
+  }
+
   static pushReplacementWithDelay(dynamic route, [delay]) {
     return Future.delayed(Duration(seconds: delay ?? 3), () async {
       Navigator.pushReplacement(
@@ -391,24 +405,51 @@ class Helper {
 
   static void loopDates(
       int diiference, DateTime? date, DateTime now, DateTime endingTime) {
-    for (int i = 1; i <= diiference; i++) {
-      if (i == 1) {
-        date = DateTime(now.year, now.month, now.day, now.hour + i, 30, 0, 0);
+    for (int i = 0; i < 3; i++) {
+      // Ensure that the time starts from 8 AM
+      DateTime startTime = DateTime(now.year, now.month, now.day, 8, 0, 0);
+
+      // Calculate the next time slot with 30-minute intervals
+      date = startTime.add(Duration(minutes: i * 30));
+
+      // Ensure that the time is between 8 AM and 8 PM
+      if (date.hour >= 8 && date.hour <= 19) {
+        Initializer.bookingTimeSuggestions.add(
+          BookingDateTimeModel(
+            label: Helper.setDateFormat(dateTime: date, format: "hh:mm a"),
+            date: date,
+            isSelected: i == 0, // Select the first time slot by default
+          ),
+        );
       } else {
-        if (date!.isBefore(endingTime)) {
-          date = DateTime(now.year, now.month, now.day, now.hour + i, 0, 0, 0);
-        } else {
-          break;
-        }
+        // If the time is outside the 8 AM - 8 PM range, break the loop
+        break;
       }
-      Initializer.bookingTimeSuggestions.add(
-        BookingDateTimeModel(
-          label: Helper.setDateFormat(dateTime: date, format: "hh:mm a"),
-          date: date,
-          isSelected: i == 1 ? true : false,
-        ),
-      );
     }
+
+    // for (int i = 1; i <= diiference; i++) {
+    //   // Ensure that the time starts from 8 AM
+    //   DateTime startTime = DateTime(now.year, now.month, now.day, 8, 0, 0, 0);
+    //   // Only allow times between 8 AM and 8 PM
+    //   if (i == 1) {
+    //     date = startTime.add(Duration(hours: i - 1, minutes: 30));
+    //     // DateTime(now.year, now.month, now.day, now.hour + i, 30, 0, 0);
+    //   } else {
+    //     if (date!.isBefore(endingTime) && date.hour >= 8 && date.hour <= 19) {
+    //       date = startTime.add(Duration(hours: i));
+    //       //  DateTime(now.year, now.month, now.day, now.hour + i, 0, 0, 0);
+    //     } else {
+    //       break;
+    //     }
+    //   }
+    //   Initializer.bookingTimeSuggestions.add(
+    //     BookingDateTimeModel(
+    //       label: Helper.setDateFormat(dateTime: date, format: "hh:mm a"),
+    //       date: date,
+    //       isSelected: i == 1 ? true : false,
+    //     ),
+    //   );
+    // }
 
     Initializer.bookingTimeSuggestions.add(
       BookingDateTimeModel(
@@ -539,6 +580,8 @@ class Helper {
 
   static openMap({required double lat, lon}) => js.context
       .callMethod('open', ['https://www.google.com/maps?q=$lat,$lon']);
+
+  static openPage(String url) => js.context.callMethod('open', [url]);
 
   static void showSuccessWeb() => showDialog(
         context: context!,
@@ -712,4 +755,231 @@ class Helper {
       DateTime(now.year, now.month, now.day, time.hour, time.minute),
     );
   }
+
+  static continueBooking(
+      {required BuildContext context,
+      required String serviceName,
+      serviceId,
+      amount}) {
+    if (!Initializer.userModel.isLoggedIn!) {
+      // Helper.showAuthDialogue(context: context);
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: Form(
+            key: Initializer.formKey,
+            child: BlocConsumer<AuthBloc, AuthState>(
+              listenWhen: (previous, current) =>
+                  current is OTPVerified ||
+                  current is VerifyingOTPError ||
+                  current is OTPNotVerified ||
+                  current is OTPNotRequested,
+              listener: (context, state) {
+                if (state is OTPVerified) {
+                  Initializer.phoneController.clear();
+                  Initializer.otpController.clear();
+                  Helper.pop();
+                  Helper.pushNamed(
+                      "/bookingaddress?service=$serviceName&id=$serviceId");
+                } else if (state is VerifyingOTPError ||
+                    state is OTPNotVerified ||
+                    state is OTPNotRequested) {
+                  Initializer.phoneController.clear();
+                  Initializer.otpController.clear();
+                  Helper.pop();
+                }
+              },
+              buildWhen: (previous, current) =>
+                  current is VerifyingOTP ||
+                  current is OTPVerified ||
+                  current is OTPNotVerified ||
+                  current is VerifyingOTPError ||
+                  current is RequestingOTP ||
+                  current is OTPRequested ||
+                  current is OTPNotRequested ||
+                  current is OTPNotRequested,
+              builder: (context, state) => Container(
+                decoration: const BoxDecoration(
+                    color: white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(18.0),
+                      topRight: Radius.circular(18.0),
+                    )),
+                padding: const EdgeInsets.only(
+                    top: 32, bottom: 18, left: 14, right: 14),
+                width: Helper.width / 3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Verify Now",
+                      style: TextStyle(fontSize: 28),
+                    ),
+                    Helper.allowHeight(5),
+                    const Text(
+                      "Enter your mobile number for verification",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: grey,
+                      ),
+                    ),
+                    Helper.allowHeight(10),
+                    TextFormField(
+                        autofocus: true,
+                        controller: Initializer.phoneController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter mobile number";
+                          } else {
+                            return null;
+                          }
+                        },
+                        maxLength: 10,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        buildCounter: (context,
+                                {required currentLength,
+                                required isFocused,
+                                required maxLength}) =>
+                            Helper.shrink(),
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 14, horizontal: 14),
+                          hintText: "Mobile Number",
+                          hintStyle: const TextStyle(fontSize: 13, color: grey),
+                          border: OutlineInputBorder(
+                            borderSide: const BorderSide(color: grey),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        )),
+                    Helper.allowHeight(10),
+                    if (state is OTPRequested ||
+                        Initializer.otpController.text.isNotEmpty)
+                      TextFormField(
+                          autofocus: true,
+                          controller: Initializer.otpController,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Please enter a valid OTP";
+                            } else {
+                              return null;
+                            }
+                          },
+                          maxLength: 4,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          buildCounter: (context,
+                                  {required currentLength,
+                                  required isFocused,
+                                  required maxLength}) =>
+                              Helper.shrink(),
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 14, horizontal: 14),
+                            hintText: "OTP",
+                            hintStyle:
+                                const TextStyle(fontSize: 13, color: grey),
+                            border: OutlineInputBorder(
+                              borderSide: const BorderSide(color: grey),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          )),
+                    Helper.allowHeight(10),
+                    SizedBox(
+                      width: Helper.width,
+                      child: MaterialButton(
+                        onPressed: () {
+                          if (state is! RequestingOTP ||
+                              state is! VerifyingOTP) {
+                            if (state is OTPRequested) {
+                              if (Initializer.formKey.currentState!
+                                  .validate()) {
+                                context.read<AuthBloc>().add(VerifyOtp(
+                                    otp: Initializer.otpController.text,
+                                    phone: Initializer.phoneController.text));
+                              }
+                            } else {
+                              if (Initializer.formKey.currentState!
+                                  .validate()) {
+                                context.read<AuthBloc>().add(VerifyPhone(
+                                    phone: Initializer.phoneController.text));
+                              }
+                            }
+                          }
+                        },
+                        elevation: 5.0,
+                        color: primaryColor,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 18, horizontal: 6),
+                        child: state is RequestingOTP || state is VerifyingOTP
+                            ? const Center(
+                                child: CupertinoActivityIndicator(
+                                    color: Colors.white))
+                            : state is OTPRequested
+                                ? const Text("Verify OTP",
+                                    style:
+                                        TextStyle(color: white, fontSize: 16))
+                                : const Text("Send OTP",
+                                    style:
+                                        TextStyle(color: white, fontSize: 16)),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      Helper.pushNamed("/bookingaddress?service=$serviceName&id=$serviceId");
+    }
+  }
+
+  static convertToKm(ServicePartners partner) {
+    if (partner.distance != null) {
+      return Text(
+        "${toTitleCase(partner.city!)} (${(partner.distance! / 1000).toStringAsFixed(1)}km away)",
+        style: const TextStyle(fontSize: 12),
+      );
+    } else {
+      return Text(
+        "${toTitleCase(partner.city!)} ",
+        style: const TextStyle(fontSize: 12),
+      );
+    }
+  }
+
+  static  Widget checkAndGetPrice(ServicePartners partner) {
+    String amount = "";
+    if (partner.serviceTypes != null) {
+      amount = partner.serviceTypes!
+          .where((e) => e.serviceType == Initializer.selectedServiceId)
+          .first
+          .amount
+          .toString();
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "Rs. $amount",
+            style: const TextStyle(
+                color: Colors.green, fontWeight: FontWeight.bold),
+          ),
+          Helper.allowWidth(10),
+        ],
+      );
+    } else {
+      return Helper.shrink();
+    }
+  }
+
 }

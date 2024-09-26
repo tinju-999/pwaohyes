@@ -55,12 +55,17 @@ class _BookingMobileState extends State<BookingMobile> {
         margin: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
         width: Helper.width / 2,
         child: MaterialButton(
-          onPressed: () => Helper.getApp(),
+          onPressed: () => Helper.continueBooking(
+              context: context,
+              serviceName:
+                  Initializer.serviceDetailedModel.data!.service!.title!,
+              serviceId: Initializer.providerClass!.selectedServiceId,
+              amount: Initializer.providerClass!.selectedServiceAmount),
+          // Helper.getApp(),
           elevation: 5.0,
           color: primaryColor,
           padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 14),
-          child:
-              const Text("Use App For Booking", style: TextStyle(color: white)),
+          child: const Text("Book Now", style: TextStyle(color: white)),
         ),
       );
 }
@@ -122,7 +127,8 @@ class BookingMobilePage extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Selector<ProviderClass, String>(
-                                      selector: (p0, p1) => p1.selectedServiceAmount,
+                                      selector: (p0, p1) =>
+                                          p1.selectedServiceAmount,
                                       builder: (context, value, child) =>
                                           value == "0"
                                               ? const Text(

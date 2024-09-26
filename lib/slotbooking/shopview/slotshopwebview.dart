@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:pwaohyes/apiservice/serverhelper.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/bloc/myqbloc.dart';
+import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/common/footer.dart';
 import 'package:pwaohyes/common/header.dart';
 import 'package:pwaohyes/model/shopviewmodel.dart';
@@ -80,16 +81,17 @@ class SlotShopWebContent extends StatelessWidget {
           }
           if (state is OTPVerified) {
             Helper.pop();
-            Initializer.serviceBloc.bookService({
-              "name": Initializer.phoneController.text,
-              "phone": Initializer.phoneController.text,
-              "service_id": Initializer.selectedShopServiceId,
-              "slot_id": Initializer.selectedShopSlotId,
-              "number_of_slots": "1",
-              "booked_date": Initializer.seletedShopSlotDate.toString(),
-              "booking_amount":
-                  Initializer.shopSlotModel.serviceInfo!.amount.toString(),
-            });
+            context.read<ServiceBloc>().add(BookService(data: {
+                  "name": Initializer.phoneController.text,
+                  "phone": Initializer.phoneController.text,
+                  "service_id": Initializer.selectedShopServiceId,
+                  "slot_id": Initializer.selectedShopSlotId,
+                  "number_of_slots": "1",
+                  "booked_date": Initializer.seletedShopSlotDate.toString(),
+                  "booking_amount":
+                      Initializer.shopSlotModel.serviceInfo!.amount.toString(),
+                }));
+
             Initializer.phoneController.clear();
             Initializer.otpController.clear();
           }
@@ -110,7 +112,7 @@ class SlotShopWebContent extends StatelessWidget {
                           if (!Initializer.userModel.isLoggedIn!) {
                             Helper.showAuthDialogue(context: context);
                           } else {
-                            Initializer.serviceBloc.bookService({
+                             context.read<ServiceBloc>().add(BookService(data:{
                               "name": Initializer.userModel.phone,
                               "phone": Initializer.userModel.phone!,
                               "service_id": Initializer.selectedShopServiceId,
@@ -121,7 +123,8 @@ class SlotShopWebContent extends StatelessWidget {
                               "booking_amount": Initializer
                                   .shopSlotModel.serviceInfo!.amount
                                   .toString(),
-                            });
+                            }));
+                           
                           }
                         } else {
                           Helper.showSnack("Please select a slot");

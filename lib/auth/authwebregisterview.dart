@@ -41,7 +41,7 @@ class _AuthWebRegisterViewState extends State<AuthWebRegisterView> {
                       style: TextStyle(fontSize: 26, color: primaryColor)),
                   Helper.allowHeight(2.5),
                   const Text(
-                    "Please enter the verification code send to your\nnumber +8129322316",
+                    "Please enter the verification code send to your\nnumber",
                     style: TextStyle(
                       fontSize: 14,
                       color: grey,
@@ -76,8 +76,9 @@ class _AuthWebRegisterViewState extends State<AuthWebRegisterView> {
                           current is OTPRequestingError,
                       builder: (context, state) => MaterialButton(
                         onPressed: () => state is! RequestingOTP
-                            ? widget.authBloc!.verifyOtp(
-                                _otpController.text, mainState.phone!)
+                            ? context.read<AuthBloc>().add(VerifyOtp(
+                                otp: _otpController.text,
+                                phone: mainState.phone!))
                             : Helper.showToast(msg: "Please wait"),
                         elevation: 0.0,
                         color: primaryColor,
@@ -177,8 +178,8 @@ class _AuthWebRegisterViewState extends State<AuthWebRegisterView> {
                           current is OTPRequestingError,
                       builder: (context, state) => MaterialButton(
                         onPressed: () => state is! RequestingOTP
-                            ? widget.authBloc!
-                                .verifyPhone(_phoneController.text)
+                            ?context.read<AuthBloc>().add(VerifyPhone(phone:_phoneController.text))
+                          
                             : Helper.showToast(msg: "Please wait"),
                         elevation: 0.0,
                         color: primaryColor,

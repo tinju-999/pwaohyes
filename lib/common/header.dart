@@ -85,9 +85,15 @@ class WebViewHeader extends StatelessWidget {
                     ),
                   ),
                   Helper.allowWidth(30),
-                  const Text("About Us"),
+                  InkWell(
+                      onTap: () =>
+                          Helper.openPage('https://ohyesworld.com/about/'),
+                      child: const Text("About Us")),
                   Helper.allowWidth(20),
-                  const Text("Get Started"),
+                  InkWell(
+                      onTap: () => Helper.openPage(
+                          'https://ohyesworld.com/app-download/'),
+                      child: const Text("Get Started")),
                   if (Initializer.selectedAdddress!.loadingState !=
                       LoadingState.initial)
                     Helper.allowWidth(20),
@@ -113,9 +119,10 @@ class WebViewHeader extends StatelessWidget {
                     InkWell(
                         onTap: () {
                           if (Initializer.userModel.isLoggedIn!) {
-                            Initializer.authBloc.doLogout();
+                            // Initializer.authBloc.doLogout();
+                            context.read<AuthBloc>().add(DoLogout());
                           } else {
-                            Helper.pushReplacementNamed(authuser);
+                            Helper.pushAndRemoveNamedUntil(locationView);
                           }
                         },
                         child: const Text("Logout")),
@@ -192,9 +199,9 @@ class MobileViewHeader extends StatelessWidget {
                     InkWell(
                         onTap: () {
                           if (Initializer.userModel.isLoggedIn!) {
-                            Initializer.authBloc.doLogout();
+                            context.read<AuthBloc>().add(DoLogout());
                           } else {
-                            Helper.pushReplacementNamed(authuser);
+                            Helper.pushAndRemoveNamedUntil(locationView);
                           }
                         },
                         child: const Text(

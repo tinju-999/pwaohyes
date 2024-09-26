@@ -191,7 +191,7 @@ class _BookingWebPageState extends State<BookingWebPage> {
                                         SizedBox(
                                           width: Helper.width / 6,
                                           child: MaterialButton(
-                                            onPressed: () => continueBooking(
+                                            onPressed: () => Helper.continueBooking(
                                                 context: context,
                                                 serviceName: Initializer
                                                     .serviceDetailedModel
@@ -213,7 +213,7 @@ class _BookingWebPageState extends State<BookingWebPage> {
                                             color: primaryColor,
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 18, horizontal: 14),
-                                            child: const Text("Use App",
+                                            child: const Text("Book Now",
                                                 style: TextStyle(color: white)),
                                           ),
                                         ),
@@ -500,15 +500,5 @@ class _BookingWebPageState extends State<BookingWebPage> {
         ],
       );
 
-  continueBooking(
-      {required BuildContext context,
-      required String serviceName,
-      serviceId,
-      amount}) {
-    if (!Initializer.userModel.isLoggedIn!) {
-      Helper.showAuthDialogue(context: context);
-    } else {
-      Helper.pushNamed("/bookingaddress?service=$serviceName&id=$serviceId");
-    }
-  }
+ 
 }

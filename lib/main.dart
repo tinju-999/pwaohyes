@@ -130,46 +130,46 @@ class MyApp extends StatelessWidget {
               onGenerateRoute: (settings) {
                 Uri uri = Uri.parse(settings.name!);
                 if (uri.pathSegments.isNotEmpty &&
-                    uri.pathSegments.first == 'slotbookingshop') {
+                    uri.pathSegments.first.toLowerCase() == 'slotbookingshop') {
                   final id = uri.queryParameters['id'];
                   return MaterialPageRoute(
                       builder: (context) => SlotShopView(id: id),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'booking') {
+                } else if (uri.pathSegments.first.toLowerCase() == 'booking') {
                   final catId = uri.queryParameters['catId'];
                   final title = uri.queryParameters['title'];
                   return MaterialPageRoute(
                       builder: (context) =>
                           BookingHome(catId: catId, title: title),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'subservices') {
+                } else if (uri.pathSegments.first.toLowerCase() == 'subservices') {
                   final subServiceId = uri.queryParameters['subServiceId'];
                   return MaterialPageRoute(
                       builder: (context) =>
                           SubServiceHome(subServiceId: subServiceId),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'chooselocation') {
+                } else if (uri.pathSegments.first.toLowerCase() == 'chooselocation') {
                   return MaterialPageRoute(
                       builder: (context) =>
                           const LocationPermissionView(route: null),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'allservices') {
+                } else if (uri.pathSegments.first.toLowerCase() == 'allservices') {
                   return MaterialPageRoute(
                       builder: (context) => const ServiceHome(),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'servicebooking') {
+                } else if (uri.pathSegments.first.toLowerCase() == 'servicebooking') {
                   return MaterialPageRoute(
                       builder: (context) => const BookingWeb(),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'confirmbooking') {
+                } else if (uri.pathSegments.first.toLowerCase() == 'confirmbooking') {
                   return MaterialPageRoute(
                       builder: (context) => const BookingAddressWeb(),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'slotbooking') {
+                } else if (uri.pathSegments.first.toLowerCase() == 'slotbooking') {
                   return MaterialPageRoute(
                       builder: (context) => const SlotBookingView(),
                       settings: RouteSettings(name: settings.name));
-                } else if (uri.pathSegments.first == 'bookingaddress') {
+                } else if (uri.pathSegments.first.toLowerCase() == 'bookingaddress') {
                   final service = uri.queryParameters['service'];
                   final id = uri.queryParameters['id'];
                   return MaterialPageRoute(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/service/servicehomemobileview.dart';
 import 'package:pwaohyes/service/servicehometabview.dart';
 import 'package:pwaohyes/service/servicehomewebview.dart';
-import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/screensize.dart';
 
 class ServiceHome extends StatefulWidget {
@@ -21,7 +21,7 @@ class _ServiceHomeState extends State<ServiceHome> {
   initState() {
     super.initState();
     providerClass = context.read<ProviderClass>();
-    Initializer.serviceBloc.getServices();
+    context.read<ServiceBloc>().add(GetServices());
   }
 
   @override
