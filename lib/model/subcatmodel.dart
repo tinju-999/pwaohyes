@@ -1,3 +1,5 @@
+import 'package:pwaohyes/utils/helper.dart';
+
 class SubCatModel {
   int? errorCode;
   Data? data;
@@ -34,7 +36,9 @@ class Data {
     if (json['services'] != null) {
       services = <Services>[];
       json['services'].forEach((v) {
-        services!.add(Services.fromJson(v));
+        if (!v['visible_to_partner_only']) {
+          services!.add(Services.fromJson(v));
+        }
       });
     }
   }
@@ -56,6 +60,7 @@ class Services {
   List<Null>? videoMetadata;
   String? categoryId;
   String? image;
+
   int? iV;
   List<String>? cities;
   String? status;
@@ -125,12 +130,18 @@ class Services {
   String? checkData(json) {
     if (json != null) {
       if (json.runtimeType == List) {
-        return null;
+        if (json.isNotEmpty) {
+          Helper.showLog("from list image ${json.first}");
+          return json.first;
+        } else {
+          return "";
+        }
       } else {
+         Helper.showLog("from string image $json");
         return json;
       }
     } else {
-      return null;
+      return "";
     }
   }
 }

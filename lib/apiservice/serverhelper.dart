@@ -14,8 +14,10 @@ import 'package:pwaohyes/utils/preferences.dart';
 import 'package:pwaohyes/utils/routes.dart';
 
 class ServerHelper {
-  static String myQPadUrl = "https://api.myqpad.com";
-  static String myQPadUrlImage = "https://api.myqpad.com/file/get/";
+  static String myQPadUrl =
+      // 'http://192.168.1.7:4000';
+      "https://api.myqpad.com";
+  static String myQPadUrlImage = "$myQPadUrl/file/get/";
 
   Future<Response> refreshToken() async {
     Helper.showLog("----------> CALLING REFRESH TOKEN <----------");
@@ -128,14 +130,15 @@ class ServerHelper {
     Helper.showLog('Token: Bearer ${Initializer.userModel.token ?? ""}');
     Helper.showLog(
         'Refresh token: Bearer ${Initializer.userModel.refreshToken ?? ""}');
-    return await http.post(Uri.parse(myQPadUrl + url),
-        headers: {
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-          // 'Authorization': 'Bearer ${Initializer.userModel.token ?? ""}',
-          // 'Refreshtoken':
-          //     'Bearer ${Initializer.userModel.refreshToken ?? ""}',
-        },
-        body: data);
+    return await http.post(
+      Uri.parse(myQPadUrl + url),
+      headers: {
+        // 'Content-Type': 'application/json',
+        // 'Authorization': 'Bearer ${Initializer.userModel.token ?? ""}',
+        // 'Refreshtoken': 'Bearer ${Initializer.userModel.refreshToken ?? ""}',
+      },
+      body: data,
+    );
   }
 
   static getMyQPostSpecial(String url, Map data) async {

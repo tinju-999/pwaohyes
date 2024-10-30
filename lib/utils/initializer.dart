@@ -8,7 +8,9 @@ import 'package:pwaohyes/model/bookingdatemodel.dart';
 import 'package:pwaohyes/model/citiesmodel.dart';
 import 'package:pwaohyes/model/myqpadcatmodel.dart';
 import 'package:pwaohyes/model/myqpadshopsmodel.dart';
+import 'package:pwaohyes/model/myreviewmodel.dart';
 import 'package:pwaohyes/model/otpverifiedmodel.dart';
+import 'package:pwaohyes/model/partnerreviewmodel.dart';
 import 'package:pwaohyes/model/selectedaddressmodel.dart';
 import 'package:pwaohyes/model/selectedservicedetailedmodel.dart';
 import 'package:pwaohyes/model/servicedetailedmodel.dart';
@@ -22,6 +24,10 @@ import 'package:pwaohyes/provider/locationprovider.dart';
 import 'package:pwaohyes/provider/provider.dart';
 
 class Initializer {
+  static MyReviewModel myReviewModel = MyReviewModel();
+  static PartnerReviewModel partnerReviewModel = PartnerReviewModel();
+  static TextEditingController? ratingController = TextEditingController();
+  static String? myReviewId = "";
   static GlobalKey<FormState> formKey = GlobalKey<FormState>();
   static DateTime? seletedShopSlotDate = now;
   static String? selectedShopId = "",

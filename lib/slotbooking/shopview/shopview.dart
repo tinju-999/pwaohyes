@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwaohyes/bloc/myqbloc.dart';
 import 'package:pwaohyes/slotbooking/shopview/slobookingshopmobileview.dart';
 import 'package:pwaohyes/slotbooking/shopview/slotshopwebview.dart';
 import 'package:pwaohyes/utils/initializer.dart';
@@ -18,7 +20,7 @@ class _SlotShopViewState extends State<SlotShopView> {
   void initState() {
     Initializer.selectedShopId = widget.id;
     Initializer.seletedShopSlotDate = DateTime.now();
-    Initializer.myQBloc.getMyQOneShop(widget.id!);
+    context.read<MyQBloc>().add(GetMyQOneShop(id: widget.id!));
     super.initState();
   }
 

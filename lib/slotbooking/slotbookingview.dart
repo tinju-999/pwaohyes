@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pwaohyes/bloc/myqbloc.dart';
 import 'package:pwaohyes/slotbooking/slotbookingwebview.dart';
 import 'package:pwaohyes/slotbooking/slotbookinmobileview.dart';
-import 'package:pwaohyes/utils/initializer.dart';
 import 'package:pwaohyes/utils/screensize.dart';
 
 class SlotBookingView extends StatefulWidget {
@@ -14,7 +14,8 @@ class SlotBookingView extends StatefulWidget {
 class _SlotBookingViewState extends State<SlotBookingView> {
   @override
   void initState() {
-    Initializer.myQBloc.getMyQCats();
+    // Initializer.myQBloc.getMyQCats();
+    MyQBloc().add(GetMyQCats());
     super.initState();
   }
 

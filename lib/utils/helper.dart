@@ -22,7 +22,6 @@ class Helper {
   static BuildContext? context = key!.currentContext!;
   static double width = MediaQuery.of(context!).size.width;
   static double height = MediaQuery.of(context!).size.height;
-
   static String? appVersion;
   static allowHeight(double height) {
     return SizedBox(height: height);
@@ -66,7 +65,6 @@ class Helper {
       //  {} // uncomment this for activate
       =>
       log('${(msg)} ');
-
   static shrink([valueKey]) {
     return SizedBox.shrink(
       key: valueKey,
@@ -198,8 +196,9 @@ class Helper {
                           if (state is OTPRequested) {
                             if (formKey.currentState!.validate()) {
                               context.read<AuthBloc>().add(VerifyOtp(
-                                  otp: Initializer.otpController.text,
-                                  phone: Initializer.phoneController.text));
+                                    otp: Initializer.otpController.text,
+                                    phone: Initializer.phoneController.text
+                                  ));
                             }
                           } else {
                             if (formKey.currentState!.validate()) {
@@ -956,7 +955,7 @@ class Helper {
     }
   }
 
-  static  Widget checkAndGetPrice(ServicePartners partner) {
+  static Widget checkAndGetPrice(ServicePartners partner) {
     String amount = "";
     if (partner.serviceTypes != null) {
       amount = partner.serviceTypes!
@@ -982,4 +981,25 @@ class Helper {
     }
   }
 
+  static String getTimeAgo(DateTime? date) {
+    if (date == null) return "Date not provided";
+
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inSeconds < 60) {
+      return "just now";
+    } else if (difference.inMinutes < 60) {
+      return "${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} ago";
+    } else if (difference.inHours < 24) {
+      return "${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} ago";
+    } else if (difference.inDays < 7) {
+      return "${difference.inDays} day${difference.inDays == 1 ? '' : 's'} ago";
+    } else if (difference.inDays < 30) {
+      final weeks = (difference.inDays / 7).floor();
+      return "$weeks week${weeks == 1 ? '' : 's'} ago";
+    } else {
+      return DateFormat('dd/MM/yyyy').format(date);
+    }
+  }
 }

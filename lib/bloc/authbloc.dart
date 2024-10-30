@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:pwaohyes/apiservice/serverhelper.dart';
 import 'package:pwaohyes/model/citiesmodel.dart';
+import 'package:pwaohyes/model/myreviewmodel.dart';
 import 'package:pwaohyes/model/otpverifiedmodel.dart';
 import 'package:pwaohyes/model/usermodel.dart';
 import 'package:pwaohyes/utils/helper.dart';
@@ -18,6 +19,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<VerifyPhone>(verifyPhone);
     on<DoLogout>(doLogout);
     on<FetchCities>(fetchCities);
+    on<GetMyReview>(getMyReview);
   }
 
   Future<void> verifyOtp(VerifyOtp event, Emitter<AuthState> emit) async {
@@ -134,11 +136,53 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(FetchingCitiesDataError());
     }
   }
+
+  Future<FutureOr<void>> getMyReview(
+      GetMyReview event, Emitter<AuthState> emit) async {
+    try {
+      emit(GettingMyReview());
+      Helper.showLoader();
+      Response response = await ServerHelper.getMyQPost('/rating/get/my/review',
+          {"partnerId": event.partnerId, "phone_no": event.phoneNo});
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Helper.pop();
+        Initializer.myReviewModel =
+            MyReviewModel.fromJson(jsonDecode(response.body));
+        emit(MyReviewsFetched());
+      } else {
+        Helper.pop();
+        Initializer.myReviewModel = MyReviewModel(review: false);
+        emit(MyReviewsNotFetched());
+      }
+    } catch (e) {
+      Helper.pop();
+      Helper.showLog('Exception on gettingmy review $e');
+      Initializer.myReviewModel = MyReviewModel(review: false);
+      emit(GettingMyReviewError());
+    }
+  }
 }
 
 class AuthState {}
 
 class AuthEvent {}
+
+//-----------------------------------
+
+class GetMyReview extends AuthEvent {
+  final String? partnerId, phoneNo;
+  GetMyReview({required this.partnerId, required this.phoneNo});
+}
+
+class GettingMyReview extends AuthState {}
+
+class MyReviewsFetched extends AuthState {}
+
+class MyReviewsNotFetched extends AuthState {}
+
+class GettingMyReviewError extends AuthState {}
+
+//-----------------------------------
 
 class VerifyOtp extends AuthEvent {
   final String? phone, otp;

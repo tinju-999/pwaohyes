@@ -167,29 +167,23 @@ class SubServicePageWeb extends StatelessWidget {
                                             color: grey,
                                           ),
                                         ),
-                                        child: Initializer.subCatModel.data!
-                                                    .services![index].image !=
-                                                null
-                                            ? ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: CachedNetworkImage(
-                                                    imageUrl: Initializer
-                                                        .subCatModel
-                                                        .data!
-                                                        .services![index]
-                                                        .image!,
-                                                    width: 120,
-                                                    height: 120,
-                                                    fit: BoxFit.cover,
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            const Icon(
-                                                              Icons.error,
-                                                              color: black,
-                                                            )),
-                                              )
-                                            : noImageView(context),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          child: CachedNetworkImage(
+                                            imageUrl: Initializer.subCatModel
+                                                .data!.services![index].image!,
+                                            width: 120,
+                                            height: 120,
+                                            fit: BoxFit.cover,
+                                            // errorWidget:
+                                            //     (context, url, error) =>
+                                            //         const Icon(
+                                            //   Icons.error,
+                                            //   color: black,
+                                            // ),
+                                          ),
+                                        ),
                                       ),
                                       Helper.allowHeight(15),
                                       SizedBox(
@@ -531,17 +525,17 @@ class SubServicePageWeb extends StatelessWidget {
         ],
       );
 
-  noImageView(BuildContext context) => ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child: CachedNetworkImage(
-          imageUrl:
-              "https://cdn.vectorstock.com/i/500p/82/99/no-image-available-like-missing-picture-vector-43938299.jpg",
-          width: 120,
-          height: 120,
-          fit: BoxFit.cover,
-          errorWidget: (context, url, error) => const Icon(Icons.error),
-        ),
-      );
+  // noImageView(BuildContext context) => ClipRRect(
+  //       borderRadius: BorderRadius.circular(8.0),
+  //       child: CachedNetworkImage(
+  //         imageUrl:
+  //             "https://cdn.vectorstock.com/i/500p/82/99/no-image-available-like-missing-picture-vector-43938299.jpg",
+  //         width: 120,
+  //         height: 120,
+  //         fit: BoxFit.cover,
+  //         errorWidget: (context, url, error) => const Icon(Icons.error),
+  //       ),
+  //     );
 
   Widget bookMySlotView(BuildContext context) => Column(
         children: [

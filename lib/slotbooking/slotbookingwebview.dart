@@ -312,9 +312,12 @@ class SlotBookingWebContent extends StatelessWidget {
                 keyboardType: TextInputType.text,
                 // controller: controller,
                 textAlign: TextAlign.center,
-                onChanged: (value) => Initializer.myQBloc.getMyQShops(
+                onChanged: (value) => MyQBloc().add(GetMyQShops(
                     query: value.toLowerCase(),
-                    businessName: Initializer.selectedMyQCategoryName),
+                    businessName: Initializer.selectedMyQCategoryName)),
+                // Initializer.myQBloc.getMyQShops(
+                //     query: value.toLowerCase(),
+                //     businessName: Initializer.selectedMyQCategoryName),
                 decoration: const InputDecoration(
                   hintStyle: TextStyle(color: Colors.grey),
                   hintText: "Search Shop/Services  \u{1F50D}",

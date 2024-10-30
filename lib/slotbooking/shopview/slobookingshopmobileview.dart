@@ -3,16 +3,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:pwaohyes/apiservice/serverhelper.dart';
 import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/bloc/myqbloc.dart';
 import 'package:pwaohyes/bloc/servicebloc.dart';
 import 'package:pwaohyes/common/header.dart';
+import 'package:pwaohyes/model/partnerreviewmodel.dart';
 import 'package:pwaohyes/model/shopslotmodel.dart';
 import 'package:pwaohyes/model/shopviewmodel.dart';
 import 'package:pwaohyes/provider/provider.dart';
 import 'package:pwaohyes/utils/constants.dart';
+import 'package:pwaohyes/utils/extensions.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 
@@ -35,7 +38,35 @@ class SlotBookingShopMobileView extends StatelessWidget {
                 current is OneShopFetched ||
                 current is OneShopNotFetched ||
                 current is GettingOneShopError,
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is RreviewsFetched) {
+                Helper.showLog('Reviews fetched');
+                if (Initializer.userModel.isLoggedIn!) {
+                  context.read<AuthBloc>().add(
+                        GetMyReview(
+                          partnerId: Initializer.shopViewModel.data!.sId,
+                          phoneNo: Initializer.userModel.phone,
+                        ),
+                      );
+                }
+              }
+              if (state is OneShopFetched) {
+                context.read<MyQBloc>().add(GetRatingList(
+                    page: "1",
+                    limit: "100",
+                    shopId: Initializer.shopViewModel.data!.sId));
+                // Initializer.myQBloc.getRatingList(
+                //     shopId: Initializer.shopViewModel.data!.sId);
+                // if (Initializer.userModel.isLoggedIn!) {
+                //   context.read<AuthBloc>().add(
+                //         GetMyReview(
+                //           partnerId: Initializer.shopViewModel.data!.sId,
+                //           phoneNo: Initializer.userModel.phone,
+                //         ),
+                //       );
+                // }
+              }
+            },
             builder: (context, state) => state is GettingOneShop
                 ? const Center(child: CupertinoActivityIndicator())
                 : state is OneShopFetched
@@ -89,48 +120,54 @@ class SlotShopWebContent extends StatelessWidget {
             current is SlotShopNotFetched ||
             current is GettingSlotShopError,
         builder: (context, state) => state is SlotShopFetched
-            ? SizedBox(
-                width: Helper.width,
-                child: SizedBox(
-                  width: Helper.width,
-                  child: MaterialButton(
-                    onPressed: () {
-                      if (Initializer.selectedShopServiceId != null) {
-                        if (Initializer.selectedShopSlotId != null) {
-                          if (!Initializer.userModel.isLoggedIn!) {
-                            showAuthView(context, formKey, phoneController,
-                                otpController);
+            ? Column(
+                children: [
+                  SizedBox(
+                    width: Helper.width,
+                    child: MaterialButton(
+                      onPressed: () {
+                        if (Initializer.selectedShopServiceId != null) {
+                          if (Initializer.selectedShopSlotId != null) {
+                            if (!Initializer.userModel.isLoggedIn!) {
+                              showAuthView(context, formKey, phoneController,
+                                  otpController, true, shopViewModel);
+                            } else {
+                              context
+                                  .read<ServiceBloc>()
+                                  .add(BookService(data: {
+                                    "name": Initializer.userModel.phone,
+                                    "phone": Initializer.userModel.phone!,
+                                    "service_id":
+                                        Initializer.selectedShopServiceId,
+                                    "slot_id": Initializer.selectedShopSlotId,
+                                    "number_of_slots": "1",
+                                    "booked_date": Initializer
+                                        .seletedShopSlotDate
+                                        .toString(),
+                                    "booking_amount": Initializer
+                                        .shopSlotModel.serviceInfo!.amount
+                                        .toString(),
+                                  }));
+                            }
                           } else {
-                            context.read<ServiceBloc>().add(BookService(data: {
-                                  "name": Initializer.userModel.phone,
-                                  "phone": Initializer.userModel.phone!,
-                                  "service_id":
-                                      Initializer.selectedShopServiceId,
-                                  "slot_id": Initializer.selectedShopSlotId,
-                                  "number_of_slots": "1",
-                                  "booked_date": Initializer.seletedShopSlotDate
-                                      .toString(),
-                                  "booking_amount": Initializer
-                                      .shopSlotModel.serviceInfo!.amount
-                                      .toString(),
-                                }));
+                            Helper.showSnack("Please select a slot");
                           }
                         } else {
-                          Helper.showSnack("Please select a slot");
+                          Helper.showSnack("Please select a service");
                         }
-                      } else {
-                        Helper.showSnack("Please select a service");
-                      }
-                    },
-                    elevation: 5.0,
-                    color: primaryColor,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 18, horizontal: 18),
-                    child: Text(
-                        "\u{20B9} ${Initializer.shopSlotModel.serviceInfo!.amount}   Book Now",
-                        style: const TextStyle(color: white, fontFamily: "")),
+                      },
+                      elevation: 5.0,
+                      color: primaryColor,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 18, horizontal: 18),
+                      child: Text(
+                          "\u{20B9} ${Initializer.shopSlotModel.serviceInfo!.amount}   Book Now",
+                          style: const TextStyle(color: white, fontFamily: "")),
+                    ),
                   ),
-                ),
+                  Helper.allowHeight(30),
+                  reviewView(context, formKey, phoneController, otpController),
+                ],
               )
             : Helper.shrink(),
       );
@@ -397,7 +434,9 @@ class SlotShopWebContent extends StatelessWidget {
           BuildContext context,
           GlobalKey<FormState> formKey,
           TextEditingController phoneController,
-          TextEditingController otpController) =>
+          TextEditingController otpController,
+          bool isBooking,
+          ShopViewModel? shopViewModel) =>
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -416,21 +455,32 @@ class SlotShopWebContent extends StatelessWidget {
                 }
                 if (state is OTPVerified) {
                   Helper.pop();
-                  context.read<ServiceBloc>().add(BookService(data: {
-                        "name": phoneController.text,
-                        "phone": phoneController.text,
-                        "service_id": Initializer.selectedShopServiceId,
-                        "slot_id": Initializer.selectedShopSlotId,
-                        "number_of_slots": "1",
-                        "booked_date":
-                            Initializer.seletedShopSlotDate.toString(),
-                        "booking_amount": Initializer
-                            .shopSlotModel.serviceInfo!.amount
-                            .toString(),
-                      }));
+                  if (isBooking) {
+                    context.read<ServiceBloc>().add(BookService(data: {
+                          "name": phoneController.text,
+                          "phone": phoneController.text,
+                          "service_id": Initializer.selectedShopServiceId,
+                          "slot_id": Initializer.selectedShopSlotId,
+                          "number_of_slots": "1",
+                          "booked_date":
+                              Initializer.seletedShopSlotDate.toString(),
+                          "booking_amount": Initializer
+                              .shopSlotModel.serviceInfo!.amount
+                              .toString(),
+                        }));
 
-                  phoneController.clear();
-                  otpController.clear();
+                    phoneController.clear();
+                    otpController.clear();
+                  } else {
+                    context.read<AuthBloc>().add(
+                          GetMyReview(
+                            partnerId: Initializer.shopViewModel.data!.sId,
+                            phoneNo: Initializer.userModel.phone,
+                          ),
+                        );
+                    // Helper.pushNamed(
+                    //     '/addReviewPage?shopName=${shopViewModel!.data!.businessName}&shopCat=${shopViewModel.data!.businessCategoryName}&partnerId=${shopViewModel.data!.sId}');
+                  }
                 }
               },
               buildWhen: (previous, current) =>
@@ -543,8 +593,9 @@ class SlotShopWebContent extends StatelessWidget {
                             if (state is OTPRequested) {
                               if (formKey.currentState!.validate()) {
                                 context.read<AuthBloc>().add(VerifyOtp(
-                                    otp: otpController.text,
-                                    phone: phoneController.text));
+                                      otp: otpController.text,
+                                      phone: phoneController.text,
+                                    ));
                               }
                             } else {
                               if (formKey.currentState!.validate()) {
@@ -586,4 +637,295 @@ class SlotShopWebContent extends StatelessWidget {
       return "${Helper.timeConversion(time24: shopSlotModelData.slotStartTime)} - ${Helper.timeConversion(time24: shopSlotModelData.slotEndTime)}";
     }
   }
+
+  Widget reviewView(
+          BuildContext context,
+          GlobalKey<FormState> formKey,
+          TextEditingController phoneController,
+          TextEditingController otpController) =>
+      Column(
+        children: [
+          Container(
+            width: Helper.width,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 0.2,
+                  spreadRadius: 0.2,
+                )
+              ],
+              color: Colors.white,
+              // border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        RatingBarIndicator(
+                          rating: Initializer.partnerReviewModel.partnerDetails!
+                                  .averageRating ??
+                              0.0,
+                          itemSize: 32,
+                          itemBuilder: (context, index) => Icon(
+                            Icons.star,
+                            color: Colors.yellow[600],
+                          ),
+                        ),
+                        Helper.allowHeight(5),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Text(
+                              "${Initializer.partnerReviewModel.partnerDetails != null ? Initializer.partnerReviewModel.partnerDetails!.averageRating!.toStringAsFixed(1) : "0.0"} Average Rating",
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: ''),
+                            ),
+                            Helper.allowHeight(2.5),
+                            Text(
+                              Initializer.partnerReviewModel.partnerDetails !=
+                                      null
+                                  ? "${Initializer.partnerReviewModel.partnerDetails!.totalRating} Total Ratings"
+                                  : "0 Total Ratings",
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontFamily: '',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Helper.allowHeight(20),
+                BlocConsumer<AuthBloc, AuthState>(
+                  // listenWhen: (previous, current) =>
+                  //     current is MyReviewsFetched || current is GettingMyReview,
+                  listener: (context, state) {
+                    // if (state is MyReviewsFetched) {
+                    //   MyQBloc().add(GetRatingList(
+                    //       page: "1",
+                    //       limit: "100",
+                    //       shopId: Initializer.shopViewModel.data!.sId));
+                    //   // if (!Initializer.myReviewModel.review!) {
+                    //   //   Helper.pushNamed(
+                    //   //       '/addReviewPage?shopName=${shopViewModel!.data!.businessName}&shopCat=${shopViewModel!.data!.businessCategoryName}&partnerId=${shopViewModel!.data!.sId}');
+                    //   // }
+                    // }
+                  },
+                  builder: (context, state) => GestureDetector(
+                    onTap: () {
+                      if (!Initializer.userModel.isLoggedIn!) {
+                        showAuthView(context, formKey, phoneController,
+                            otpController, false, shopViewModel);
+                      } else {
+                        Helper.pushNamed(
+                            '/addReviewPage?shopName=${shopViewModel!.data!.businessName}&shopCat=${shopViewModel!.data!.businessCategoryName}&partnerId=${shopViewModel!.data!.sId}');
+                      }
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 18),
+                      width: Helper.width,
+                      child: state is MyReviewsFetched &&
+                              Initializer.myReviewModel.review!
+                          ? myReiewView(Initializer.myReviewModel.data!)
+                          : Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 12),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  border: Border.all(color: primaryColor)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  const Icon(
+                                    Icons.rate_review_rounded,
+                                    color: primaryColor,
+                                    size: 18,
+                                  ),
+                                  Helper.allowWidth(10),
+                                  const Text("Write a review",
+                                      style: TextStyle(
+                                          color: primaryColor, fontFamily: "")),
+                                ],
+                              ),
+                            ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Helper.allowHeight(15),
+          Selector<ProviderClass, bool>(
+            selector: (p0, p1) => p1.showAllReviewsStatus,
+            builder: (context, value, child) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const Text(
+                      "All Reviews",
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () =>
+                          Initializer.providerClass?.showAllReviews(value),
+                      icon: Icon(
+                        value
+                            ? CupertinoIcons.chevron_up
+                            : CupertinoIcons.chevron_down,
+                        size: 16,
+                      ),
+                    ),
+                  ],
+                ),
+                if (value) Helper.allowHeight(10),
+                if (value)
+                  ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics()),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 18, vertical: 14),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) => reviewTileView(
+                        Initializer.partnerReviewModel.data![index], false),
+                    separatorBuilder: (context, index) => Column(
+                      children: [
+                        Helper.allowHeight(10),
+                        const Divider(
+                          color: Colors.grey,
+                          thickness: 0.2,
+                        ),
+                        Helper.allowHeight(10),
+                      ],
+                    ),
+                    itemCount: Initializer.partnerReviewModel.data!.length,
+                  ),
+              ],
+            ),
+          ),
+        ],
+      );
+
+  myReiewView(PartnerReviewData myReviewModel) => Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: Colors.grey.withOpacity(0.2)),
+      ),
+      child: reviewTileView(myReviewModel, true));
+
+  Widget reviewTileView(
+          PartnerReviewData partnerReviewData, bool isMyComment) =>
+      SizedBox(
+        width: Helper.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Row(
+                  children: [
+                    const CircleAvatar(
+                      child: Icon(Icons.person),
+                    ),
+                    Helper.allowWidth(15.0),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          partnerReviewData.customerName!.toTitleCase(),
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        Text(
+                          Helper.getTimeAgo(
+                              DateTime.tryParse(partnerReviewData.createDate!)),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Helper.allowWidth(15),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            "${partnerReviewData.rating ?? 0}",
+                            style: const TextStyle(
+                                fontSize: 10,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Helper.allowWidth(2.0),
+                          const Icon(
+                            Icons.star,
+                            size: 14,
+                            color: Colors.white,
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                if (isMyComment) Helper.allowWidth(10),
+                if (isMyComment)
+                  IconButton(
+                      onPressed: () {
+                        Helper.pushNamed(
+                            '/addReviewPage?commentId=${partnerReviewData.sId}&comment=${partnerReviewData.review ?? ""}&rating=${partnerReviewData.rating}&shopName=${shopViewModel!.data!.businessName}&shopCat=${shopViewModel!.data!.businessCategoryName}&partnerId=${shopViewModel!.data!.sId}');
+                      },
+                      icon: const Icon(
+                        Icons.edit,
+                        size: 16,
+                        color: Colors.grey,
+                      ))
+              ],
+            ),
+            if ((partnerReviewData.review ?? "").isNotEmpty)
+              Helper.allowHeight(15),
+            if ((partnerReviewData.review ?? "").isNotEmpty)
+              Text(partnerReviewData.review!)
+          ],
+        ),
+      );
 }

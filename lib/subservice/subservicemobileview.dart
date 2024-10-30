@@ -124,23 +124,16 @@ class SubServicePageWeb extends StatelessWidget {
                                             color: white,
                                             border: Border.all(
                                                 color: primaryColor)),
-                                        child: Initializer.subCatModel.data!
-                                                    .services![index].image !=
-                                                null
-                                            ? CachedNetworkImage(
-                                                imageUrl: Initializer
-                                                    .subCatModel
-                                                    .data!
-                                                    .services![index]
-                                                    .image!,
-                                                fit: BoxFit.cover,
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        const Icon(
-                                                          Icons.error,
-                                                          color: black,
-                                                        ))
-                                            : noImageView(context),
+                                        child: CachedNetworkImage(
+                                          imageUrl: Initializer.subCatModel
+                                              .data!.services![index].image!,
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(
+                                            Icons.error,
+                                            color: black,
+                                          ),
+                                        ),
                                       ),
                                       Helper.allowHeight(10),
                                       SizedBox(
@@ -407,17 +400,17 @@ class SubServicePageWeb extends StatelessWidget {
   //       ],
   //     );
 
-  noImageView(BuildContext context) => ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child: CachedNetworkImage(
-          imageUrl:
-              "https://cdn.vectorstock.com/i/500p/82/99/no-image-available-like-missing-picture-vector-43938299.jpg",
-          width: 100,
-          height: 100,
-          fit: BoxFit.contain,
-          errorWidget: (context, url, error) => const Icon(Icons.error),
-        ),
-      );
+  // noImageView(BuildContext context) => ClipRRect(
+  //       borderRadius: BorderRadius.circular(8.0),
+  //       child: CachedNetworkImage(
+  //         imageUrl:
+  //             "https://cdn.vectorstock.com/i/500p/82/99/no-image-available-like-missing-picture-vector-43938299.jpg",
+  //         width: 100,
+  //         height: 100,
+  //         fit: BoxFit.contain,
+  //         errorWidget: (context, url, error) => const Icon(Icons.error),
+  //       ),
+  //     );
 
   Widget bookMySlotView(BuildContext context) => Column(
         children: [

@@ -22,7 +22,12 @@ class ServiceHomeMobileView extends StatelessWidget {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
-      body: BlocBuilder<ServiceBloc, ServiceState>(
+      body: BlocConsumer<ServiceBloc, ServiceState>(
+         listener: (context, state) {
+          if (state is ServicesFetched) {
+            context.read<MyQBloc>().add(GetMyQCats());
+          }
+        },
         buildWhen: (previous, current) =>
             current is FetchingServices ||
             current is ServicesFetched ||
@@ -164,17 +169,17 @@ class ServicePageWeb extends StatelessWidget {
     );
   }
 
-  noImageView(BuildContext context) => ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child: CachedNetworkImage(
-          imageUrl:
-              "https://cdn.vectorstock.com/i/500p/82/99/no-image-available-like-missing-picture-vector-43938299.jpg",
-          width: 100,
-          height: 100,
-          fit: BoxFit.contain,
-          errorWidget: (context, url, error) => const Icon(Icons.error),
-        ),
-      );
+  // noImageView(BuildContext context) => ClipRRect(
+  //       borderRadius: BorderRadius.circular(8.0),
+  //       child: CachedNetworkImage(
+  //         imageUrl:
+  //             "https://cdn.vectorstock.com/i/500p/82/99/no-image-available-like-missing-picture-vector-43938299.jpg",
+  //         width: 100,
+  //         height: 100,
+  //         fit: BoxFit.contain,
+  //         errorWidget: (context, url, error) => const Icon(Icons.error),
+  //       ),
+  //     );
 
   Widget bookMySlotView(BuildContext context) => Column(
         children: [

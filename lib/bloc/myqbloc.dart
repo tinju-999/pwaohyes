@@ -1,19 +1,31 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:pwaohyes/apiservice/serverhelper.dart';
+import 'package:pwaohyes/bloc/authbloc.dart';
 import 'package:pwaohyes/model/myqpadcatmodel.dart';
 import 'package:pwaohyes/model/myqpadshopsmodel.dart';
+import 'package:pwaohyes/model/partnerreviewmodel.dart';
 import 'package:pwaohyes/model/shopslotmodel.dart';
 import 'package:pwaohyes/model/shopviewmodel.dart';
 import 'package:pwaohyes/utils/helper.dart';
 import 'package:pwaohyes/utils/initializer.dart';
 
-class MyQBloc extends Cubit<MyQState> {
-  MyQBloc() : super(MyQState());
+class MyQBloc extends Bloc<MyQEvent, MyQState> {
+  MyQBloc() : super(MyQState()) {
+    on<GetMyQCats>(getMyQCats);
+    on<GetMyQShops>(getMyQShops);
+    on<GetMyQOneShop>(getMyQOneShop);
+    on<GetShopsSlots>(getShopsSlots);
+    on<GetRatingList>(getRatingList);
+  }
 
-  Future<void> getMyQCats() async {
+  //---------------------------------------------------------------------------
+
+  Future<FutureOr<void>> getMyQCats(
+      GetMyQCats event, Emitter<MyQState> emit) async {
     try {
       emit(GettingMyQCats());
       Response response = await ServerHelper.getMyQPost(
@@ -27,10 +39,12 @@ class MyQBloc extends Cubit<MyQState> {
             Initializer.myqpadCategoryModel.data!.cateoryList!.first.sId;
         Initializer.selectedMyQCategoryName = Initializer
             .myqpadCategoryModel.data!.cateoryList!.first.businessName!;
-        getMyQShops(
-            query: '',
-            businessName: Initializer
-                .myqpadCategoryModel.data!.cateoryList!.first.businessName!);
+        add(GetMyQShops(
+          query: '',
+          businessName: Initializer
+              .myqpadCategoryModel.data!.cateoryList!.first.businessName!,
+        ));
+
         emit(MyQCatsFetched());
       } else {
         emit(MyQCatsNotFetched());
@@ -41,14 +55,14 @@ class MyQBloc extends Cubit<MyQState> {
     }
   }
 
-  Future<void> getMyQShops(
-      {required String? query, required String? businessName}) async {
+  Future<FutureOr<void>> getMyQShops(
+      GetMyQShops event, Emitter<MyQState> emit) async {
     try {
       emit(GettingShopsList());
       Response response = await ServerHelper.getMyQPost('/partner/list/user', {
         "page": "1",
         "limit": "10",
-        "keyword": query,
+        "keyword": event.query,
         "business_category": Initializer.selectedMyQCategory,
         "lat": "10.213142",
         "lon": "76.378480"
@@ -60,7 +74,7 @@ class MyQBloc extends Cubit<MyQState> {
           if (Initializer.myqpadShopsModel.data!.isNotEmpty) {
             emit(ShopsListFetched());
           } else {
-            Initializer.selectedMyQCategoryName = businessName;
+            Initializer.selectedMyQCategoryName = event.businessName;
             emit(ShopsListNotFound());
           }
         });
@@ -73,13 +87,12 @@ class MyQBloc extends Cubit<MyQState> {
     }
   }
 
-  //---------------------------------------------------------------------------
-
-  Future<void> getMyQOneShop(String? id) async {
+  Future<FutureOr<void>> getMyQOneShop(
+      GetMyQOneShop event, Emitter<MyQState> emit) async {
     try {
       emit(GettingOneShop());
       Response response =
-          await ServerHelper.getMyQPost('/partner/view/user', {"id": id});
+          await ServerHelper.getMyQPost('/partner/view/user', {"id": event.id});
       if (response.statusCode == 200 || response.statusCode == 201) {
         Initializer.shopViewModel =
             ShopViewModel.fromJson(jsonDecode(response.body));
@@ -87,10 +100,14 @@ class MyQBloc extends Cubit<MyQState> {
           Initializer.shopViewModel.services!.first.isSelected = true;
           Initializer.selectedShopServiceId =
               Initializer.shopViewModel.services!.first.sId;
-          Initializer.myQBloc.getShopsSlots(Initializer.selectedShopServiceId,
-              Initializer.seletedShopSlotDate);
+          add(GetShopsSlots(
+              serviceId: Initializer.selectedShopServiceId,
+              selectedSlotedServiceDate:
+                  Initializer.seletedShopSlotDate.toString()));
         }
         emit(OneShopFetched());
+
+        // getRatingList(shopId: id);
       } else {
         emit(OneShopNotFetched());
       }
@@ -100,8 +117,8 @@ class MyQBloc extends Cubit<MyQState> {
     }
   }
 
-  Future<void> getShopsSlots(
-      String? sId, DateTime? selectedSlotedServiceDate) async {
+  Future<FutureOr<void>> getShopsSlots(
+      GetShopsSlots event, Emitter<MyQState> emit) async {
     try {
       // Initializer.selectedShopServiceId = null;
       Initializer.selectedShopSlotId = null;
@@ -109,8 +126,8 @@ class MyQBloc extends Cubit<MyQState> {
       await Future.delayed(const Duration(milliseconds: 800)).then((_) async {
         Response response =
             await ServerHelper.getMyQPost('/booking/get/slots/user', {
-          "service_id": sId,
-          "date": selectedSlotedServiceDate.toString(),
+          "service_id": event.serviceId,
+          "date": event.selectedSlotedServiceDate.toString(),
         });
         if (response.statusCode == 200 || response.statusCode == 201) {
           Initializer.shopSlotModel =
@@ -136,11 +153,60 @@ class MyQBloc extends Cubit<MyQState> {
       emit(GettingSlotShopError());
     }
   }
+
+  Future<FutureOr<void>> getRatingList(
+      GetRatingList event, Emitter<MyQState> emit) async {
+    try {
+      // emit(GettingReviews());
+      Response response = await ServerHelper.getMyQPost(
+          '/rating/list/partner', {
+        "page": event.page,
+        "limit": event.limit,
+        "partnerId": event.shopId
+      });
+      if (response.statusCode == 200) {
+        Initializer.partnerReviewModel =
+            PartnerReviewModel.fromJson(jsonDecode(response.body));
+        emit(RreviewsFetched());
+      } else {
+        // emit(RreviewsNotFetched());
+      }
+    } catch (e) {
+      Helper.showLog("Exception on getting ratinglist $e");
+      // emit(GettingReviewsError());
+    }
+  }
 }
 
 class MyQState {}
 
 class MyQEvent {}
+
+class GetMyQCats extends MyQEvent {}
+
+class GetMyQShops extends MyQEvent {
+  final String? query, businessName;
+  GetMyQShops({required this.query, required this.businessName});
+}
+
+class GetShopsSlots extends MyQEvent {
+  final String? serviceId, selectedSlotedServiceDate;
+  GetShopsSlots(
+      {required this.serviceId, required this.selectedSlotedServiceDate});
+}
+
+class GetRatingList extends MyQEvent {
+  final String? page, limit, shopId;
+  GetRatingList(
+      {required this.page, required this.limit, required this.shopId});
+}
+
+class RreviewsFetched extends MyQState {}
+
+class GetMyQOneShop extends MyQEvent {
+  final String? id;
+  GetMyQOneShop({required this.id});
+}
 
 class GettingShopsList extends MyQState {}
 

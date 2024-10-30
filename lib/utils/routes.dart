@@ -6,6 +6,7 @@ import 'package:pwaohyes/bookingaddress/bookingaddresshome.dart';
 import 'package:pwaohyes/bookingaddress/bookingaddressweb.dart';
 import 'package:pwaohyes/location/locationpermissionview.dart';
 import 'package:pwaohyes/service/servicehome.dart';
+import 'package:pwaohyes/review/addreviewpage.dart';
 import 'package:pwaohyes/slotbooking/shopview/shopview.dart';
 import 'package:pwaohyes/slotbooking/slotbookingview.dart';
 import 'package:pwaohyes/subservice/subservicehome.dart';
@@ -21,6 +22,7 @@ const String slotbookingshop = '/slotbookingshop';
 const String bookingHome = '/booking';
 const String subservices = '/subservices';
 const String bookingaddress = '/bookingaddress';
+const String addReviewPage = '/addReviewPage';
 
 final routes = {
   locationView: (context) => const LocationPermissionView(route: null),
@@ -33,5 +35,6 @@ final routes = {
   slotbookingshop: (context) => const SlotShopView(),
   bookingHome: (context) => const BookingHome(catId: '', title: ''),
   subservices: (context) => const SubServiceHome(),
-  bookingaddress: (context) => const BookingAddress()
+  bookingaddress: (context) => const BookingAddress(),
+  addReviewPage: (context) => const AddReviewPage(),
 };

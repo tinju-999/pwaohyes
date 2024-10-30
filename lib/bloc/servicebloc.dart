@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:pwaohyes/apiservice/serverhelper.dart';
+import 'package:pwaohyes/bloc/myqbloc.dart';
 import 'package:pwaohyes/model/servicedetailedmodel.dart';
 import 'package:pwaohyes/model/servicemodel.dart';
 import 'package:pwaohyes/model/subcatmodel.dart';
@@ -14,6 +15,7 @@ import 'package:pwaohyes/utils/routes.dart';
 
 class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   ServiceBloc() : super(ServiceState()) {
+    on<AddCustomerReview>(addReview);
     on<AddAddress>(addAddress);
     on<GetServices>(getServices);
     on<GetSubServices>(getSubServices);
@@ -68,7 +70,6 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
               .toList();
 
           emit(ServicesFetched());
-          Initializer.myQBloc.getMyQCats();
         } else {
           Helper.showSnack(response.reasonPhrase);
           emit(ServicesNotFetched());
@@ -89,7 +90,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     try {
       emit(FetchingSubServices());
       Response response = await ServerHelper.get(
-          'services/by_category/without_location/${event.id}');
+          'services/by_category/without_location/${event.id}?city=${Initializer.selectedAdddress!.cityId}');
+      //&city=${Initializer.selectedAdddress!.cityId}
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         Initializer.subCatModel = SubCatModel.fromJson(data);
@@ -137,8 +139,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     try {
       emit(BookingService());
       Helper.showLoader();
-      Response response =
-          await ServerHelper.getMyQPostSpecial('/booking/add/user/web', event.data);
+      Response response = await ServerHelper.getMyQPostSpecial(
+          '/booking/add/user/web', event.data);
       if (response.statusCode == 200 && jsonDecode(response.body)['status']) {
         Helper.pop();
         if (Initializer.selectedAdddress!.loadingState ==
@@ -166,11 +168,52 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       emit(ServiceBookingError());
     }
   }
+
+  Future<FutureOr<void>> addReview(
+      AddCustomerReview event, Emitter<ServiceState> emit) async {
+    try {
+      emit(AddingReview());
+      Helper.showLoader();
+      Response response =
+          await ServerHelper.getMyQPost('/rating/add/customer', event.map);
+      Helper.showLog(response);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Helper.pop();
+        Helper.showSnack(jsonDecode(response.body)['message']);
+       
+        emit(ReviewAdded());
+      } else {
+        Helper.pop();
+        Helper.showSnack(response.reasonPhrase);
+        emit(ReviewNotAdded());
+      }
+    } catch (e) {
+      Helper.pop();
+      Helper.showLog("Exception on adding review $e");
+      Helper.showSnack("Something went wrong, unable to add review");
+      emit(ReviewAddingFailed());
+    }
+  }
 }
 
 class ServiceState {}
 
 class ServiceEvent {}
+
+//___________________________________________
+
+class AddCustomerReview extends ServiceEvent {
+  final Map<String, dynamic> map;
+  AddCustomerReview({required this.map});
+}
+
+class AddingReview extends ServiceState {}
+
+class ReviewAdded extends ServiceState {}
+
+class ReviewNotAdded extends ServiceState {}
+
+class ReviewAddingFailed extends ServiceState {}
 
 //___________________________________________
 class AddAddress extends ServiceEvent {

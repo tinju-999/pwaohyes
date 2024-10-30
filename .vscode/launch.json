@@ -10,27 +10,28 @@
       "type": "dart",
       "program": "lib/main.dart",
       "args": [
-                "-d",
-                "chrome",
-                "--web-renderer",
-                "html"
-                //------------
-                // flutter run -d web-server --web-port 1234 --web-hostname <your_ip_address> --web-renderer canvaskit
-                  //------------
-                //  "-d",
-                //  "web-server",
-                //  "--web-hostname",
-                //  "192.168.1.10",
-                //  "--web-port",
-                //  "8080"
-                //------------
-                //  "--web-port",
-                //  "8080",
-                //  "--web-hostname",
-                //  "192.168.1.12",
-                //  "--web-renderer",
-                //  "html"
-            ],
+        "-d",
+        "chrome",
+        "--web-renderer",
+        "html",
+        // "--profile",
+        //------------
+        // flutter run -d web-server --web-port 1234 --web-hostname <your_ip_address> --web-renderer canvaskit
+        //------------
+        //  "-d",
+        //  "web-server",
+        //  "--web-hostname",
+        //  "192.168.1.10",
+        //  "--web-port",
+        //  "8080"
+        //------------
+        //  "--web-port",
+        //  "8080",
+        //  "--web-hostname",
+        //  "192.168.1.12",
+        //  "--web-renderer",
+        //  "html"
+      ],
     },
     {
       "name": "pwaohyes (profile mode)",
@@ -42,7 +43,18 @@
       "name": "pwaohyes (release mode)",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "release"
+      "flutterMode": "release",
+      "program": "lib/main.dart",
+      "args": [
+        "-d",
+        "chrome",
+        "--web-renderer",
+        "html",
+        // "--disable-web-security", // Disable CORS checks for local testing
+        // "--disable-site-isolation-trials",
+        // "--no-sandbox", // Optional for more direct local testing
+        // "--disable-dev-shm-usage" // Optional flag for testing
+      ]
     }
   ]
 }

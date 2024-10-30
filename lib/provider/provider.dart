@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pwaohyes/bloc/myqbloc.dart';
 import 'package:pwaohyes/model/bookingdatemodel.dart';
 import 'package:pwaohyes/model/selectedaddressmodel.dart';
 import 'package:pwaohyes/model/servicedetailedmodel.dart';
@@ -28,6 +29,13 @@ class ProviderClass extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _showAllReviewsStatus = false;
+  bool get showAllReviewsStatus => _showAllReviewsStatus;
+  showAllReviews(bool bool) {
+    _showAllReviewsStatus = bool ? false : true;
+    notifyListeners();
+  }
+
   String _selectedServicePartner = "";
   String get selectedServicePartner => _selectedServicePartner;
 
@@ -48,6 +56,12 @@ class ProviderClass extends ChangeNotifier {
 
   bool _agreed = false;
   bool get agreed => _agreed;
+
+  void setRatingValue(String? rating) =>
+      _ratingValue = double.tryParse(rating!)!;
+
+  double _ratingValue = 0.0;
+  double get ratingValue => _ratingValue;
   setAgreement(bool? value) {
     _agreed = value!;
     notifyListeners();
@@ -87,8 +101,11 @@ class ProviderClass extends ChangeNotifier {
     _serviceTime = value;
     Initializer.seletedShopSlotDate = _serviceTime;
     notifyListeners();
-    Initializer.myQBloc.getShopsSlots(
-        Initializer.selectedShopServiceId, Initializer.seletedShopSlotDate);
+    MyQBloc().add(GetShopsSlots(
+        serviceId: Initializer.selectedShopServiceId,
+        selectedSlotedServiceDate: Initializer.seletedShopSlotDate.toString()));
+    // Initializer.myQBloc.getShopsSlots(
+    //     Initializer.selectedShopServiceId, Initializer.seletedShopSlotDate);
   }
 
   startTimer() {
@@ -451,8 +468,10 @@ class ProviderClass extends ChangeNotifier {
         "Selected cat id : ${Initializer.myqpadCategoryModel.data!.cateoryList![index].sId}");
     Initializer.selectedMyQCategoryName =
         Initializer.myqpadCategoryModel.data!.cateoryList![index].businessName!;
-    Initializer.myQBloc.getMyQShops(
-        businessName: Initializer.selectedMyQCategoryName, query: '');
+    MyQBloc().add(GetMyQShops(
+        query: "", businessName: Initializer.selectedMyQCategoryName));
+    // Initializer.myQBloc.getMyQShops(
+    //     businessName: Initializer.selectedMyQCategoryName, query: '');
     notifyListeners();
   }
 
@@ -464,8 +483,11 @@ class ProviderClass extends ChangeNotifier {
     Initializer.selectedShopServiceId =
         Initializer.shopViewModel.services![index].sId;
     notifyListeners();
-    Initializer.myQBloc.getShopsSlots(
-        Initializer.selectedShopServiceId, Initializer.seletedShopSlotDate);
+    MyQBloc().add(GetShopsSlots(
+        serviceId: Initializer.selectedShopServiceId,
+        selectedSlotedServiceDate: Initializer.seletedShopSlotDate.toString()));
+    // Initializer.myQBloc.getShopsSlots(
+    //     Initializer.selectedShopServiceId, Initializer.seletedShopSlotDate);
   }
 
   void changeShopServiceSlot(int index) {
@@ -480,6 +502,11 @@ class ProviderClass extends ChangeNotifier {
   }
 
   void checkSelectedPartner() => _selectedServicePartner = "";
+
+  updateRating(double value) {
+    _ratingValue = value;
+    notifyListeners();
+  }
 }
 
 class CombinedData {
